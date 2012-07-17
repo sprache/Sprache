@@ -1,0 +1,22 @@
+[Oo]bj
+[Bb]in
+*.user
+*.suo
+*.[Cc]ache
+*.bak
+*.ncb
+*.log 
+*.DS_Store
+[Tt]humbs.db 
+_ReSharper.*
+
+# Ignore NCrunch cache files.
+*.crunchproject.local.xml
+*.crunchsolution.local.xml
+
+# Ignore test output
+TestResult.xml
+
+# Ignore NuGet package files.
+*.nupkg
+lib
