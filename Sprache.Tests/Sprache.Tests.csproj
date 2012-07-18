@@ -111,6 +111,8 @@
     <Compile Include="ParseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultTests.cs" />
+    <Compile Include="Scenarios\AmqpErrorTests.cs" />
+    <Compile Include="Scenarios\AmqpErrorTests2.cs" />
     <Compile Include="Scenarios\CsvTests.cs" />
   </ItemGroup>
   <ItemGroup>
