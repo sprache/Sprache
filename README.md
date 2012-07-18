@@ -11,8 +11,9 @@ Unlike most parser-building frameworks, you use Sprache directly from your progr
 
 A simple parser might parse a sequence of characters:
 
-// Parse any number of capital 'A's in a row
-var parseA = Parse.Char('A').AtLeastOnce();
+    // Parse any number of capital 'A's in a row
+    var parseA = Parse.Char('A').AtLeastOnce();
+
 Sprache provides a number of built-in functions that can make bigger parsers from smaller ones, often callable via Linq query comprehensions:
 
     Parser<string> identifier =
