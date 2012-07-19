@@ -7,7 +7,7 @@
     <title>Sprache</title>
     <authors>Nicholas Blumhardt</authors>
     <owners>Nicholas Blumhardt, Mike Hadlow</owners>
-    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <licenseUrl>https://github.com/sprache/Sprache/blob/master/licence.txt</licenseUrl>
     <projectUrl>https://github.com/sprache/Sprache</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</description>
