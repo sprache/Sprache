@@ -18,6 +18,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyTemplates", "TinyTempla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyTemplates.Tests", "TinyTemplates.Tests\TinyTemplates.Tests.csproj", "{4BFA4889-0FA0-4EAE-84FA-E95924A18ABD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{4E6BF671-AEB9-430E-872A-89F01C6E49A7}"
+	ProjectSection(SolutionItems) = preProject
+		..\Package\Sprache.nuspec = ..\Package\Sprache.nuspec
+		..\Build\Sprache.proj = ..\Build\Sprache.proj
+		Version.cs = Version.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
