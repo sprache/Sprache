@@ -3,7 +3,7 @@
   <metadata>
     <id>Sprache</id>
     <!-- Version gets updated from Sprache.dll version number during the build's packaging process -->
-    <version>1.9.1.0</version>
+    <version>1.10.0.0</version>
     <title>Sprache</title>
     <authors>Nicholas Blumhardt</authors>
     <owners>Nicholas Blumhardt, Mike Hadlow</owners>

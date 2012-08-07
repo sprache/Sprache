@@ -70,15 +70,15 @@ namespace Sprache.Tests.Scenarios
             var itemsResult = 
                 items.Parse(originalErrorString).OfType<KeyValue>().ToDictionary(x => x.Key, x => x.Value);
             
-            foreach (var amqpErrorItem in itemsResult)
-            {
-                Console.Out.WriteLine("{0}", amqpErrorItem);
-            }
+//            foreach (var amqpErrorItem in itemsResult)
+//            {
+//                Console.Out.WriteLine("{0}", amqpErrorItem);
+//            }
 
-            Console.Out.WriteLine("itemsResult[\"code\"] = {0}", itemsResult["code"]);
-            Console.Out.WriteLine("itemsResult[\"text\"] = {0}", itemsResult["text"]);
-            Console.Out.WriteLine("itemsResult[\"classId\"] = {0}", itemsResult["classId"]);
-            Console.Out.WriteLine("itemsResult[\"methodId\"] = {0}", itemsResult["methodId"]);
+            Assert.AreEqual("406", itemsResult["code"].ToString());
+            Assert.AreEqual("PRECONDITION_FAILED - parameters for queue 'my.redeclare.queue' in vhost '/' not equivalent", itemsResult["text"].ToString());
+            Assert.AreEqual("50", itemsResult["classId"].ToString());
+            Assert.AreEqual("10", itemsResult["methodId"].ToString());
         }
     }
 
