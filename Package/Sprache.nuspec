@@ -14,7 +14,7 @@
     <releaseNotes>
     </releaseNotes>
     <copyright>Copyright Nicholas Blumhardt 2012</copyright>
-    <tags>Parser Parsers</tags>
+    <tags>Parser Parsers Monad</tags>
     <dependencies>
     </dependencies>
   </metadata>
