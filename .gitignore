@@ -19,4 +19,4 @@ TestResult.xml
 
 # Ignore NuGet package files.
 *.nupkg
-lib
+Package/lib
