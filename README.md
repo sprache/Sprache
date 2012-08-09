@@ -34,9 +34,9 @@ The best place to start is [this introductory article.](http://nblumhardt.com/20
 
 Examples included with the source demonstrate:
 
-* [Parsing XML directly to a Document object](https://github.com/sprache/Sprache/blob/master/XmlExample/Program.cs)
-* [Parsing numeric expressions to System.Linq.Expression objects](https://github.com/sprache/Sprache/blob/master/LinqyCalculator/ExpressionParser.cs)
-* [Parsing comma-separated (CSV) 'files' into lists of strings](https://github.com/sprache/Sprache/blob/master/Sprache.Tests/Scenarios/CsvTests.cs)
+* [Parsing XML directly to a Document object](https://github.com/sprache/Sprache/blob/master/src/XmlExample/Program.cs)
+* [Parsing numeric expressions to System.Linq.Expression objects](https://github.com/sprache/Sprache/blob/master/src/LinqyCalculator/ExpressionParser.cs)
+* [Parsing comma-separated (CSV) 'files' into lists of strings](https://github.com/sprache/Sprache/blob/master/src/Sprache.Tests/Scenarios/CsvTests.cs)
 
 Parser combinators are covered extensively on the web. The original paper describing the monadic implementation by [Graham Hutton and Eric Meijer](http://www.cs.nott.ac.uk/~gmh/monparsing.pdf) is very readable. Sprache grew out of some exercises in [Hutton's Haskell book](http://www.amazon.com/Programming-Haskell-Graham-Hutton/dp/0521692695).
 
