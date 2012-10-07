@@ -82,7 +82,7 @@ namespace Sprache.Tests
         public void ReturningValue_ReturnsValueAsResult()
         {
             var p = Parse.Return(1);
-            var r = (Success<int>)p.TryParse("abc");
+            var r = (Result<int>)p.TryParse("abc");
             Assert.AreEqual(0, r.Remainder.Position);
         }
 
@@ -208,9 +208,9 @@ namespace Sprache.Tests
         {
             var untilAa = Parse.AnyChar.Until(Parse.String("aa")).Text();
             var r = untilAa.TryParse("abcaab");
-            Assert.IsInstanceOf<Success<string>>(r);
-            var s = (Success<string>)r;
-            Assert.AreEqual("abc", s.Result);
+            Assert.IsInstanceOf<Result<string>>(r);
+            var s = (Result<string>)r;
+            Assert.AreEqual("abc", s.Value);
             Assert.AreEqual(5, s.Remainder.Position);
         }
     }
