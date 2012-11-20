@@ -16,8 +16,9 @@ namespace Sprache.Tests
             var p = 2;
             var i1 = new Input(s, p);
             var i2 = new Input(s, p);
-            Assert.AreEqual(i1, i2);
-        }
+			Assert.AreEqual(i1, i2);
+			Assert.IsTrue(i1 == i2);
+		}
 
         [Test]
         public void InputsOnTheSameString_AtDifferentPositions_AreNotEqual()
@@ -26,7 +27,8 @@ namespace Sprache.Tests
             var i1 = new Input(s, 1);
             var i2 = new Input(s, 2);
             Assert.AreNotEqual(i1, i2);
-        }
+			Assert.IsTrue(i1 != i2);
+		}
 
         [Test]
         public void InputsOnDifferentStrings_AtTheSamePosition_AreNotEqual()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Sprache
 {
-    public class Input
+    public class Input : IEquatable<Input>
     {
         public string Source { get; set; }
         readonly string _source;
@@ -50,16 +50,34 @@ namespace Sprache
         {
             return string.Format("Line {0}, Column {1}", _line, _column);
         }
-
-        public override bool Equals(object obj)
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return ((_source != null ? _source.GetHashCode() : 0) * 397) ^ _position;
+			}
+		}
+		public override bool Equals(object obj)
         {
-            var i = obj as Input;
-            return i != null && i._source == _source && i._position == _position;
+	        if (ReferenceEquals(null, obj)) return false;
+	        if (ReferenceEquals(this, obj)) return true;
+	        if (obj.GetType() != this.GetType()) return false;
+	        return Equals((Input) obj);
         }
 
-        public override int GetHashCode()
-        {
-            return _source.GetHashCode() ^ _position.GetHashCode();
-        }
+	    public bool Equals(Input other)
+	    {
+		    if (ReferenceEquals(null, other)) return false;
+		    if (ReferenceEquals(this, other)) return true;
+		    return string.Equals(_source, other._source) && _position == other._position;
+	    }
+	    public static bool operator ==(Input left, Input right)
+	    {
+		    return Equals(left, right);
+	    }
+	    public static bool operator !=(Input left, Input right)
+	    {
+		    return !Equals(left, right);
+	    }
     }
 }
