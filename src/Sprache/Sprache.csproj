@@ -93,17 +93,14 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Failure.cs" />
-    <Compile Include="IFailure.cs" />
     <Compile Include="Input.cs" />
-    <Compile Include="ISuccess.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ParserOfT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IResultOfT.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="ResultHelper.cs" />
-    <Compile Include="Success.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -13,7 +13,7 @@ namespace Sprache.Tests
         public void FailureContainingBracketFormattedSuccessfully()
         {
             var p = Parse.String("xy").Text().XMany().End();
-            var r = (Failure<IEnumerable<string>>)p.TryParse("x{");
+            var r = (Result<IEnumerable<string>>)p.TryParse("x{");
             Assert.That(r.Message.Contains("unexpected '{'"));
         }
     }

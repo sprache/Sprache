@@ -31,12 +31,12 @@ namespace Sprache.Tests
             parser.TryParse(input)
                 .IfFailure(f =>
                 {
-                    Assert.Fail("Parsing of \"{0}\" failed unexpectedly at position {1}: {2}", input, f.FailedInput.Position, f.Message);
+                    Assert.Fail("Parsing of \"{0}\" failed unexpectedly at position {1}: {2}", input, f.Remainder.Position, f.Message);
                     return f;
                 })
                 .IfSuccess(s =>
                 {
-                    resultAssertion(s.Result);
+                    resultAssertion(s.Value);
                     return s;
                 });
         }
@@ -48,15 +48,15 @@ namespace Sprache.Tests
 
         public static void FailsAt<T>(Parser<T> parser, string input, int position)
         {
-            FailsWith(parser, input, f => Assert.AreEqual(position, f.FailedInput.Position));
+            FailsWith(parser, input, f => Assert.AreEqual(position, f.Remainder.Position));
         }
 
-        public static void FailsWith<T>(Parser<T> parser, string input, Action<IFailure<T>> resultAssertion)
+        public static void FailsWith<T>(Parser<T> parser, string input, Action<IResult<T>> resultAssertion)
         {
             parser.TryParse(input)
                 .IfSuccess(s =>
                 {
-                    Assert.Fail("Expected failure but succeeded with {0}.", s.Result);
+                    Assert.Fail("Expected failure but succeeded with {0}.", s.Value);
                     return s;
                 })
                 .IfFailure(f =>
