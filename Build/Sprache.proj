@@ -45,11 +45,12 @@
 
         <ItemGroup>
             <FilesToDelete Include="$(Package)\*.nupkg"  />
+			<FilesToCopy Include="$(OutputDir)\Sprache.*" Exclude="$(OutputDir)\*Test*.*" />
         </ItemGroup>
       
         <Delete Files="@(FilesToDelete)" />
     
-        <Copy SourceFiles="$(OutputDir)\Sprache.dll" DestinationFolder="$(Package)\lib\net40" />
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(Package)\lib\net40" />
         
         <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\Sprache.dll">
             <Output TaskParameter="Assemblies" ItemName="AsmInfo" />
