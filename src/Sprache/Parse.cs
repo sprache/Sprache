@@ -84,6 +84,18 @@ namespace Sprache
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
+        public static Parser<string> Str(string s)
+        {
+            if (s == null) throw new ArgumentNullException("s");
+
+            return String(s).Text();
+        }
+
+        /// <summary>
+        /// Parse a string of characters.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static Parser<IEnumerable<char>> String(string s)
         {
             if (s == null) throw new ArgumentNullException("s");
