@@ -69,13 +69,44 @@ namespace Sprache
             return CharExcept(ch => c == ch, c.ToString());
         }
 
+        /// <summary>
+        /// Parse any character.
+        /// </summary>
         public static readonly Parser<char> AnyChar = Char(c => true, "any character");
+
+        /// <summary>
+        /// Parse a whitespace.
+        /// </summary>
         public static readonly Parser<char> WhiteSpace = Char(char.IsWhiteSpace, "whitespace");
+
+        /// <summary>
+        /// Parse a digit.
+        /// </summary>
         public static readonly Parser<char> Digit = Char(char.IsDigit, "digit");
+
+        /// <summary>
+        /// Parse a letter.
+        /// </summary>
         public static readonly Parser<char> Letter = Char(char.IsLetter, "letter");
+
+        /// <summary>
+        /// Parse a letter or digit.
+        /// </summary>
         public static readonly Parser<char> LetterOrDigit = Char(char.IsLetterOrDigit, "letter or digit");
+
+        /// <summary>
+        /// Parse a lowercase letter.
+        /// </summary>
         public static readonly Parser<char> Lower = Char(char.IsLower, "lowercase letter");
-        public static readonly Parser<char> Upper = Char(char.IsUpper, "upper");
+
+        /// <summary>
+        /// Parse an uppercase letter.
+        /// </summary>
+        public static readonly Parser<char> Upper = Char(char.IsUpper, "uppercase letter");
+
+        /// <summary>
+        /// Parse a numeric character.
+        /// </summary>
         public static readonly Parser<char> Numeric = Char(char.IsNumber, "numeric character");
 
         /// <summary>
@@ -165,7 +196,7 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException("parser");
 
-            return parser.Once().Then(t1 => parser.Many().Select(ts => t1.Concat(ts)));
+            return parser.Once().Then(t1 => parser.Many().Select(t1.Concat));
         }
 
         /// <summary>
@@ -363,7 +394,7 @@ namespace Sprache
             if (first == null) throw new ArgumentNullException("first");
             if (second == null) throw new ArgumentNullException("second");
 
-            return first.Then(f => second.Select(s => f.Concat(s)));
+            return first.Then(f => second.Select(f.Concat));
         }
 
         /// <summary>
@@ -425,7 +456,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<IEnumerable<T>> Until<T, U>(this Parser<T> parser, Parser<U> until)
         {
-            return parser.Except(until).Many().Then(r => until.Return(r));
+            return parser.Except(until).Many().Then(until.Return);
         }
 
         /// <summary>
@@ -539,8 +570,14 @@ namespace Sprache
                 .Or(Return(lastOperand));
         }
 
+        /// <summary>
+        /// Parse a number.
+        /// </summary>
         public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
 
+        /// <summary>
+        /// Parse a decimal number.
+        /// </summary>
         public static readonly Parser<string> Decimal =
             from integral in Number
             from fraction in Char('.').Then(point => Number.Select(n => "." + n)).XOr(Return(""))
