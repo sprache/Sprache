@@ -94,6 +94,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Input.cs" />
+    <Compile Include="Option.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ParserOfT.cs" />
