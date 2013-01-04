@@ -196,7 +196,7 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException("parser");
 
-            return parser.Once().Then(t1 => parser.Many().Select(t1.Concat));
+            return parser.Once().Then(t1 => parser.Many().Select(ts => t1.Concat(ts)));
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace Sprache
             if (first == null) throw new ArgumentNullException("first");
             if (second == null) throw new ArgumentNullException("second");
 
-            return first.Then(f => second.Select(f.Concat));
+            return first.Then(f => second.Select(s => f.Concat(s)));
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<IEnumerable<T>> Until<T, U>(this Parser<T> parser, Parser<U> until)
         {
-            return parser.Except(until).Many().Then(until.Return);
+            return parser.Except(until).Many().Then(r => until.Return(r));
         }
 
         /// <summary>
