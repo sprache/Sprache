@@ -255,9 +255,9 @@ namespace Sprache
 
         /// <summary>
         /// Construct a parser that indicates the given parser
-        /// is optional. The returned parser will not consume
-        /// any character no matter the given parser parses successfully
-        /// or not.
+        /// is optional. The returned parser will succeed on
+        /// any input no matter whether the given parser
+        /// succeeds or not.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="parser"></param>
@@ -269,9 +269,9 @@ namespace Sprache
 
         /// <summary>
         /// Construct a parser that indicates the given parser
-        /// is optional. The returned parser will not consume
-        /// any character no matter the given parser parses successfully
-        /// or not.
+        /// is optional. The returned parser will succeed on
+        /// any input no matter whether the given parser
+        /// succeeds or not.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="parser"></param>
