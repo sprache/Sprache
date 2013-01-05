@@ -95,9 +95,11 @@
     </Compile>
     <Compile Include="Input.cs" />
     <Compile Include="Option.cs" />
+    <Compile Include="IPositionAware.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ParserOfT.cs" />
+    <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IResultOfT.cs" />
     <Compile Include="Result.cs" />

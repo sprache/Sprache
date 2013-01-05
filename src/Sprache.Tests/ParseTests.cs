@@ -253,5 +253,15 @@ namespace Sprache.Tests
             Assert.IsFalse(r.WasSuccessful);
             Assert.AreEqual(0, r.Remainder.Position);
         }
+
+        [Test]
+        public void PositionedParser()
+        {
+            var pos = (from s in Parse.Str("winter") select new PosAwareStr { Value = s }).Positioned();
+            var r = pos.TryParse("winter");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(0, r.Value.Pos.Pos);
+            Assert.AreEqual(6, r.Value.Length);
+        }
     }
 }
