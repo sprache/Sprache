@@ -5,9 +5,8 @@ namespace Sprache
 {
     public class Input : IEquatable<Input>
     {
-        public string Source { get; set; }
-        readonly string _source;
-        readonly Position _position;
+        private readonly string _source;
+        private readonly Position _position;
 
         internal IDictionary<object, object> Memos = new Dictionary<object, object>();
 
@@ -18,8 +17,6 @@ namespace Sprache
 
         internal Input(string source, int position, int line = 1, int column = 1)
         {
-            Source = source;
-
             _source = source;
             _position = new Position(position, line, column);
         }
@@ -35,6 +32,11 @@ namespace Sprache
                 Current == '\n' ? _position.Line + 1 : _position.Line,
                 Current == '\n' ? 1 : _position.Column + 1);
         }
+
+        /// <summary>
+        /// Gets the whole source.
+        /// </summary>
+        public string Source { get { return _source; } }
 
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
