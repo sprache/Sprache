@@ -103,7 +103,7 @@ namespace Sprache
         /// <summary>
         /// Parse an uppercase letter.
         /// </summary>
-        public static readonly Parser<char> Upper = Char(char.IsUpper, "upper");
+        public static readonly Parser<char> Upper = Char(char.IsUpper, "uppercase letter");
 
         /// <summary>
         /// Parse a numeric character.

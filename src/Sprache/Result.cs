@@ -4,43 +4,61 @@ using System.Linq;
 
 namespace Sprache
 {
+    /// <summary>
+    /// Contains helper functions to create <see cref="IResult&lt;T&gt;"/> instances.
+    /// </summary>
     public static class Result
     {
-        public static Result<T> Success<T>(T value, Input remainder)
+        /// <summary>
+        /// Creates a success result.
+        /// </summary>
+        /// <typeparam name="T">The type of the result (value).</typeparam>
+        /// <param name="value">The sucessfully parsed value.</param>
+        /// <param name="remainder">The remainder of the input.</param>
+        /// <returns>The new <see cref="IResult&lt;T&gt;"/>.</returns>
+        public static IResult<T> Success<T>(T value, Input remainder)
         {
             return new Result<T>(value, remainder);
         }
 
-        public static Result<T> Failure<T>(Input remainder, string message, IEnumerable<string> expectations)
+        /// <summary>
+        /// Creates a failure result.
+        /// </summary>
+        /// <typeparam name="T">The type of the result.</typeparam>
+        /// <param name="remainder">The remainder of the input.</param>
+        /// <param name="message">The error message.</param>
+        /// <param name="expectations">The parser expectations.</param>
+        /// <returns>The new <see cref="IResult&lt;T&gt;"/>.</returns>
+        public static IResult<T> Failure<T>(Input remainder, string message, IEnumerable<string> expectations)
         {
             return new Result<T>(remainder, message, expectations);
         }
     }
 
-    public class Result<T> : IResult<T>
+    internal class Result<T> : IResult<T>
     {
-        private readonly T _Value;
-        private readonly Input _Remainder;
-        private readonly bool _WasSuccessful;
-        private readonly string _Message;
-        private readonly IEnumerable<string> _Expectations;
+        private readonly T _value;
+        private readonly Input _remainder;
+        private readonly bool _wasSuccessful;
+        private readonly string _message;
+        private readonly IEnumerable<string> _expectations;
 
         public Result(T value, Input remainder)
         {
-            _Value = value;
-            _Remainder = remainder;
-            _WasSuccessful = true;
-            _Message = null;
-            _Expectations = Enumerable.Empty<string>();
+            _value = value;
+            _remainder = remainder;
+            _wasSuccessful = true;
+            _message = null;
+            _expectations = Enumerable.Empty<string>();
         }
 
         public Result(Input remainder, string message, IEnumerable<string> expectations)
         {
-            _Value = default(T);
-            _Remainder = remainder;
-            _WasSuccessful = false;
-            _Message = message;
-            _Expectations = expectations;
+            _value = default(T);
+            _remainder = remainder;
+            _wasSuccessful = false;
+            _message = message;
+            _expectations = expectations;
         }
 
         public T Value
@@ -50,19 +68,21 @@ namespace Sprache
                 if (!WasSuccessful)
                     throw new InvalidOperationException("No value can be computed.");
 
-                return _Value;
+                return _value;
             }
         }
-        public bool WasSuccessful { get { return _WasSuccessful; } }
 
-        public string Message { get { return _Message; } }
-        public IEnumerable<string> Expectations { get { return _Expectations; } }
+        public bool WasSuccessful { get { return _wasSuccessful; } }
 
-        public Input Remainder { get { return _Remainder; } }
+        public string Message { get { return _message; } }
+
+        public IEnumerable<string> Expectations { get { return _expectations; } }
+
+        public Input Remainder { get { return _remainder; } }
 
         public override string ToString()
         {
-            if(WasSuccessful)
+            if (WasSuccessful)
                 return string.Format("Successful parsing of {0}.", Value);
 
             var expMsg = "";
@@ -72,6 +92,5 @@ namespace Sprache
 
             return string.Format("Parsing failure: {0};{1} ({2}).", Message, expMsg, Remainder);
         }
-
     }
 }
