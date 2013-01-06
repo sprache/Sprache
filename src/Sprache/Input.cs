@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace Sprache
 {
-    /// <summary>
-    /// Represents an input for parsing.
-    /// </summary>
     public class Input : IEquatable<Input>
     {
         public string Source { get; set; }
@@ -14,10 +11,6 @@ namespace Sprache
 
         internal IDictionary<object, object> Memos = new Dictionary<object, object>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Input" /> class.
-        /// </summary>
-        /// <param name="source">The source.</param>
         public Input(string source)
             : this(source, 0)
         {
@@ -31,11 +24,6 @@ namespace Sprache
             _position = new Position(position, line, column);
         }
 
-        /// <summary>
-        /// Advances the input.
-        /// </summary>
-        /// <returns>A new <see cref="Input" /> that is advanced.</returns>
-        /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
         public Input Advance()
         {
             if (AtEnd)
@@ -47,11 +35,6 @@ namespace Sprache
                 Current == '\n' ? _position.Line + 1 : _position.Line,
                 Current == '\n' ? 1 : _position.Column + 1);
         }
-
-        /// <summary>
-        /// Gets the whole source.
-        /// </summary>
-        public string Source { get { return _source; } }
 
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
@@ -80,12 +63,6 @@ namespace Sprache
 
         internal Position Pos { get { return _position; } }
 
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
         public override string ToString()
         {
             return string.Format("Line {0}, Column {1}", _position.Line, _position.Column);
