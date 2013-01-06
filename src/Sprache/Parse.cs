@@ -70,13 +70,44 @@ namespace Sprache
             return CharExcept(ch => c == ch, c.ToString());
         }
 
+        /// <summary>
+        /// Parse any character.
+        /// </summary>
         public static readonly Parser<char> AnyChar = Char(c => true, "any character");
+
+        /// <summary>
+        /// Parse a whitespace.
+        /// </summary>
         public static readonly Parser<char> WhiteSpace = Char(char.IsWhiteSpace, "whitespace");
+
+        /// <summary>
+        /// Parse a digit.
+        /// </summary>
         public static readonly Parser<char> Digit = Char(char.IsDigit, "digit");
+
+        /// <summary>
+        /// Parse a letter.
+        /// </summary>
         public static readonly Parser<char> Letter = Char(char.IsLetter, "letter");
+
+        /// <summary>
+        /// Parse a letter or digit.
+        /// </summary>
         public static readonly Parser<char> LetterOrDigit = Char(char.IsLetterOrDigit, "letter or digit");
+
+        /// <summary>
+        /// Parse a lowercase letter.
+        /// </summary>
         public static readonly Parser<char> Lower = Char(char.IsLower, "lowercase letter");
+        
+        /// <summary>
+        /// Parse an uppercase letter.
+        /// </summary>
         public static readonly Parser<char> Upper = Char(char.IsUpper, "upper");
+
+        /// <summary>
+        /// Parse a numeric character.
+        /// </summary>
         public static readonly Parser<char> Numeric = Char(char.IsNumber, "numeric character");
 
         /// <summary>
@@ -685,8 +716,14 @@ namespace Sprache
             };
         }
 
+        /// <summary>
+        /// Parse a number.
+        /// </summary>
         public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
 
+        /// <summary>
+        /// Parse a decimal number.
+        /// </summary>
         public static readonly Parser<string> Decimal =
             from integral in Number
             from fraction in Char('.').Then(point => Number.Select(n => "." + n)).XOr(Return(""))
