@@ -57,7 +57,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<char> Char(char c)
         {
-            return Char(ch => c == ch, c.ToString());
+            return Char(ch => c == ch, char.ToString(c));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<char> CharExcept(char c)
         {
-            return CharExcept(ch => c == ch, c.ToString());
+            return CharExcept(ch => c == ch, char.ToString(c));
         }
 
         /// <summary>
