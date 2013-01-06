@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Sprache
 {
+    /// <summary>
+    /// Represents an input for parsing.
+    /// </summary>
     public class Input : IEquatable<Input>
     {
         private readonly string _source;
@@ -10,6 +13,10 @@ namespace Sprache
 
         internal IDictionary<object, object> Memos = new Dictionary<object, object>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Input" /> class.
+        /// </summary>
+        /// <param name="source">The source.</param>
         public Input(string source)
             : this(source, 0)
         {
@@ -21,6 +28,11 @@ namespace Sprache
             _position = new Position(position, line, column);
         }
 
+        /// <summary>
+        /// Advances the input.
+        /// </summary>
+        /// <returns>A new <see cref="Input" /> that is advanced.</returns>
+        /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
         public Input Advance()
         {
             if (AtEnd)
@@ -65,6 +77,12 @@ namespace Sprache
 
         internal Position Pos { get { return _position; } }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
         public override string ToString()
         {
             return string.Format("Line {0}, Column {1}", _position.Line, _position.Column);
@@ -93,10 +111,7 @@ namespace Sprache
         /// <param name="obj">The object to compare with the current object. </param>
         public override bool Equals(object obj)
         {
-	        if (ReferenceEquals(null, obj)) return false;
-	        if (ReferenceEquals(this, obj)) return true;
-	        if (obj.GetType() != this.GetType()) return false;
-	        return Equals((Input) obj);
+            return Equals(obj as Input);
         }
 
         /// <summary>
