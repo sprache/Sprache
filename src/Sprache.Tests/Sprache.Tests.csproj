@@ -103,6 +103,7 @@
     <Compile Include="AssertParser.cs" />
     <Compile Include="InputTests.cs" />
     <Compile Include="ParseTests.cs" />
+    <Compile Include="PosAwareStr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultTests.cs" />
     <Compile Include="Scenarios\AmqpErrorTests.cs" />

@@ -82,7 +82,7 @@ namespace Sprache
 
         public override string ToString()
         {
-            if(WasSuccessful)
+            if (WasSuccessful)
                 return string.Format("Successful parsing of {0}.", Value);
 
             var expMsg = "";

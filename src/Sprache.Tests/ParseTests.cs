@@ -213,5 +213,55 @@ namespace Sprache.Tests
             Assert.AreEqual("abc", s.Value);
             Assert.AreEqual(5, s.Remainder.Position);
         }
+
+        [Test]
+        public void OptionalOperatorConsumesInputOnSuccessfulMatch()
+        {
+            var optAbc = Parse.String("abc").Text().Optional();
+            var r = optAbc.TryParse("abcd");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(3, r.Remainder.Position);
+            Assert.IsTrue(r.Value.IsDefined);
+            Assert.AreEqual("abc", r.Value.Get());
+        }
+
+        [Test]
+        public void OptionalOperatorDoesNotConsumeInputOnFailedMatch()
+        {
+            var optAbc = Parse.String("abc").Text().Optional();
+            var r = optAbc.TryParse("d");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+            Assert.IsTrue(r.Value.IsEmpty);
+        }
+
+        [Test]
+        public void RegexParserConsumesInputOnSuccessfulMatch()
+        {
+            var digits = Parse.Regex(@"\d+");
+            var r = digits.TryParse("123d");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual("123", r.Value);
+            Assert.AreEqual(3, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RegexParserDoesNotConsumeInputOnFailedMatch()
+        {
+            var digits = Parse.Regex(@"\d+");
+            var r = digits.TryParse("d123");
+            Assert.IsFalse(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+        }
+
+        [Test]
+        public void PositionedParser()
+        {
+            var pos = (from s in Parse.Str("winter") select new PosAwareStr { Value = s }).Positioned();
+            var r = pos.TryParse("winter");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(0, r.Value.Pos.Pos);
+            Assert.AreEqual(6, r.Value.Length);
+        }
     }
 }
