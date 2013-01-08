@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Sprache
 {
@@ -115,18 +114,6 @@ namespace Sprache
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static Parser<string> Str(string s)
-        {
-            if (s == null) throw new ArgumentNullException("s");
-
-            return String(s).Text();
-        }
-
-        /// <summary>
-        /// Parse a string of characters.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static Parser<IEnumerable<char>> String(string s)
         {
             if (s == null) throw new ArgumentNullException("s");
@@ -137,65 +124,7 @@ namespace Sprache
                     (a, p) => a.Concat(p.Once()))
                 .Named(s);
         }
-
-        /// <summary>
-        /// Construct a parser from the given regular expression.
-        /// </summary>
-        /// <param name="p">The regex expression.</param>
-        /// <param name="description">Description of characters that don't match.</param>
-        /// <returns>a parse of string</returns>
-        public static Parser<string> Regex(string p, string description = null)
-        {
-            if (p == null) throw new ArgumentNullException("p");
-
-            return Regex(new Regex(p, RegexOptions.Compiled), description);
-        }
-
-        /// <summary>
-        /// Construct a parser from the given regular expression.
-        /// </summary>
-        /// <param name="pat">The regex expression.</param>
-        /// <param name="description">Description of characters that don't match.</param>
-        /// <returns>a parse of string</returns>
-        public static Parser<string> Regex(Regex pat, string description = null)
-        {
-            if (pat == null) throw new ArgumentNullException("pat");
-
-            var expectations = description == null
-                ? new string[0]
-                : new string[] { description };
-
-            return i =>
-            {
-                if (!i.AtEnd)
-                {
-                    var remainder = i;
-                    var input = i.Source.Substring(i.Position);
-                    var match = pat.Match(input);
-
-                    if (match.Success && match.Index == 0)
-                    {
-                        for (int j = 0; j < match.Length; j++)
-                            remainder = remainder.Advance();
-
-                        return Result.Success(match.Value, remainder);
-                    }
-                    else
-                    {
-                        var found = match.Index == input.Length
-                            ? "end of source"
-                            : string.Format("`{0}'", input[match.Index]);
-                        return Result.Failure<string>(
-                            remainder,
-                            "string matching regex `" + pat.ToString() + "' expected but " + found + " found",
-                            expectations);
-                    }
-                }
-
-                return Result.Failure<string>(i, "Unexpected end of input", expectations);
-            };
-        }
-        
+ 
         /// <summary>
         /// Parse first, and if successful, then parse second.
         /// </summary>
