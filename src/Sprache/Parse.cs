@@ -8,7 +8,7 @@ namespace Sprache
     /// <summary>
     /// Parsers and combinators.
     /// </summary>
-    public static class Parse
+    public static partial class Parse
     {
         /// <summary>
         /// TryParse a single character matching 'predicate'
@@ -693,27 +693,6 @@ namespace Sprache
                         ChainRightOperatorRest(operandValue, op, operand, apply)).Then(r =>
                             Return(apply(opvalue, lastOperand, r))))
                 .Or(Return(lastOperand));
-        }
-
-        /// <summary>
-        /// Construct a parser that will set the position to the position-aware
-        /// T on succsessful match.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<T> Positioned<T>(this Parser<T> parser) where T : IPositionAware<T>
-        {
-            return i =>
-            {
-                var r = parser(i);
-
-                if (r.WasSuccessful)
-                {
-                    return Result.Success(r.Value.SetPos(i.Pos, r.Remainder.Position - i.Position), r.Remainder);
-                }
-                return r;
-            };
         }
 
         /// <summary>
