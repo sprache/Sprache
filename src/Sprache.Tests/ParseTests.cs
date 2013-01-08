@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace Sprache.Tests
@@ -139,7 +137,7 @@ namespace Sprache.Tests
         [Test, Ignore("Not Implemented")]
         public void CanParseLeftRecursiveGrammar()
         {
-            AssertParser.SucceedsWith(ASeq.End(), "a,a,a", r => new string(r.ToArray()).Equals("aaa"));
+            AssertParser.SucceedsWith(ASeq.End(), "a,a,a", r => Assert.AreEqual(new string(r.ToArray()), "aaa"));
         }
 
         [Test]
@@ -257,11 +255,17 @@ namespace Sprache.Tests
         [Test]
         public void PositionedParser()
         {
-            var pos = (from s in Parse.Str("winter") select new PosAwareStr { Value = s }).Positioned();
+            var pos = (from s in Parse.String("winter").Text() select new PosAwareStr { Value = s }).Positioned();
             var r = pos.TryParse("winter");
             Assert.IsTrue(r.WasSuccessful);
             Assert.AreEqual(0, r.Value.Pos.Pos);
             Assert.AreEqual(6, r.Value.Length);
+        }
+
+        [Test, Ignore("Not Implemented")]
+        public void XAtLeastOnceParser()
+        {
+            //TODO: implement test
         }
     }
 }

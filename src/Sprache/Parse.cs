@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Sprache
 {
     /// <summary>
     /// Parsers and combinators.
     /// </summary>
-    public static class Parse
+    public static partial class Parse
     {
         /// <summary>
         /// TryParse a single character matching 'predicate'
@@ -115,18 +115,6 @@ namespace Sprache
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static Parser<string> Str(string s)
-        {
-            if (s == null) throw new ArgumentNullException("s");
-
-            return String(s).Text();
-        }
-
-        /// <summary>
-        /// Parse a string of characters.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static Parser<IEnumerable<char>> String(string s)
         {
             if (s == null) throw new ArgumentNullException("s");
@@ -137,65 +125,7 @@ namespace Sprache
                     (a, p) => a.Concat(p.Once()))
                 .Named(s);
         }
-
-        /// <summary>
-        /// Construct a parser from the given regular expression.
-        /// </summary>
-        /// <param name="p">The regex expression.</param>
-        /// <param name="description">Description of characters that don't match.</param>
-        /// <returns>a parse of string</returns>
-        public static Parser<string> Regex(string p, string description = null)
-        {
-            if (p == null) throw new ArgumentNullException("p");
-
-            return Regex(new Regex(p, RegexOptions.Compiled), description);
-        }
-
-        /// <summary>
-        /// Construct a parser from the given regular expression.
-        /// </summary>
-        /// <param name="pat">The regex expression.</param>
-        /// <param name="description">Description of characters that don't match.</param>
-        /// <returns>a parse of string</returns>
-        public static Parser<string> Regex(Regex pat, string description = null)
-        {
-            if (pat == null) throw new ArgumentNullException("pat");
-
-            var expectations = description == null
-                ? new string[0]
-                : new string[] { description };
-
-            return i =>
-            {
-                if (!i.AtEnd)
-                {
-                    var remainder = i;
-                    var input = i.Source.Substring(i.Position);
-                    var match = pat.Match(input);
-
-                    if (match.Success && match.Index == 0)
-                    {
-                        for (int j = 0; j < match.Length; j++)
-                            remainder = remainder.Advance();
-
-                        return Result.Success(match.Value, remainder);
-                    }
-                    else
-                    {
-                        var found = match.Index == input.Length
-                            ? "end of source"
-                            : string.Format("`{0}'", input[match.Index]);
-                        return Result.Failure<string>(
-                            remainder,
-                            "string matching regex `" + pat.ToString() + "' expected but " + found + " found",
-                            expectations);
-                    }
-                }
-
-                return Result.Failure<string>(i, "Unexpected end of input", expectations);
-            };
-        }
-        
+ 
         /// <summary>
         /// Parse first, and if successful, then parse second.
         /// </summary>
@@ -282,46 +212,6 @@ namespace Sprache
             if (parser == null) throw new ArgumentNullException("parser");
 
             return parser.Once().Then(t1 => parser.XMany().Select(ts => t1.Concat(ts)));
-        }
-
-        /// <summary>
-        /// Construct a parser that indicates the given parser
-        /// is optional. The returned parser will succeed on
-        /// any input no matter whether the given parser
-        /// succeeds or not.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<Option<T>> Opt<T>(this Parser<T> parser)
-        {
-            return Optional(parser);
-        }
-
-        /// <summary>
-        /// Construct a parser that indicates the given parser
-        /// is optional. The returned parser will succeed on
-        /// any input no matter whether the given parser
-        /// succeeds or not.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<Option<T>> Optional<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return i =>
-            {
-                var remainder = i;
-
-                var pr = parser(i);
-
-                if (pr.WasSuccessful)
-                    return Result.Success(new Some<T>(pr.Value), pr.Remainder);
-                else
-                    return Result.Success(new None<T>(), pr.Remainder);
-            };
         }
 
         /// <summary>
@@ -696,37 +586,22 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Construct a parser that will set the position to the position-aware
-        /// T on succsessful match.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<T> Positioned<T>(this Parser<T> parser) where T : IPositionAware<T>
-        {
-            return i =>
-            {
-                var r = parser(i);
-
-                if (r.WasSuccessful)
-                {
-                    return Result.Success(r.Value.SetPos(i.Pos, r.Remainder.Position - i.Position), r.Remainder);
-                }
-                return r;
-            };
-        }
-
-        /// <summary>
         /// Parse a number.
         /// </summary>
         public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
 
+        static readonly Parser<string> DecimalWithoutLeadingDigits =
+            from nothing in Return("") // dummy so that CultureInfo.CurrentCulture is evaluated later
+            from dot in String(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Text()
+            from fraction in Number
+            select dot + fraction;
+
+        static readonly Parser<string> DecimalWithLeadingDigits =
+            Number.Then(n => DecimalWithoutLeadingDigits.XOr(Return("")).Select(f => n + f));
+
         /// <summary>
         /// Parse a decimal number.
         /// </summary>
-        public static readonly Parser<string> Decimal =
-            from integral in Number
-            from fraction in Char('.').Then(point => Number.Select(n => "." + n)).XOr(Return(""))
-            select integral + fraction;
+ 	    public static readonly Parser<string> Decimal = DecimalWithLeadingDigits.XOr(DecimalWithoutLeadingDigits);
     }
 }
