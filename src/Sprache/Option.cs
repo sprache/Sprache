@@ -2,45 +2,87 @@
 
 namespace Sprache
 {
-    // This interface can't be made covariance. See GetOrElse().
-    public interface Option<T>
+    /// <summary>
+    /// Represents an optional result.
+    /// </summary>
+    /// <typeparam name="T">The result type.</typeparam>
+    public interface IOption<out T>
     {
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
         bool IsEmpty { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is defined.
+        /// </summary>
         bool IsDefined { get; }
 
-        // To support covariance, the signature needs to be
-        // U GetOrElse<U>(U defaultValue) where T : U
-        // And C# doesn't support the super type constraint.
-        T GetOrElse(T defaultValue);
+        /// <summary>
+        /// Gets the matched result or a default value.
+        /// </summary>
+        /// <returns></returns>
+        T GetOrDefault();
 
+        /// <summary>
+        /// Gets the matched result.
+        /// </summary>
         T Get();
     }
 
-    public abstract class AbstractOption<T> : Option<T>
+    /// <summary>
+    /// Represents an optional result.
+    /// </summary>
+    /// <typeparam name="T">The result type.</typeparam>
+    public abstract class AbstractOption<T> : IOption<T>
     {
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
         public abstract bool IsEmpty { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is defined.
+        /// </summary>
         public bool IsDefined
         {
             get { return !IsEmpty; }
         }
 
-        public T GetOrElse(T defaultValue)
+        /// <summary>
+        /// Gets the matched result or a default value.
+        /// </summary>
+        /// <returns></returns>
+        public T GetOrDefault()
         {
-            if (IsEmpty) return defaultValue;
-            else return Get();
+            return GetOrElse(default(T));
         }
 
+        /// <summary>
+        /// Gets the or else.
+        /// </summary>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public T GetOrElse(T defaultValue)
+        {
+            if (IsEmpty)
+                return defaultValue;
+            return Get();
+        }
+
+        /// <summary>
+        /// Gets the matched result.
+        /// </summary>
         public abstract T Get();
     }
 
-    public sealed class Some<T> : AbstractOption<T>
+    internal sealed class Some<T> : AbstractOption<T>
     {
-        private T value;
+        private readonly T _value;
 
         public Some(T value)
         {
-            this.value = value;
+            _value = value;
         }
 
         public override bool IsEmpty
@@ -50,14 +92,12 @@ namespace Sprache
 
         public override T Get()
         {
-            return value;
+            return _value;
         }
     }
 
-    public sealed class None<T> : AbstractOption<T>
+    internal sealed class None<T> : AbstractOption<T>
     {
-        public None() { }
-
         public override bool IsEmpty
         {
             get { return true; }
@@ -65,9 +105,7 @@ namespace Sprache
 
         public override T Get()
         {
-            throw new GettingValueFromNoneException();
+            throw new InvalidOperationException("Cannot get value from None.");
         }
     }
-
-    public class GettingValueFromNoneException : Exception { }
 }
