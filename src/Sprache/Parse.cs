@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Sprache
@@ -589,12 +590,18 @@ namespace Sprache
         /// </summary>
         public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
 
+        static readonly Parser<string> DecimalWithoutLeadingDigits =
+            from nothing in Return("") // dummy so that CultureInfo.CurrentCulture is evaluated later
+            from dot in String(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Text()
+            from fraction in Number
+            select dot + fraction;
+
+        static readonly Parser<string> DecimalWithLeadingDigits =
+            Number.Then(n => DecimalWithoutLeadingDigits.XOr(Return("")).Select(f => n + f));
+
         /// <summary>
         /// Parse a decimal number.
         /// </summary>
-        public static readonly Parser<string> Decimal =
-            from integral in Number
-            from fraction in Char('.').Then(point => Number.Select(n => "." + n)).XOr(Return(""))
-            select integral + fraction;
+ 	    public static readonly Parser<string> Decimal = DecimalWithLeadingDigits.XOr(DecimalWithoutLeadingDigits);
     }
 }
