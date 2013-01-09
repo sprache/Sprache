@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="AssertInput.cs" />
     <Compile Include="AssertParser.cs" />
+    <Compile Include="DecimalTests.cs" />
     <Compile Include="InputTests.cs" />
     <Compile Include="ParseTests.cs" />
     <Compile Include="PosAwareStr.cs" />
