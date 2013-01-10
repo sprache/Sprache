@@ -31,48 +31,38 @@ namespace Sprache
     }
 
     /// <summary>
-    /// Represents an optional result.
+    /// Extensions for <see cref="IOption&lt;T&gt;"/>.
     /// </summary>
-    /// <typeparam name="T">The result type.</typeparam>
-    public abstract class AbstractOption<T> : IOption<T>
+    public static class OptionExtensions
     {
         /// <summary>
-        /// Gets a value indicating whether this instance is empty.
+        /// Gets the value or else returns a default value.
         /// </summary>
+        /// <typeparam name="T">The result type.</typeparam>
+        /// <param name="option"></param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static T GetOrElse<T>(this IOption<T> option, T defaultValue)
+        {
+            if (option == null) throw new ArgumentNullException("option");
+            return option.IsEmpty ? defaultValue : option.Get();
+        }
+    }
+
+    internal abstract class AbstractOption<T> : IOption<T>
+    {
         public abstract bool IsEmpty { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is defined.
-        /// </summary>
         public bool IsDefined
         {
             get { return !IsEmpty; }
         }
 
-        /// <summary>
-        /// Gets the matched result or a default value.
-        /// </summary>
-        /// <returns></returns>
         public T GetOrDefault()
         {
-            return GetOrElse(default(T));
+            return IsEmpty ? default(T) : Get();
         }
 
-        /// <summary>
-        /// Gets the or else.
-        /// </summary>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns></returns>
-        public T GetOrElse(T defaultValue)
-        {
-            if (IsEmpty)
-                return defaultValue;
-            return Get();
-        }
-
-        /// <summary>
-        /// Gets the matched result.
-        /// </summary>
         public abstract T Get();
     }
 
