@@ -213,7 +213,7 @@ namespace Sprache.Tests
         }
 
         [Test]
-        public void OptionalOperatorConsumesInputOnSuccessfulMatch()
+        public void OptionalParserConsumesInputOnSuccessfulMatch()
         {
             var optAbc = Parse.String("abc").Text().Optional();
             var r = optAbc.TryParse("abcd");
@@ -224,7 +224,7 @@ namespace Sprache.Tests
         }
 
         [Test]
-        public void OptionalOperatorDoesNotConsumeInputOnFailedMatch()
+        public void OptionalParserDoesNotConsumeInputOnFailedMatch()
         {
             var optAbc = Parse.String("abc").Text().Optional();
             var r = optAbc.TryParse("d");

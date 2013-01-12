@@ -24,7 +24,7 @@ namespace Sprache
                 if (pr.WasSuccessful)
                     return Result.Success(new Some<T>(pr.Value), pr.Remainder);
 
-                return Result.Success(new None<T>(), pr.Remainder);
+                return Result.Success(new None<T>(), i);
             };
         }
     }
