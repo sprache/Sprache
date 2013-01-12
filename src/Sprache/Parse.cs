@@ -71,6 +71,32 @@ namespace Sprache
         }
 
         /// <summary>
+        /// Parse a single character in a case-insensitive fashion.
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static Parser<char> IgnoreCase(char c)
+        {
+            return Char(ch => char.ToLower(c) == char.ToLower(ch), char.ToString(c));
+        }
+
+        /// <summary>
+        /// Parse a string in a case-insensitive fashion.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static Parser<IEnumerable<char>> IgnoreCase(string s)
+        {
+            if (s == null) throw new ArgumentNullException("s");
+
+            return s
+                .Select(IgnoreCase)
+                .Aggregate(Return(Enumerable.Empty<char>()),
+                    (a, p) => a.Concat(p.Once()))
+                .Named(s);
+        }
+
+        /// <summary>
         /// Parse any character.
         /// </summary>
         public static readonly Parser<char> AnyChar = Char(c => true, "any character");

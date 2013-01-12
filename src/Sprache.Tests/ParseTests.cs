@@ -295,5 +295,12 @@ namespace Sprache.Tests
             Assert.IsTrue(r.WasSuccessful);
             Assert.AreEqual(0, r.Remainder.Position);
         }
+
+        [Test]
+        public void IgnoreCaseParser()
+        {
+            var ab = Parse.IgnoreCase("ab").Text();
+            AssertParser.SucceedsWith(ab, "Ab", m => Assert.AreEqual("Ab", m));
+        }
     }
 }
