@@ -213,7 +213,7 @@ namespace Sprache.Tests
         }
 
         [Test]
-        public void OptionalOperatorConsumesInputOnSuccessfulMatch()
+        public void OptionalParserConsumesInputOnSuccessfulMatch()
         {
             var optAbc = Parse.String("abc").Text().Optional();
             var r = optAbc.TryParse("abcd");
@@ -224,7 +224,7 @@ namespace Sprache.Tests
         }
 
         [Test]
-        public void OptionalOperatorDoesNotConsumeInputOnFailedMatch()
+        public void OptionalParserDoesNotConsumeInputOnFailedMatch()
         {
             var optAbc = Parse.String("abc").Text().Optional();
             var r = optAbc.TryParse("d");
@@ -255,17 +255,52 @@ namespace Sprache.Tests
         [Test]
         public void PositionedParser()
         {
-            var pos = (from s in Parse.String("winter").Text() select new PosAwareStr { Value = s }).Positioned();
+            var pos = (from s in Parse.String("winter").Text()
+                       select new PosAwareStr { Value = s })
+                       .Positioned();
             var r = pos.TryParse("winter");
             Assert.IsTrue(r.WasSuccessful);
             Assert.AreEqual(0, r.Value.Pos.Pos);
             Assert.AreEqual(6, r.Value.Length);
         }
 
-        [Test, Ignore("Not Implemented")]
-        public void XAtLeastOnceParser()
+        [Test]
+        public void XAtLeastOnceParser_WhenLastElementFails_FailureReportedAtLastElement()
         {
-            //TODO: implement test
+            var ab = Parse.String("ab").Text();
+            var p = ab.XAtLeastOnce().End();
+            AssertParser.FailsAt(p, "ababaf", 5);
+        }
+
+        [Test]
+        public void XAtLeastOnceParser_WhenFirstElementFails_FailureReportedAtFirstElement()
+        {
+            var ab = Parse.String("ab").Text();
+            var p = ab.XAtLeastOnce().End();
+            AssertParser.FailsAt(p, "d", 0);
+        }
+
+        [Test]
+        public void NotParserConsumesNoInputOnFailure()
+        {
+            var notAb = Parse.String("ab").Text().Not();
+            AssertParser.FailsAt(notAb, "abc", 0);
+        }
+
+        [Test]
+        public void NotParserConsumesNoInputOnSuccess()
+        {
+            var notAb = Parse.String("ab").Text().Not();
+            var r = notAb.TryParse("d");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+        }
+
+        [Test]
+        public void IgnoreCaseParser()
+        {
+            var ab = Parse.IgnoreCase("ab").Text();
+            AssertParser.SucceedsWith(ab, "Ab", m => Assert.AreEqual("Ab", m));
         }
     }
 }
