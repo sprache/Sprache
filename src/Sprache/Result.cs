@@ -90,7 +90,22 @@ namespace Sprache
             if (Expectations.Any())
                 expMsg = " expected " + Expectations.Aggregate((e1, e2) => e1 + " or " + e2);
 
-            return string.Format("Parsing failure: {0};{1} ({2}).", Message, expMsg, Remainder);
+            var recentlyConsumed = CalculateRecentlyConsumed();
+
+            return string.Format("Parsing failure: {0};{1} ({2}). recently consumed: {3}", Message, expMsg, Remainder, recentlyConsumed);
+        }
+
+        private string CalculateRecentlyConsumed()
+        {
+            const int windowSize = 10;
+
+            var totalConsumedChars = this.Remainder.Position;
+            var windowStart = totalConsumedChars - windowSize;
+            windowStart = windowStart < 0 ? 0 : windowStart;
+
+            var numberOfRecentlyConsumedChars = totalConsumedChars - windowStart;
+
+            return this.Remainder.Source.Substring(windowStart, numberOfRecentlyConsumedChars);
         }
     }
 }
