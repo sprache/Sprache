@@ -41,6 +41,15 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void Parser_OfChars_UsingString_AcceptsAnyOfThoseChars()
+        {
+            var parser = Parse.Chars("abc").Once();
+            AssertParser.SucceedsWithOne(parser, "a", 'a');
+            AssertParser.SucceedsWithOne(parser, "b", 'b');
+            AssertParser.SucceedsWithOne(parser, "c", 'c');
+        }
+
+        [Test]
         public void Parser_OfManyChars_AcceptsEmptyInput()
         {
             AssertParser.SucceedsWithAll(Parse.Char('a').Many(), "");
@@ -75,7 +84,7 @@ namespace Sprache.Tests
         {
             var p = Parse.Char('a').Once().Then(a =>
                 Parse.Char('b').Once().Select(b => a.Concat(b)));
-            AssertParser.SucceedsWithAll(p, "ab"); 
+            AssertParser.SucceedsWithAll(p, "ab");
         }
 
         [Test]
