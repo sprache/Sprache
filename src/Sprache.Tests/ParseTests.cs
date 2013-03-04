@@ -320,5 +320,50 @@ namespace Sprache.Tests
             var ab = Parse.IgnoreCase("ab").Text();
             AssertParser.SucceedsWith(ab, "Ab", m => Assert.AreEqual("Ab", m));
         }
+
+        [Test]
+        public void RepeatParserConsumeInputOnSuccessfulMatch()
+        {
+            var repeated = Parse.Char('a').Repeat(3);
+            var r = repeated.TryParse("aaabbb");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(3, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RepeatParserDoesntConsumeInputOnFailedMatch()
+        {
+            var repeated = Parse.Char('a').Repeat(3);
+            var r = repeated.TryParse("bbbaaa");
+            Assert.IsTrue(!r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RepeatParserCanParseWithCountOfZero()
+        {
+            var repeated = Parse.Char('a').Repeat(0);
+            var r = repeated.TryParse("bbb");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+        }
+
+        [Test]
+        public void CanParseSequence()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','));
+            var r = sequence.TryParse("a,a,a");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.IsTrue(r.Remainder.AtEnd);
+        }
+
+        [Test]
+        public void CanParseContained()
+        {
+            var parser = Parse.Char('a').Contained(Parse.Char('['), Parse.Char(']'));
+            var r = parser.TryParse("[a]");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.IsTrue(r.Remainder.AtEnd);
+        }
     }
 }
