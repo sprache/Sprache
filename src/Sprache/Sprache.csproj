@@ -99,6 +99,7 @@
     <Compile Include="Option.cs" />
     <Compile Include="IPositionAware.cs" />
     <Compile Include="Parse.cs" />
+    <Compile Include="Parse.Sequence.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ParserOfT.cs" />
     <Compile Include="Position.cs" />
