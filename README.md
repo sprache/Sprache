@@ -2,7 +2,7 @@ This repository is a fork of Nicholas Blumhardt's Sprache Google Code repository
 
 Sprache is a simple, lightweight library for constructing parsers directly in C# code.
 
-It doesn't compete with "industrial strength" language workbenches - it fits somewhere in between regular expressions and a full-featured toolset like [ANTLR](antlr.org).
+It doesn't compete with "industrial strength" language workbenches - it fits somewhere in between regular expressions and a full-featured toolset like [ANTLR](http://antlr.org).
 
 Usage
 -----
