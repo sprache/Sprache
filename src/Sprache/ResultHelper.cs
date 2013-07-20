@@ -11,7 +11,7 @@ namespace Sprache
             if (result.WasSuccessful)
                 return next(result);
 
-            return Result.Failure<U>(result.Remainder, result.Message, result.Expectations);
+            return Result.Failure<U>(result.Remainder, result.Observations);
         }
 
         public static IResult<T> IfFailure<T>(this IResult<T> result, Func<IResult<T>, IResult<T>> next)

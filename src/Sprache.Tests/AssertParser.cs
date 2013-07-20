@@ -31,7 +31,7 @@ namespace Sprache.Tests
             parser.TryParse(input)
                 .IfFailure(f =>
                 {
-                    Assert.Fail("Parsing of \"{0}\" failed unexpectedly at position {1}: {2}", input, f.Remainder.Position, f.Message);
+                    Assert.Fail("Parsing of \"{0}\" failed unexpectedly at position {1}: {2}", input, f.Remainder.Position, String.Join(Environment.NewLine, f.Observations.Select(x => x.Message)));
                     return f;
                 })
                 .IfSuccess(s =>

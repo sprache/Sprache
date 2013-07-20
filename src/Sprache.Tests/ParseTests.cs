@@ -189,6 +189,16 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void LookAhead_MatchesButDoesNotConsume()
+        {
+            var parser = from la in Parse.String("ab").LookAhead()
+                         from text in Parse.String("ab")
+                         select new { la, text };
+
+            AssertParser.SucceedsWith(parser, "ab", x => { Assert.AreEqual("ab", x.la); Assert.AreEqual("ab", x.text); });
+        }
+
+        [Test]
         public void WithMany_WhenLastElementFails_FailureReportedAtLastElement()
         {
             var ab = from a in Parse.Char('a')
@@ -198,6 +208,29 @@ namespace Sprache.Tests
             var p = ab.Many().End();
 
             AssertParser.FailsAt(p, "ababaf", 4);
+        }
+
+        [Test]
+        public void ManyWithPanic_SkipsOverBadElement()
+        {
+            var ab = from a in Parse.Char('a')
+                     from b in Parse.Char('b')
+                     select "ab";
+
+            var p = ab.ManyWithPanic(Parse.Char('a').LookAhead(), "'ab'").End();
+
+            var result = p(new Input("ababaThisShouldGetSkippedab"));
+            Assert.IsTrue(result.WasSuccessful);
+
+            var elements = result.Value.ToArray();
+            Assert.IsTrue(elements.SequenceEqual(new[]{"ab", "ab", "ab"}));
+
+            var observations = result.Observations.ToArray();
+            Assert.AreEqual(1, observations.Length);
+
+            Assert.AreEqual(ResultObservationSeverity.Error, observations[0].Severity);
+
+            Assert.IsTrue(result.Remainder.AtEnd);
         }
 
         [Test]
