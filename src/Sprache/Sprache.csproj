@@ -96,6 +96,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Input.cs" />
+    <Compile Include="Observe.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="IPositionAware.cs" />
     <Compile Include="Parse.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="IResultOfT.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="ResultHelper.cs" />
+    <Compile Include="ResultObservation.cs" />
+    <Compile Include="ResultObservationSeverity.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

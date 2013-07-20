@@ -53,11 +53,11 @@ namespace Sprache
                                     : string.Format("`{0}'", input[match.Index]);
                     return Result.Failure<string>(
                         remainder,
-                        "string matching regex `" + regex.ToString() + "' expected but " + found + " found",
-                        expectations);
+                        Observe.Error("string matching regex `" + regex.ToString() + "' expected but " + found + " found", expectations));
                 }
 
-                return Result.Failure<string>(i, "Unexpected end of input", expectations);
+                return Result.Failure<string>(i,
+                    Observe.Error("Unexpected end of input", expectations));
             };
         }
     }

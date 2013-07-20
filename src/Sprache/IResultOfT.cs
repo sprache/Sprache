@@ -14,20 +14,15 @@ namespace Sprache
         T Value { get; }
 
         /// <summary>
-        /// Gets a value indicating whether wether parsing was successful.
+        /// Gets a value indicating whether parsing was successful.
         /// </summary>
         bool WasSuccessful { get; }
 
         /// <summary>
-        /// Gets the error message.
+        /// Gets any observations as a result of parsing.
         /// </summary>
-        string Message { get; }
-
-        /// <summary>
-        /// Gets the parser expectations in case of error.
-        /// </summary>
-        IEnumerable<string> Expectations { get; }
-
+        IEnumerable<ResultObservation> Observations { get; }
+            
         /// <summary>
         /// Gets the remainder of the input.
         /// </summary>
