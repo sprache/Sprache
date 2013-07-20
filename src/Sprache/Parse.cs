@@ -415,10 +415,7 @@ namespace Sprache
                 var fr = first(i);
                 if (!fr.WasSuccessful)
                 {
-                    return second(i).IfFailure(sf => Result.Failure<T>(
-                        fr.Remainder,
-                        fr.Message,
-                        fr.Expectations.Union(sf.Expectations)));
+                    return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
                 
                 if (fr.Remainder == i)
@@ -462,20 +459,35 @@ namespace Sprache
                 var fr = first(i);
                 if (!fr.WasSuccessful)
                 {
+                    // The 'X' part
                     if (fr.Remainder != i)
-                        return fr;
-
-                    return second(i).IfFailure(sf => Result.Failure<T>(
-                        fr.Remainder,
-                        fr.Message,
-                        fr.Expectations.Union(sf.Expectations)));
+                        return fr; 
+                    
+                    return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
+                // This handles a zero-length successful application of first.
                 if (fr.Remainder == i)
                     return second(i).IfFailure(sf => fr);
 
                 return fr;
             };
+        }
+
+        // Examines two results presumably obtained at an "Or" junction; returns the result with
+        // the most information, or if they apply at the same input position, a union of the results.
+        static IResult<T> DetermineBestError<T>(IResult<T> firstFailure, IResult<T> secondFailure)
+        {
+            if (secondFailure.Remainder.Position > firstFailure.Remainder.Position)
+                return secondFailure;
+
+            if (secondFailure.Remainder.Position == firstFailure.Remainder.Position)
+                return Result.Failure<T>(
+                    firstFailure.Remainder,
+                    firstFailure.Message,
+                    firstFailure.Expectations.Union(secondFailure.Expectations));
+
+            return firstFailure;
         }
 
         /// <summary>
@@ -625,11 +637,19 @@ namespace Sprache
             if (op == null) throw new ArgumentNullException("op");
             if (operand == null) throw new ArgumentNullException("operand");
             if (apply == null) throw new ArgumentNullException("apply");
-            return operand.Then(first => ChainOperatorRest(first, op, operand, apply));
+            return operand.Then(first => ChainOperatorRest(first, op, operand, apply, Or));
         }
 
-        static Parser<T> ChainOperatorRest<T, TOp>(
-            T firstOperand,
+        /// <summary>
+        /// Chain a left-associative operator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TOp"></typeparam>
+        /// <param name="op"></param>
+        /// <param name="operand"></param>
+        /// <param name="apply"></param>
+        /// <returns></returns>
+        public static Parser<T> XChainOperator<T, TOp>(
             Parser<TOp> op,
             Parser<T> operand,
             Func<TOp, T, T, T> apply)
@@ -637,10 +657,23 @@ namespace Sprache
             if (op == null) throw new ArgumentNullException("op");
             if (operand == null) throw new ArgumentNullException("operand");
             if (apply == null) throw new ArgumentNullException("apply");
-            return op.Then(opvalue =>
-                    operand.Then(operandValue =>
-                        ChainOperatorRest(apply(opvalue, firstOperand, operandValue), op, operand, apply)))
-                .Or(Return(firstOperand));
+            return operand.Then(first => ChainOperatorRest(first, op, operand, apply, XOr));
+        }
+
+        static Parser<T> ChainOperatorRest<T, TOp>(
+            T firstOperand,
+            Parser<TOp> op,
+            Parser<T> operand,
+            Func<TOp, T, T, T> apply,
+            Func<Parser<T>, Parser<T>, Parser<T>> or)
+        {
+            if (op == null) throw new ArgumentNullException("op");
+            if (operand == null) throw new ArgumentNullException("operand");
+            if (apply == null) throw new ArgumentNullException("apply");
+            return or(op.Then(opvalue =>
+                          operand.Then(operandValue =>
+                              ChainOperatorRest(apply(opvalue, firstOperand, operandValue), op, operand, apply, or))),
+                      Return(firstOperand));
         }
 
         /// <summary>
@@ -660,11 +693,19 @@ namespace Sprache
             if (op == null) throw new ArgumentNullException("op");
             if (operand == null) throw new ArgumentNullException("operand");
             if (apply == null) throw new ArgumentNullException("apply");
-            return operand.Then(first => ChainRightOperatorRest(first, op, operand, apply));
+            return operand.Then(first => ChainRightOperatorRest(first, op, operand, apply, Or));
         }
 
-        static Parser<T> ChainRightOperatorRest<T, TOp>(
-            T lastOperand,
+        /// <summary>
+        /// Chain a right-associative operator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TOp"></typeparam>
+        /// <param name="op"></param>
+        /// <param name="operand"></param>
+        /// <param name="apply"></param>
+        /// <returns></returns>
+        public static Parser<T> XChainRightOperator<T, TOp>(
             Parser<TOp> op,
             Parser<T> operand,
             Func<TOp, T, T, T> apply)
@@ -672,11 +713,24 @@ namespace Sprache
             if (op == null) throw new ArgumentNullException("op");
             if (operand == null) throw new ArgumentNullException("operand");
             if (apply == null) throw new ArgumentNullException("apply");
-            return op.Then(opvalue =>
-                    operand.Then(operandValue =>
-                        ChainRightOperatorRest(operandValue, op, operand, apply)).Then(r =>
-                            Return(apply(opvalue, lastOperand, r))))
-                .Or(Return(lastOperand));
+            return operand.Then(first => ChainRightOperatorRest(first, op, operand, apply, XOr));
+        }
+
+        static Parser<T> ChainRightOperatorRest<T, TOp>(
+            T lastOperand,
+            Parser<TOp> op,
+            Parser<T> operand,
+            Func<TOp, T, T, T> apply,
+            Func<Parser<T>, Parser<T>, Parser<T>> or)
+        {
+            if (op == null) throw new ArgumentNullException("op");
+            if (operand == null) throw new ArgumentNullException("operand");
+            if (apply == null) throw new ArgumentNullException("apply");
+            return or(op.Then(opvalue =>
+                        operand.Then(operandValue =>
+                            ChainRightOperatorRest(operandValue, op, operand, apply, or)).Then(r =>
+                                Return(apply(opvalue, lastOperand, r)))),
+                      Return(lastOperand));
         }
 
         /// <summary>
