@@ -6,6 +6,15 @@
 
     partial class Parse
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <param name="delimiter"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> DelimitedBy<T, U>(this Parser<T> parser, Parser<U> delimiter)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -19,6 +28,14 @@
                    select head.Concat(tail);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <param name="count"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int count)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -55,6 +72,17 @@
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <param name="open"></param>
+        /// <param name="close"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<T> Contained<T, U, V>(this Parser<T> parser, Parser<U> open, Parser<V> close)
         {
             if (parser == null) throw new ArgumentNullException("parser");
