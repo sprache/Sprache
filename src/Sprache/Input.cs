@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Sprache
 {
@@ -20,9 +21,15 @@ namespace Sprache
         /// </summary>
         /// <param name="source">The source.</param>
         public Input(string source)
-            : this(source, 0)
-        {
-        }
+            : this(source, 0) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Input" /> class,
+        /// accepting a TextReader as input.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        public Input(TextReader source)
+            : this(source.ReadToEnd(), 0) { }
 
         internal Input(string source, int position, int line = 1, int column = 1)
         {

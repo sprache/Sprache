@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sprache;
+using System.IO;
 
 namespace LinqyCalculator
 {
@@ -37,11 +38,9 @@ namespace LinqyCalculator
                 value = null;
                 return false;
             }
-            else
-            {
-                value = line;
-                return true;
-            }
+            else value = line;
+
+            return true;
         }
     }
 }

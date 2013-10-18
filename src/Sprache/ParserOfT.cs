@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Sprache
 {
@@ -30,6 +31,16 @@ namespace Sprache
             return parser(new Input(input));
         }
 
+        public static IResult<T> TryParse<T>(this Parser<T> parser, TextReader _input)
+        {
+            string input = _input.ReadToEnd();
+
+            if (parser == null) throw new ArgumentNullException("parser");
+            if (input == null) throw new ArgumentNullException("input");
+
+            return parser(new Input(input));
+        }
+
         /// <summary>
         /// Parses the specified input string.
         /// </summary>
@@ -46,6 +57,21 @@ namespace Sprache
             var result = parser.TryParse(input);
             
             if(result.WasSuccessful)
+                return result.Value;
+
+            throw new ParseException(result.ToString());
+        }
+
+        public static T Parse<T>(this Parser<T> parser, TextReader _input)
+        {
+            string input = _input.ReadToEnd();
+
+            if (parser == null) throw new ArgumentNullException("parser");
+            if (input == null) throw new ArgumentNullException("input");
+
+            var result = parser.TryParse(input);
+
+            if (result.WasSuccessful)
                 return result.Value;
 
             throw new ParseException(result.ToString());
