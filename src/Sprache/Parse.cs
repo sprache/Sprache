@@ -140,46 +140,6 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Parse any character.
-        /// </summary>
-        public static readonly Parser<char> AnyChar = Char(c => true, "any character");
-
-        /// <summary>
-        /// Parse a whitespace.
-        /// </summary>
-        public static readonly Parser<char> WhiteSpace = Char(char.IsWhiteSpace, "whitespace");
-
-        /// <summary>
-        /// Parse a digit.
-        /// </summary>
-        public static readonly Parser<char> Digit = Char(char.IsDigit, "digit");
-
-        /// <summary>
-        /// Parse a letter.
-        /// </summary>
-        public static readonly Parser<char> Letter = Char(char.IsLetter, "letter");
-
-        /// <summary>
-        /// Parse a letter or digit.
-        /// </summary>
-        public static readonly Parser<char> LetterOrDigit = Char(char.IsLetterOrDigit, "letter or digit");
-
-        /// <summary>
-        /// Parse a lowercase letter.
-        /// </summary>
-        public static readonly Parser<char> Lower = Char(char.IsLower, "lowercase letter");
-        
-        /// <summary>
-        /// Parse an uppercase letter.
-        /// </summary>
-        public static readonly Parser<char> Upper = Char(char.IsUpper, "uppercase letter");
-
-        /// <summary>
-        /// Parse a numeric character.
-        /// </summary>
-        public static readonly Parser<char> Numeric = Char(char.IsNumber, "numeric character");
-
-        /// <summary>
         /// Parse a string of characters.
         /// </summary>
         /// <param name="s"></param>
@@ -679,23 +639,65 @@ namespace Sprache
                 .Or(Return(lastOperand));
         }
 
+        #region Parsers
+        /// <summary>
+        /// Parse any character.
+        /// </summary>
+        public static readonly Parser<char> AnyChar = Parse.Char(c => true, "any character");
+
+        /// <summary>
+        /// Parse a whitespace.
+        /// </summary>
+        public static readonly Parser<char> WhiteSpace = Parse.Char(char.IsWhiteSpace, "whitespace");
+
+        /// <summary>
+        /// Parse a digit.
+        /// </summary>
+        public static readonly Parser<char> Digit = Parse.Char(char.IsDigit, "digit");
+
+        /// <summary>
+        /// Parse a letter.
+        /// </summary>
+        public static readonly Parser<char> Letter = Parse.Char(char.IsLetter, "letter");
+
+        /// <summary>
+        /// Parse a letter or digit.
+        /// </summary>
+        public static readonly Parser<char> LetterOrDigit = Parse.Char(char.IsLetterOrDigit, "letter or digit");
+
+        /// <summary>
+        /// Parse a lowercase letter.
+        /// </summary>
+        public static readonly Parser<char> Lower = Parse.Char(char.IsLower, "lowercase letter");
+
+        /// <summary>
+        /// Parse an uppercase letter.
+        /// </summary>
+        public static readonly Parser<char> Upper = Parse.Char(char.IsUpper, "uppercase letter");
+
+        /// <summary>
+        /// Parse a numeric character.
+        /// </summary>
+        public static readonly Parser<char> Numeric = Parse.Char(char.IsNumber, "numeric character");
+
         /// <summary>
         /// Parse a number.
         /// </summary>
         public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
 
         static readonly Parser<string> DecimalWithoutLeadingDigits =
-            from nothing in Return("") // dummy so that CultureInfo.CurrentCulture is evaluated later
-            from dot in String(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Text()
+            from nothing in Parse.Return("") // dummy so that CultureInfo.CurrentCulture is evaluated later
+            from dot in Parse.String(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Text()
             from fraction in Number
             select dot + fraction;
 
         static readonly Parser<string> DecimalWithLeadingDigits =
-            Number.Then(n => DecimalWithoutLeadingDigits.XOr(Return("")).Select(f => n + f));
+            Number.Then(n => DecimalWithoutLeadingDigits.XOr(Parse.Return("")).Select(f => n + f));
 
         /// <summary>
         /// Parse a decimal number.
         /// </summary>
- 	    public static readonly Parser<string> Decimal = DecimalWithLeadingDigits.XOr(DecimalWithoutLeadingDigits);
+        public static readonly Parser<string> Decimal = DecimalWithLeadingDigits.XOr(DecimalWithoutLeadingDigits);
+        #endregion
     }
 }
