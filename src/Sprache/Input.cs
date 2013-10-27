@@ -23,14 +23,6 @@ namespace Sprache
         public Input(string source)
             : this(source, 0) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Input" /> class,
-        /// accepting a TextReader as input.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        public Input(TextReader source)
-            : this(source.ReadToEnd(), 0) { }
-
         internal Input(string source, int position, int line = 1, int column = 1)
         {
             _source = source;
