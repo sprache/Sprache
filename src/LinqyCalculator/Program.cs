@@ -19,10 +19,6 @@ namespace LinqyCalculator
             Console.WriteLine("Type q to quit, and c to clear");
             Console.WriteLine("");
 
-            //double abc = VariableParser.VarDec.Parse("var abc = 5 + 5");
-            //Console.WriteLine(">> var abc = 5 + 5");
-            //Console.WriteLine("Created variable abc = {0}", abc);
-
             while (Prompt(out line))
             {
                 try
@@ -46,9 +42,10 @@ namespace LinqyCalculator
 
         public static void CWriteLine(string text, ConsoleColor c)
         {
+            var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = c;
             Console.WriteLine(text);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = currentColor;
         }
 
         static bool Prompt(out string value)
