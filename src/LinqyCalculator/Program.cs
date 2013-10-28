@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sprache;
 using System.IO;
+using System.Linq.Expressions;
 
 namespace LinqyCalculator
 {
@@ -18,6 +19,10 @@ namespace LinqyCalculator
             Console.WriteLine("Type q to quit, and c to clear");
             Console.WriteLine("");
 
+            //double abc = VariableParser.VarDec.Parse("var abc = 5 + 5");
+            //Console.WriteLine(">> var abc = 5 + 5");
+            //Console.WriteLine("Created variable abc = {0}", abc);
+
             while (Prompt(out line))
             {
                 try
@@ -25,10 +30,9 @@ namespace LinqyCalculator
                     if (line.ToLowerInvariant().Trim() == "c") Console.Clear();
                     else
                     {
-                        var parsed = ExpressionParser.ParseExpression(line);
-                        Console.WriteLine("Parsed as {0}", parsed);
-                        Console.Write("Value is ", parsed.Compile()());
-                        CWriteLine(parsed.Compile()().ToString(), ConsoleColor.Red);
+                        var parsed = LangParser.Line.Parse(line);
+                        Console.Write("Value is ");
+                        CWriteLine(parsed.ToString(), ConsoleColor.Red);
                     }
                 }
                 catch (ParseException ex)
