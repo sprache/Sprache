@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sprache;
-using System.IO;
 
 namespace LinqyCalculator
 {
@@ -12,24 +11,13 @@ namespace LinqyCalculator
         static void Main()
         {
             var line = "";
-
-            Console.WriteLine("Linqy Calculator");
-            Console.WriteLine("Type an expression to evaluate it");
-            Console.WriteLine("Type q to quit, and c to clear");
-            Console.WriteLine("");
-
             while (Prompt(out line))
             {
                 try
                 {
-                    if (line.ToLowerInvariant().Trim() == "c") Console.Clear();
-                    else
-                    {
-                        var parsed = ExpressionParser.ParseExpression(line);
-                        Console.WriteLine("Parsed as {0}", parsed);
-                        Console.Write("Value is ", parsed.Compile()());
-                        CWriteLine(parsed.Compile()().ToString(), ConsoleColor.Red);
-                    }
+                    var parsed = ExpressionParser.ParseExpression(line);
+                    Console.WriteLine("Parsed as {0}", parsed);
+                    Console.WriteLine("Value is {0}", parsed.Compile()());
                 }
                 catch (ParseException ex)
                 {
@@ -40,25 +28,20 @@ namespace LinqyCalculator
             }
         }
 
-        public static void CWriteLine(string text, ConsoleColor c)
-        {
-            Console.ForegroundColor = c;
-            Console.WriteLine(text);
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
-
         static bool Prompt(out string value)
         {
-            Console.Write(">> ");
+            Console.Write("Enter a numeric expression, or 'q' to quit: ");
             var line = Console.ReadLine();
             if (line.ToLowerInvariant().Trim() == "q")
             {
                 value = null;
                 return false;
             }
-
-            value = line;
-            return true;
+            else
+            {
+                value = line;
+                return true;
+            }
         }
     }
 }

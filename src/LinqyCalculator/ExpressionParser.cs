@@ -33,11 +33,11 @@ namespace LinqyCalculator
 
         static Expression CallFunction(string name, Expression[] parameters)
         {
-            var methodInfo = typeof (Math).GetMethod(name, parameters.Select(e => e.Type).ToArray());
+            var methodInfo = typeof(Math).GetMethod(name, parameters.Select(e => e.Type).ToArray());
             if (methodInfo == null)
                 throw new ParseException(string.Format("Function '{0}({1})' does not exist.", name,
                                                        string.Join(",", parameters.Select(e => e.Type.Name))));
-            
+
             return Expression.Call(methodInfo, parameters);
         }
 
@@ -48,9 +48,9 @@ namespace LinqyCalculator
 
         static readonly Parser<Expression> Factor =
             (from lparen in Parse.Char('(')
-              from expr in Parse.Ref(() => Expr)
-              from rparen in Parse.Char(')')
-              select expr).Named("expression")
+             from expr in Parse.Ref(() => Expr)
+             from rparen in Parse.Char(')')
+             select expr).Named("expression")
              .XOr(Constant)
              .XOr(Function);
 
