@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Sprache
@@ -10,151 +9,6 @@ namespace Sprache
     /// </summary>
     public static partial class Parse
     {
-        /// <summary>
-        /// TryParse a single character matching 'predicate'
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <param name="description"></param>
-        /// <returns></returns>
-        public static Parser<char> Char(Predicate<char> predicate, string description)
-        {
-            if (predicate == null) throw new ArgumentNullException("predicate");
-            if (description == null) throw new ArgumentNullException("description");
-
-            return i =>
-            {
-                if (!i.AtEnd)
-                {
-                    if (predicate(i.Current))
-                        return Result.Success(i.Current, i.Advance());
-
-                    return Result.Failure<char>(i,
-                        string.Format("unexpected '{0}'", i.Current),
-                        new[] { description });
-                }
-
-                return Result.Failure<char>(i,
-                    "Unexpected end of input reached",
-                    new[] { description });
-            };
-        }
-
-        /// <summary>
-        /// Parse a single character except those matching <paramref name="predicate"/>.
-        /// </summary>
-        /// <param name="predicate">Characters not to match.</param>
-        /// <param name="description">Description of characters that don't match.</param>
-        /// <returns>A parser for characters except those matching <paramref name="predicate"/>.</returns>
-        public static Parser<char> CharExcept(Predicate<char> predicate, string description)
-        {
-            return Char(c => !predicate(c), "any character except " + description);
-        }
-
-        /// <summary>
-        /// Parse a single character c.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static Parser<char> Char(char c)
-        {
-            return Char(ch => c == ch, char.ToString(c));
-        }
-
-
-        /// <summary>
-        /// Parse a single character of any in c
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static Parser<char> Chars(params char[] c)
-        {
-            return Char(c.Contains, string.Join("|", c));
-        }
-
-        /// <summary>
-        /// Parse a single character of any in c
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static Parser<char> Chars(string c)
-        {
-            return Char(c.Contains, string.Join("|", c.ToCharArray()));
-        }
-
-
-        /// <summary>
-        /// Parse a single character except c.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static Parser<char> CharExcept(char c)
-        {
-            return CharExcept(ch => c == ch, char.ToString(c));
-        }
-
-        /// <summary>
-        /// Parses a single character except for those in the given parameters
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static Parser<char> CharExcept(IEnumerable<char> c)
-        {
-            var chars = c as char[] ?? c.ToArray();
-            return CharExcept(chars.Contains, string.Join("|", chars));
-        }
-
-        /// <summary>
-        /// Parses a single character except for those in c
-        /// </summary>  
-        /// <param name="c"></param>
-        /// <returns></returns> 
-        public static Parser<char> CharExcept(string c)
-        {
-            return CharExcept(c.Contains, string.Join("|", c.ToCharArray()));
-        }
-
-        /// <summary>
-        /// Parse a single character in a case-insensitive fashion.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static Parser<char> IgnoreCase(char c)
-        {
-            return Char(ch => char.ToLower(c) == char.ToLower(ch), char.ToString(c));
-        }
-
-        /// <summary>
-        /// Parse a string in a case-insensitive fashion.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static Parser<IEnumerable<char>> IgnoreCase(string s)
-        {
-            if (s == null) throw new ArgumentNullException("s");
-
-            return s
-                .Select(IgnoreCase)
-                .Aggregate(Return(Enumerable.Empty<char>()),
-                    (a, p) => a.Concat(p.Once()))
-                .Named(s);
-        }
-
-        /// <summary>
-        /// Parse a string of characters.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static Parser<IEnumerable<char>> String(string s)
-        {
-            if (s == null) throw new ArgumentNullException("s");
-
-            return s
-                .Select(Char)
-                .Aggregate(Return(Enumerable.Empty<char>()),
-                    (a, p) => a.Concat(p.Once()))
-                .Named(s);
-        }
-
         /// <summary>
         /// Constructs a parser that will fail if the given parser succeeds,
         /// and will succeed if the given parser fails. In any case, it won't
@@ -569,135 +423,48 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Chain a left-associative operator.
+        /// Construct a parser that indicates the given parser
+        /// is optional. The returned parser will succeed on
+        /// any input no matter whether the given parser
+        /// succeeds or not.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TOp"></typeparam>
-        /// <param name="op"></param>
-        /// <param name="operand"></param>
-        /// <param name="apply"></param>
+        /// <param name="parser"></param>
         /// <returns></returns>
-        public static Parser<T> ChainOperator<T, TOp>(
-            Parser<TOp> op,
-            Parser<T> operand,
-            Func<TOp, T, T, T> apply)
+        public static Parser<IOption<T>> Optional<T>(this Parser<T> parser)
         {
-            if (op == null) throw new ArgumentNullException("op");
-            if (operand == null) throw new ArgumentNullException("operand");
-            if (apply == null) throw new ArgumentNullException("apply");
-            return operand.Then(first => ChainOperatorRest(first, op, operand, apply));
-        }
+            if (parser == null) throw new ArgumentNullException("parser");
 
-        static Parser<T> ChainOperatorRest<T, TOp>(
-            T firstOperand,
-            Parser<TOp> op,
-            Parser<T> operand,
-            Func<TOp, T, T, T> apply)
-        {
-            if (op == null) throw new ArgumentNullException("op");
-            if (operand == null) throw new ArgumentNullException("operand");
-            if (apply == null) throw new ArgumentNullException("apply");
-            return op.Then(opvalue =>
-                    operand.Then(operandValue =>
-                        ChainOperatorRest(apply(opvalue, firstOperand, operandValue), op, operand, apply)))
-                .Or(Return(firstOperand));
+            return i =>
+            {
+                var pr = parser(i);
+
+                if (pr.WasSuccessful)
+                    return Result.Success(new Some<T>(pr.Value), pr.Remainder);
+
+                return Result.Success(new None<T>(), i);
+            };
         }
 
         /// <summary>
-        /// Chain a right-associative operator.
+        /// Construct a parser that will set the position to the position-aware
+        /// T on succsessful match.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TOp"></typeparam>
-        /// <param name="op"></param>
-        /// <param name="operand"></param>
-        /// <param name="apply"></param>
+        /// <param name="parser"></param>
         /// <returns></returns>
-        public static Parser<T> ChainRightOperator<T, TOp>(
-            Parser<TOp> op,
-            Parser<T> operand,
-            Func<TOp, T, T, T> apply)
+        public static Parser<T> Positioned<T>(this Parser<T> parser) where T : IPositionAware<T>
         {
-            if (op == null) throw new ArgumentNullException("op");
-            if (operand == null) throw new ArgumentNullException("operand");
-            if (apply == null) throw new ArgumentNullException("apply");
-            return operand.Then(first => ChainRightOperatorRest(first, op, operand, apply));
+            return i =>
+            {
+                var r = parser(i);
+
+                if (r.WasSuccessful)
+                {
+                    return Result.Success(r.Value.SetPos(Position.FromInput(i), r.Remainder.Position - i.Position), r.Remainder);
+                }
+                return r;
+            };
         }
-
-        static Parser<T> ChainRightOperatorRest<T, TOp>(
-            T lastOperand,
-            Parser<TOp> op,
-            Parser<T> operand,
-            Func<TOp, T, T, T> apply)
-        {
-            if (op == null) throw new ArgumentNullException("op");
-            if (operand == null) throw new ArgumentNullException("operand");
-            if (apply == null) throw new ArgumentNullException("apply");
-            return op.Then(opvalue =>
-                    operand.Then(operandValue =>
-                        ChainRightOperatorRest(operandValue, op, operand, apply)).Then(r =>
-                            Return(apply(opvalue, lastOperand, r))))
-                .Or(Return(lastOperand));
-        }
-
-        #region Parsers
-        /// <summary>
-        /// Parse any character.
-        /// </summary>
-        public static readonly Parser<char> AnyChar = Parse.Char(c => true, "any character");
-
-        /// <summary>
-        /// Parse a whitespace.
-        /// </summary>
-        public static readonly Parser<char> WhiteSpace = Parse.Char(char.IsWhiteSpace, "whitespace");
-
-        /// <summary>
-        /// Parse a digit.
-        /// </summary>
-        public static readonly Parser<char> Digit = Parse.Char(char.IsDigit, "digit");
-
-        /// <summary>
-        /// Parse a letter.
-        /// </summary>
-        public static readonly Parser<char> Letter = Parse.Char(char.IsLetter, "letter");
-
-        /// <summary>
-        /// Parse a letter or digit.
-        /// </summary>
-        public static readonly Parser<char> LetterOrDigit = Parse.Char(char.IsLetterOrDigit, "letter or digit");
-
-        /// <summary>
-        /// Parse a lowercase letter.
-        /// </summary>
-        public static readonly Parser<char> Lower = Parse.Char(char.IsLower, "lowercase letter");
-
-        /// <summary>
-        /// Parse an uppercase letter.
-        /// </summary>
-        public static readonly Parser<char> Upper = Parse.Char(char.IsUpper, "uppercase letter");
-
-        /// <summary>
-        /// Parse a numeric character.
-        /// </summary>
-        public static readonly Parser<char> Numeric = Parse.Char(char.IsNumber, "numeric character");
-
-        /// <summary>
-        /// Parse a number.
-        /// </summary>
-        public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
-
-        static readonly Parser<string> DecimalWithoutLeadingDigits =
-            from nothing in Parse.Return("") // dummy so that CultureInfo.CurrentCulture is evaluated later
-            from dot in Parse.String(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Text()
-            from fraction in Number
-            select dot + fraction;
-
-        static readonly Parser<string> DecimalWithLeadingDigits =
-            Number.Then(n => DecimalWithoutLeadingDigits.XOr(Parse.Return("")).Select(f => n + f));
-
-        /// <summary>
-        /// Parse a decimal number.
-        /// </summary>
-        public static readonly Parser<string> Decimal = DecimalWithLeadingDigits.XOr(DecimalWithoutLeadingDigits);
-        #endregion
     }
 }
