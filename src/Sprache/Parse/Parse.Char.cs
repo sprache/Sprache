@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sprache
 {
-    class Parse
+    partial class Parse
     {
         /// <summary>
         /// TryParse a single character matching 'predicate'

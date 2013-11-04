@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Sprache
 {
-    class Parse
+    partial class Parse
     {
         /// <summary>
         /// Parse any character.

@@ -10,119 +10,6 @@ namespace Sprache
     public static partial class Parse
     {
         /// <summary>
-        /// Constructs a parser that will fail if the given parser succeeds,
-        /// and will succeed if the given parser fails. In any case, it won't
-        /// consume any input. It's like a negative look-ahead in regex.
-        /// </summary>
-        /// <typeparam name="T">The result type of the given parser</typeparam>
-        /// <param name="parser">The parser to wrap</param>
-        /// <returns>A parser that is the opposite of the given parser.</returns>
-        public static Parser<object> Not<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return i =>
-            {
-                var result = parser(i);
-
-                if (result.WasSuccessful)
-                {
-                    var msg = string.Format("`{0}' was not expected", string.Join(", ", result.Expectations));
-                    return Result.Failure<object>(i, msg, new string[0]);
-                }
-                return Result.Success<object>(null, i);
-            };
-        }
- 
-        /// <summary>
-        /// Parse first, and if successful, then parse second.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
-        /// <returns></returns>
-        public static Parser<U> Then<T, U>(this Parser<T> first, Func<T, Parser<U>> second)
-        {
-            if (first == null) throw new ArgumentNullException("first");
-            if (second == null) throw new ArgumentNullException("second");
-
-            return i => first(i).IfSuccess(s => second(s.Value)(s.Remainder));
-        }
-
-        /// <summary>
-        /// Parse a stream of elements.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        /// <remarks>Implemented imperatively to decrease stack usage.</remarks>
-        public static Parser<IEnumerable<T>> Many<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return i =>
-            {
-                var remainder = i;
-                var result = new List<T>();
-                var r = parser(i);
-
-                while (r.WasSuccessful)
-                {
-                    if (remainder == r.Remainder)
-                        break;
-
-                    result.Add(r.Value);
-                    remainder = r.Remainder;
-                    r = parser(remainder);
-                }
-
-                return Result.Success<IEnumerable<T>>(result, remainder);
-            };
-        }
-
-        /// <summary>
-        /// Parse a stream of elements. If any element is partially parsed
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        /// <remarks>Implemented imperatively to decrease stack usage.</remarks>
-        public static Parser<IEnumerable<T>> XMany<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return parser.Many().Then(m => parser.Once().XOr(Return(m)));
-        }
-
-        /// <summary>
-        /// TryParse a stream of elements with at least one item.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<IEnumerable<T>> AtLeastOnce<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return parser.Once().Then(t1 => parser.Many().Select(ts => t1.Concat(ts)));
-        }
-
-        /// <summary>
-        /// TryParse a stream of elements with at least one item. Except the first
-        /// item, all other items will be matched with the <code>XMany</code> operator.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<IEnumerable<T>> XAtLeastOnce<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return parser.Once().Then(t1 => parser.XMany().Select(ts => t1.Concat(ts)));
-        }
-
-        /// <summary>
         /// Parse end-of-input.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -133,113 +20,12 @@ namespace Sprache
             if (parser == null) throw new ArgumentNullException("parser");
 
             return i => parser(i).IfSuccess(s =>
-                s.Remainder.AtEnd 
+                s.Remainder.AtEnd
                     ? s
                     : Result.Failure<T>(
                         s.Remainder,
                         string.Format("unexpected '{0}'", s.Remainder.Current),
                         new[] { "end of input" }));
-        }
-
-        /// <summary>
-        /// Take the result of parsing, and project it onto a different domain.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
-        /// <param name="parser"></param>
-        /// <param name="convert"></param>
-        /// <returns></returns>
-        public static Parser<U> Select<T, U>(this Parser<T> parser, Func<T, U> convert)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (convert == null) throw new ArgumentNullException("convert");
-
-            return parser.Then(t => Return(convert(t)));
-        }
-
-        /// <summary>
-        /// Parse the token, embedded in any amount of whitespace characters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        public static Parser<T> Token<T>(this Parser<T> parser)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return from leading in WhiteSpace.Many()
-                   from item in parser
-                   from trailing in WhiteSpace.Many()
-                   select item;
-        }
-
-        /// <summary>
-        /// Refer to another parser indirectly. This allows circular compile-time dependency between parsers.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="reference"></param>
-        /// <returns></returns>
-        public static Parser<T> Ref<T>(Func<Parser<T>> reference)
-        {
-            if (reference == null) throw new ArgumentNullException("reference");
-
-            Parser<T> p = null;
-
-            return i =>
-                       {
-                           if (p == null)
-                               p = reference();
-
-                           if (i.Memos.ContainsKey(p))
-                               throw new ParseException(i.Memos[p].ToString());
-
-                           i.Memos[p] = Result.Failure<T>(i,
-                               "Left recursion in the grammar.",
-                               new string[0]);
-                           var result = p(i);
-                           i.Memos[p] = result;
-                           return result;
-                       };
-        }
-
-        /// <summary>
-        /// Convert a stream of characters to a string.
-        /// </summary>
-        /// <param name="characters"></param>
-        /// <returns></returns>
-        public static Parser<string> Text(this Parser<IEnumerable<char>> characters)
-        {
-            return characters.Select(chs => new string(chs.ToArray()));
-        }
-
-        /// <summary>
-        /// Parse first, if it succeeds, return first, otherwise try second.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
-        /// <returns></returns>
-        public static Parser<T> Or<T>(this Parser<T> first, Parser<T> second)
-        {
-            if (first == null) throw new ArgumentNullException("first");
-            if (second == null) throw new ArgumentNullException("second");
-
-            return i =>
-            {
-                var fr = first(i);
-                if (!fr.WasSuccessful)
-                {
-                    return second(i).IfFailure(sf => Result.Failure<T>(
-                        fr.Remainder,
-                        fr.Message,
-                        fr.Expectations.Union(sf.Expectations)));
-                }
-                
-                if (fr.Remainder == i)
-                    return second(i).IfFailure(sf => fr);
-
-                return fr;
-            };
         }
 
         /// <summary>
@@ -260,64 +46,53 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Parse first, if it succeeds, return first, otherwise try second.
-        /// Assumes that the first parsed character will determine the parser chosen (see Try).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
-        /// <returns></returns>
-        public static Parser<T> XOr<T>(this Parser<T> first, Parser<T> second)
-        {
-            if (first == null) throw new ArgumentNullException("first");
-            if (second == null) throw new ArgumentNullException("second");
-
-            return i => {
-                var fr = first(i);
-                if (!fr.WasSuccessful)
-                {
-                    if (fr.Remainder != i)
-                        return fr;
-
-                    return second(i).IfFailure(sf => Result.Failure<T>(
-                        fr.Remainder,
-                        fr.Message,
-                        fr.Expectations.Union(sf.Expectations)));
-                }
-
-                if (fr.Remainder == i)
-                    return second(i).IfFailure(sf => fr);
-
-                return fr;
-            };
-        }
-
-        /// <summary>
-        /// Parse a stream of elements containing only one item.
+        /// Construct a parser that will set the position to the position-aware
+        /// T on succsessful match.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="parser"></param>
         /// <returns></returns>
-        public static Parser<IEnumerable<T>> Once<T>(this Parser<T> parser)
+        public static Parser<T> Positioned<T>(this Parser<T> parser) where T : IPositionAware<T>
         {
-            if (parser == null) throw new ArgumentNullException("parser");
+            return i =>
+            {
+                var r = parser(i);
 
-            return parser.Select(r => (IEnumerable<T>)new[] { r });
+                if (r.WasSuccessful)
+                {
+                    return Result.Success(r.Value.SetPos(Position.FromInput(i), r.Remainder.Position - i.Position), r.Remainder);
+                }
+                return r;
+            };
         }
 
         /// <summary>
-        /// Concatenate two streams of elements.
+        /// Refer to another parser indirectly. This allows circular compile-time dependency between parsers.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
+        /// <param name="reference"></param>
         /// <returns></returns>
-        public static Parser<IEnumerable<T>> Concat<T>(this Parser<IEnumerable<T>> first, Parser<IEnumerable<T>> second)
+        public static Parser<T> Ref<T>(Func<Parser<T>> reference)
         {
-            if (first == null) throw new ArgumentNullException("first");
-            if (second == null) throw new ArgumentNullException("second");
+            if (reference == null) throw new ArgumentNullException("reference");
 
-            return first.Then(f => second.Select(s => f.Concat(s)));
+            Parser<T> p = null;
+
+            return i =>
+            {
+                if (p == null)
+                    p = reference();
+
+                if (i.Memos.ContainsKey(p))
+                    throw new ParseException(i.Memos[p].ToString());
+
+                i.Memos[p] = Result.Failure<T>(i,
+                    "Left recursion in the grammar.",
+                    new string[0]);
+                var result = p(i);
+                i.Memos[p] = result;
+                return result;
+            };
         }
 
         /// <summary>
@@ -346,58 +121,19 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Attempt parsing only if the <paramref name="except"/> parser fails.
+        /// Take the result of parsing, and project it onto a different domain.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="U"></typeparam>
         /// <param name="parser"></param>
-        /// <param name="except"></param>
+        /// <param name="convert"></param>
         /// <returns></returns>
-        public static Parser<T> Except<T, U>(this Parser<T> parser, Parser<U> except)
+        public static Parser<U> Select<T, U>(this Parser<T> parser, Func<T, U> convert)
         {
             if (parser == null) throw new ArgumentNullException("parser");
-            if (except == null) throw new ArgumentNullException("except");
+            if (convert == null) throw new ArgumentNullException("convert");
 
-            // Could be more like: except.Then(s => s.Fail("..")).XOr(parser)
-            return i =>
-                {
-                    var r = except(i);
-                    if (r.WasSuccessful)
-                        return Result.Failure<T>(i, "Excepted parser succeeded.", new[] { "other than the excepted input" });
-                    return parser(i);
-                };
-        }
-
-        /// <summary>
-        /// Parse a sequence of items until a terminator is reached.
-        /// Returns the sequence, discarding the terminator.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
-        /// <param name="parser"></param>
-        /// <param name="until"></param>
-        /// <returns></returns>
-        public static Parser<IEnumerable<T>> Until<T, U>(this Parser<T> parser, Parser<U> until)
-        {
-            return parser.Except(until).Many().Then(r => until.Return(r));
-        }
-
-        /// <summary>
-        /// Succeed if the parsed value matches predicate.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public static Parser<T> Where<T>(this Parser<T> parser, Func<T, bool> predicate)
-        {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (predicate == null) throw new ArgumentNullException("predicate");
-
-            return i => parser(i).IfSuccess(s =>
-                predicate(s.Value) ? s : Result.Failure<T>(i,
-                    string.Format("Unexpected {0}.", s.Value),
-                    new string[0]));
+            return parser.Then(t => Return(convert(t)));
         }
 
         /// <summary>
@@ -423,48 +159,26 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Construct a parser that indicates the given parser
-        /// is optional. The returned parser will succeed on
-        /// any input no matter whether the given parser
-        /// succeeds or not.
+        /// Convert a stream of characters to a string.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
+        /// <param name="characters"></param>
         /// <returns></returns>
-        public static Parser<IOption<T>> Optional<T>(this Parser<T> parser)
+        public static Parser<string> Text(this Parser<IEnumerable<char>> characters)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return i =>
-            {
-                var pr = parser(i);
-
-                if (pr.WasSuccessful)
-                    return Result.Success(new Some<T>(pr.Value), pr.Remainder);
-
-                return Result.Success(new None<T>(), i);
-            };
+            return characters.Select(chs => new string(chs.ToArray()));
         }
 
         /// <summary>
-        /// Construct a parser that will set the position to the position-aware
-        /// T on succsessful match.
+        /// Parse the token, embedded in any amount of whitespace characters.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="parser"></param>
         /// <returns></returns>
-        public static Parser<T> Positioned<T>(this Parser<T> parser) where T : IPositionAware<T>
+        public static Parser<T> Token<T>(this Parser<T> parser)
         {
-            return i =>
-            {
-                var r = parser(i);
-
-                if (r.WasSuccessful)
-                {
-                    return Result.Success(r.Value.SetPos(Position.FromInput(i), r.Remainder.Position - i.Position), r.Remainder);
-                }
-                return r;
-            };
+            if (parser == null) throw new ArgumentNullException("parser");
+            return parser.Contained(Parse.WhiteSpace.Many(), Parse.WhiteSpace.Many());
         }
+
     }
 }

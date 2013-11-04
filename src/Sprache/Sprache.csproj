@@ -98,10 +98,14 @@
     <Compile Include="Input.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="IPositionAware.cs" />
-    <Compile Include="Parse.cs" />
-    <Compile Include="Parse.Sequence.cs" />
+    <Compile Include="Parse\Parse.ChainOperator.cs" />
+    <Compile Include="Parse\Parse.Char.cs" />
+    <Compile Include="Parse\Parse.cs" />
+    <Compile Include="Parse\Parse.Logic.cs" />
+    <Compile Include="Parse\Parse.Sequence.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ParserOfT.cs" />
+    <Compile Include="Parse\Parsers.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IResultOfT.cs" />
@@ -126,13 +130,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parse.Positioned.cs" />
+    <Compile Include="Parse\Parse.Regex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parse.Optional.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Parse.Regex.cs" />
+    <Compile Include="Parse\Parse.Stream.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sprache
 {
-    class Parse
+    partial class Parse
     {
         /// <summary>
         /// Chain a left-associative operator.

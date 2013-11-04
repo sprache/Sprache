@@ -1,11 +1,41 @@
-﻿namespace Sprache
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace Sprache
+{
     partial class Parse
     {
+        /// <summary>
+        /// Parse an item between two other items.
+        /// Returns the contained item, discarding the surrounding items.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="parser"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static Parser<T> Contained<T, U, V>(this Parser<T> parser, Parser<U> open, Parser<V> close)
+        {
+            if (parser == null) throw new ArgumentNullException("parser");
+            if (open == null) throw new ArgumentNullException("open");
+            if (close == null) throw new ArgumentNullException("close");
+
+            return from o in open
+                   from item in parser
+                   from c in close
+                   select item;
+        }
+
+        /// <summary>
+        /// Parse a sequence of items delimited by another
+        /// Returns the sequence, discarding the delimiter.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="parser"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
         public static Parser<IEnumerable<T>> DelimitedBy<T, U>(this Parser<T> parser, Parser<U> delimiter)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -19,6 +49,15 @@
                    select head.Concat(tail);
         }
 
+        /// <summary>
+        /// Parse an item several times.
+        /// Returns the sequence of parsed items.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="parser"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int count)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -54,17 +93,18 @@
             };
         }
 
-
-        public static Parser<T> Contained<T, U, V>(this Parser<T> parser, Parser<U> open, Parser<V> close)
+        /// <summary>
+        /// Parse a sequence of items until a terminator is reached.
+        /// Returns the sequence, discarding the terminator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="parser"></param>
+        /// <param name="until"></param>
+        /// <returns></returns>
+        public static Parser<IEnumerable<T>> Until<T, U>(this Parser<T> parser, Parser<U> until)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (open == null) throw new ArgumentNullException("open");
-            if (close == null) throw new ArgumentNullException("close");
-
-            return from o in open
-                   from item in parser
-                   from c in close
-                   select item;
+            return parser.Except(until).Many().Then(r => until.Return(r));
         }
     }
 }
