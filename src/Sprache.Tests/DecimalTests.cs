@@ -7,7 +7,7 @@ namespace Sprache.Tests
     [TestFixture]
     public class DecimalTests
     {
-        private static readonly Parser<string> DecimalParser = Parse.Decimal.End();
+        private static readonly Parser<string> DecimalParser = Parse.Numerics.Decimal.End();
 
         private CultureInfo _previousCulture;
 

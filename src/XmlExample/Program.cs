@@ -46,8 +46,8 @@ namespace XmlExample
     public static class XmlParser
     {
         static readonly Parser<string> Identifier =
-            from first in Parse.Letter.Once()
-            from rest in Parse.LetterOrDigit.XOr(Parse.Char('-')).XOr(Parse.Char('_')).Many()
+            from first in Parse.Characters.Letter.Once()
+            from rest in Parse.Characters.LetterOrDigit.XOr(Parse.Char('-')).XOr(Parse.Char('_')).Many()
             select new string(first.Concat(rest).ToArray());
 
         static Parser<T> Tag<T>(Parser<T> content)
@@ -87,7 +87,7 @@ namespace XmlExample
         static readonly Parser<Item> Item = Node.Select(n => (Item)n).XOr(Content);
 
         public static readonly Parser<Document> Document =
-            from leading in Parse.WhiteSpace.Many()
+            from leading in Parse.Characters.WhiteSpace.Many()
             from doc in Node.Select(n => new Document { Root = n }).End()
             select doc;
     }
