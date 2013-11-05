@@ -105,7 +105,9 @@
     <Compile Include="Parse\Parse.Sequence.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ParserOfT.cs" />
-    <Compile Include="Parse\Parsers.cs" />
+    <Compile Include="Parse\Parsers\Parse.Characters.cs" />
+    <Compile Include="Parse\Parsers\Parse.Numerics.cs" />
+    <Compile Include="Parse\Parsers\Parse.Parsers.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IResultOfT.cs" />
