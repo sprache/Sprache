@@ -159,6 +159,24 @@ namespace Sprache
         }
 
         /// <summary>
+        /// Parse first, and if successful, then parse second.
+        /// Second is a parser, not a lambda.
+        /// For cases where the lambda is: a => second.Return(a)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public static Parser<T> Then<T, U>(this Parser<T> first, Parser<U> second)
+        {
+            if (first == null) throw new ArgumentNullException("first");
+            if (second == null) throw new ArgumentNullException("second");
+
+            return first.Then(a => second.Return(a));
+        }
+
+        /// <summary>
         /// Succeed if the parsed value matches predicate.
         /// </summary>
         /// <typeparam name="T"></typeparam>

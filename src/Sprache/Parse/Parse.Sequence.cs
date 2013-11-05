@@ -12,8 +12,10 @@ namespace Sprache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="U"></typeparam>
+        /// <typeparam name="V"></typeparam>
         /// <param name="parser"></param>
-        /// <param name="delimiter"></param>
+        /// <param name="open"></param>
+        /// <param name="close"></param>
         /// <returns></returns>
         public static Parser<T> Contained<T, U, V>(this Parser<T> parser, Parser<U> open, Parser<V> close)
         {
@@ -24,6 +26,25 @@ namespace Sprache
             return from o in open
                    from item in parser
                    from c in close
+                   select item;
+        }
+        /// <summary>
+        /// Parse an item between two other items.
+        /// Returns the contained item, discarding the surrounding items.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="parser"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        public static Parser<T> Contained<T, U>(this Parser<T> parser, Parser<U> container)
+        {
+            if (parser == null) throw new ArgumentNullException("parser");
+            if (container == null) throw new ArgumentNullException("container");
+
+            return from o in container
+                   from item in parser
+                   from c in container
                    select item;
         }
 
@@ -54,7 +75,6 @@ namespace Sprache
         /// Returns the sequence of parsed items.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
         /// <param name="parser"></param>
         /// <param name="count"></param>
         /// <returns></returns>

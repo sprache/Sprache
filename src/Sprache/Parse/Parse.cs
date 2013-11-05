@@ -177,7 +177,7 @@ namespace Sprache
         public static Parser<T> Token<T>(this Parser<T> parser)
         {
             if (parser == null) throw new ArgumentNullException("parser");
-            return parser.Contained(Parse.WhiteSpace.Many(), Parse.WhiteSpace.Many());
+            return parser.Contained(Parse.Characters.WhiteSpace.Many());
         }
 
     }

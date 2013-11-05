@@ -25,7 +25,7 @@ namespace LinqyCalculator
         static readonly Parser<ExpressionType> Power = Operator("^", ExpressionType.Power);
 
         static readonly Parser<Expression> Function =
-            from name in Parse.Letter.AtLeastOnce().Text()
+            from name in Parse.Characters.Letter.AtLeastOnce().Text()
             from lparen in Parse.Char('(')
             from expr in Parse.Ref(() => Expr).DelimitedBy(Parse.Char(',').Token())
             from rparen in Parse.Char(')')
@@ -42,7 +42,7 @@ namespace LinqyCalculator
         }
 
         static readonly Parser<Expression> Constant =
-             Parse.Decimal
+             Parse.Numerics.Decimal
              .Select(x => Expression.Constant(double.Parse(x)))
              .Named("number");
 
