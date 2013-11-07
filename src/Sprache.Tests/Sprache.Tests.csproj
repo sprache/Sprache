@@ -109,6 +109,7 @@
     <Compile Include="ResultTests.cs" />
     <Compile Include="Scenarios\AmqpErrorTests.cs" />
     <Compile Include="Scenarios\CsvTests.cs" />
+    <Compile Include="Scenarios\ExpressionGrammarTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sprache\Sprache.csproj">
