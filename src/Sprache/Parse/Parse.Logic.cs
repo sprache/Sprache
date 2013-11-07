@@ -95,10 +95,7 @@ namespace Sprache
                 var fr = first(i);
                 if (!fr.WasSuccessful)
                 {
-                    return second(i).IfFailure(sf => Result.Failure<T>(
-                        fr.Remainder,
-                        fr.Message,
-                        fr.Expectations.Union(sf.Expectations)));
+                    return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
                 if (fr.Remainder == i)
@@ -126,20 +123,35 @@ namespace Sprache
                 var fr = first(i);
                 if (!fr.WasSuccessful)
                 {
+                    // The 'X' part
                     if (fr.Remainder != i)
                         return fr;
-
-                    return second(i).IfFailure(sf => Result.Failure<T>(
-                        fr.Remainder,
-                        fr.Message,
-                        fr.Expectations.Union(sf.Expectations)));
+                    
+                    return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
+                // This handles a zero-length successful application of first.
                 if (fr.Remainder == i)
                     return second(i).IfFailure(sf => fr);
 
                 return fr;
             };
+        }
+
+        // Examines two results presumably obtained at an "Or" junction; returns the result with
+        // the most information, or if they apply at the same input position, a union of the results.
+        static IResult<T> DetermineBestError<T>(IResult<T> firstFailure, IResult<T> secondFailure)
+        {
+            if (secondFailure.Remainder.Position > firstFailure.Remainder.Position)
+                return secondFailure;
+
+            if (secondFailure.Remainder.Position == firstFailure.Remainder.Position)
+                return Result.Failure<T>(
+                    firstFailure.Remainder,
+                    firstFailure.Message,
+                    firstFailure.Expectations.Union(secondFailure.Expectations));
+
+            return firstFailure;
         }
 
         /// <summary>

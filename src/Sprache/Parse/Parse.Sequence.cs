@@ -7,16 +7,16 @@ namespace Sprache
     partial class Parse
     {
         /// <summary>
-        /// Parse an item between two other items.
-        /// Returns the contained item, discarding the surrounding items.
+        /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
-        /// <typeparam name="V"></typeparam>
         /// <param name="parser"></param>
         /// <param name="open"></param>
         /// <param name="close"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <typeparam name="V"></typeparam>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<T> Contained<T, U, V>(this Parser<T> parser, Parser<U> open, Parser<V> close)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -29,14 +29,14 @@ namespace Sprache
                    select item;
         }
         /// <summary>
-        /// Parse an item between two other items.
-        /// Returns the contained item, discarding the surrounding items.
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="U"></typeparam>
         /// <param name="parser"></param>
         /// <param name="container"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<T> Contained<T, U>(this Parser<T> parser, Parser<U> container)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -49,14 +49,14 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Parse a sequence of items delimited by another
-        /// Returns the sequence, discarding the delimiter.
+        /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
         /// <param name="parser"></param>
         /// <param name="delimiter"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> DelimitedBy<T, U>(this Parser<T> parser, Parser<U> delimiter)
         {
             if (parser == null) throw new ArgumentNullException("parser");
@@ -71,13 +71,13 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Parse an item several times.
-        /// Returns the sequence of parsed items.
+        /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="parser"></param>
         /// <param name="count"></param>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int count)
         {
             if (parser == null) throw new ArgumentNullException("parser");
