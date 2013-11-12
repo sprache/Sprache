@@ -15,10 +15,10 @@ A simple parser might parse a sequence of characters:
 Sprache provides a number of built-in functions that can make bigger parsers from smaller ones, often callable via Linq query comprehensions:
 
     Parser<string> identifier =
-        from leading in Parse.Whitespace.Many()
-        from first in Parse.Letter.Once()
-        from rest in Parse.LetterOrDigit.Many()
-        from trailing in Parse.Whitespace.Many()
+        from leading in Parse.Characters.Whitespace.Many()
+        from first in Parse.Characters.Letter.Once()
+        from rest in Parse.Characters.LetterOrDigit.Many()
+        from trailing in Parse.Characters.Whitespace.Many()
         select new string(first.Concat(rest).ToArray());
 
     var id = identifier.Parse(" abc123  ");
