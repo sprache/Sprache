@@ -5,6 +5,9 @@ namespace Sprache
 {
     partial class Parse
     {
+        /// <summary>
+        /// Parsers.
+        /// </summary>
         public partial class Parsers
         {
             /// <summary>
