@@ -8,7 +8,7 @@ namespace Sprache
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="input">The input to parse.</param>
     /// <returns>The result of the parser.</returns>
-    public delegate IResult<T> Parser<out T>(Input input);
+    public delegate IResult<T> Parser<out T>(IInput input);
 
     /// <summary>
     /// Contains some extension methods for <see cref="Parser&lt;T&gt;" />.

@@ -95,6 +95,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="IInput.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="IPositionAware.cs" />
