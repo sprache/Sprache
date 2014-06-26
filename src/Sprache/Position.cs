@@ -21,11 +21,11 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Creates an new <see cref="Position"/> instance from a given <see cref="Input"/> object.
+        /// Creates an new <see cref="Position"/> instance from a given <see cref="IInput"/> object.
         /// </summary>
         /// <param name="input">The current input.</param>
         /// <returns>A new <see cref="Position"/> instance.</returns>
-        public static Position FromInput(Input input)
+        public static Position FromInput(IInput input)
         {
             return new Position(input.Position, input.Line, input.Column);
         }

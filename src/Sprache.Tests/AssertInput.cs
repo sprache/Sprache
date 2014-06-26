@@ -6,7 +6,7 @@ namespace Sprache.Tests
 {
     static class AssertInput
     {
-        public static Input AdvanceMany(this Input input, int count)
+        public static IInput AdvanceMany(this IInput input, int count)
         {
             for (int i = 0; i < count; i++)
             {
@@ -16,14 +16,14 @@ namespace Sprache.Tests
             return input;
         }
 
-        public static Input AdvanceAssert(this Input input, Action<Input, Input> assertion)
+        public static IInput AdvanceAssert(this IInput input, Action<IInput, IInput> assertion)
         {
             var result = input.Advance();
             assertion(input, result);
             return result;
         }
 
-        public static Input AdvanceManyAssert(this Input input, int count, Action<Input, Input> assertion)
+        public static IInput AdvanceManyAssert(this Input input, int count, Action<IInput, IInput> assertion)
         {
             var result = input.AdvanceMany(count);
             assertion(input, result);

@@ -6,14 +6,14 @@ namespace Sprache
     /// <summary>
     /// Represents an input for parsing.
     /// </summary>
-    public class Input : IEquatable<Input>
+    public class Input : IInput
     {
         private readonly string _source;
         private readonly int _position;
         private readonly int _line;
         private readonly int _column;
 
-        internal IDictionary<object, object> Memos = new Dictionary<object, object>();
+        public IDictionary<object, object> Memos { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Input" /> class.
@@ -30,14 +30,16 @@ namespace Sprache
             _position = position;
             _line = line;
             _column = column;
+
+            Memos = new Dictionary<object, object>();
         }
 
         /// <summary>
         /// Advances the input.
         /// </summary>
-        /// <returns>A new <see cref="Input" /> that is advanced.</returns>
+        /// <returns>A new <see cref="IInput" /> that is advanced.</returns>
         /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
-        public Input Advance()
+        public IInput Advance()
         {
             if (AtEnd)
                 throw new InvalidOperationException("The input is already at the end of the source.");
@@ -109,7 +111,7 @@ namespace Sprache
         /// <param name="obj">The object to compare with the current object. </param>
         public override bool Equals(object obj)
         {
-            return Equals(obj as Input);
+            return Equals(obj as IInput);
         }
 
         /// <summary>
@@ -119,11 +121,11 @@ namespace Sprache
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(Input other)
+        public bool Equals(IInput other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(_source, other._source) && _position == other._position;
+            return string.Equals(_source, other.Source) && _position == other.Position;
         }
 
         /// <summary>
