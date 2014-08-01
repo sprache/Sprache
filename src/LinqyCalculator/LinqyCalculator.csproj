@@ -80,7 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sprache\Sprache.csproj">
-      <Project>{DF5FE6F0-5ABE-4363-9184-EB6EF64F0F61}</Project>
+      <Project>{82cc8cf8-b770-4756-850a-95dd14dd312f}</Project>
       <Name>Sprache</Name>
     </ProjectReference>
   </ItemGroup>
