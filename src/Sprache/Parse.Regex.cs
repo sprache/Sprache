@@ -15,7 +15,7 @@ namespace Sprache
         {
             if (pattern == null) throw new ArgumentNullException("pattern");
 
-            return Regex(new Regex(pattern, RegexOptions.Compiled), description);
+            return Regex(new Regex(pattern), description);
         }
 
         /// <summary>
