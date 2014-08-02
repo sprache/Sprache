@@ -42,6 +42,7 @@
     <Compile Include="IResultOfT.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Parse.cs" />
+    <Compile Include="Parse.Primitives.cs" />
     <Compile Include="Parse.Optional.cs" />
     <Compile Include="Parse.Positioned.cs" />
     <Compile Include="Parse.Regex.cs" />
