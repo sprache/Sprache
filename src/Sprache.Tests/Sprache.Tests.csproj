@@ -108,6 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultTests.cs" />
     <Compile Include="Scenarios\AmqpErrorTests.cs" />
+    <Compile Include="Scenarios\AssemblerTests.cs" />
     <Compile Include="Scenarios\CsvTests.cs" />
     <Compile Include="Scenarios\ExpressionGrammarTests.cs" />
   </ItemGroup>
