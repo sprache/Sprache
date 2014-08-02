@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -355,6 +356,17 @@ namespace Sprache.Tests
             var r = sequence.TryParse("a,a,a");
             Assert.IsTrue(r.WasSuccessful);
             Assert.IsTrue(r.Remainder.AtEnd);
+        }
+
+        [Test]
+        public void FailGracefullyOnSequence()
+        {
+            var sequence = Parse.Char('a').XDelimitedBy(Parse.Char(','));
+            AssertParser.FailsWith(sequence, "a,a,b", result =>
+            {
+                StringAssert.Contains("unexpected 'b'", result.Message);
+                CollectionAssert.Contains(result.Expectations, "a");
+            });
         }
 
         [Test]
