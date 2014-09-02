@@ -111,6 +111,7 @@
     <Compile Include="Scenarios\AssemblerTests.cs" />
     <Compile Include="Scenarios\CsvTests.cs" />
     <Compile Include="Scenarios\ExpressionGrammarTests.cs" />
+    <Compile Include="Scenarios\StarDateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

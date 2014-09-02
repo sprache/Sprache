@@ -60,6 +60,19 @@
         /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int count)
         {
+            return Repeat(parser, count, count);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <param name="count"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int minimumCount, int maximumCount)
+        {
             if (parser == null) throw new ArgumentNullException("parser");
 
             return i =>
@@ -67,17 +80,18 @@
                 var remainder = i;
                 var result = new List<T>();
 
-                for (var n = 0; n < count; ++n)
+                for (var n = 0; n < maximumCount; ++n)
                 {
                     var r = parser(remainder);
-                    if (!r.WasSuccessful)
+
+                    if (!r.WasSuccessful && n < minimumCount)
                     {
                         var what = r.Remainder.AtEnd
                             ? "end of input"
                             : r.Remainder.Current.ToString();
 
                         var msg = string.Format("Unexpected '{0}'", what);
-                        var exp = string.Format("'{0}' {1} times, but was {2}", string.Join(", ", r.Expectations), count, n);
+                        var exp = string.Format("'{0}' at least {1} times, but was {2}", string.Join(", ", r.Expectations), minimumCount, n);
                         return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                     }
 
@@ -92,7 +106,6 @@
                 return Result.Success<IEnumerable<T>>(result, remainder);
             };
         }
-
 
         /// <summary>
         /// 
