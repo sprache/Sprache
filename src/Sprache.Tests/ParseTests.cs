@@ -384,6 +384,23 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void RepeatParserErrorMessagesAreReadable()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            var expectedMessage = "Parsing failure: Unexpected 'end of input'; expected 'a' between 4 and 5 times, but found 3";
+
+            try
+            {
+                var r = repeated.Parse("aaa");
+            }
+            catch(ParseException ex)
+            {
+                Assert.That(ex.Message, Is.StringStarting(expectedMessage));
+            }
+        }
+
+        [Test]
         public void CanParseSequence()
         {
             var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','));

@@ -91,7 +91,11 @@
                             : r.Remainder.Current.ToString();
 
                         var msg = string.Format("Unexpected '{0}'", what);
-                        var exp = string.Format("'{0}' at least {1} times, but was {2}", string.Join(", ", r.Expectations), minimumCount, n);
+                        var exp = string.Format("'{0}' between {1} and {2} times, but found {3}", string.Join(", ", r.Expectations), 
+                            minimumCount, 
+                            maximumCount, 
+                            n);
+
                         return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                     }
 
