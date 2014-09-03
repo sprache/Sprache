@@ -350,6 +350,57 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void RepeatParserCanParseAMinimumNumberOfValues()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            // Test failure.
+            var r = repeated.TryParse("aaa");
+            Assert.IsFalse(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+
+            // Test success.
+            r = repeated.TryParse("aaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(4, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RepeatParserCanParseAMaximumNumberOfValues()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            var r = repeated.TryParse("aaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(4, r.Remainder.Position);
+
+            r = repeated.TryParse("aaaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(5, r.Remainder.Position);
+
+            r = repeated.TryParse("aaaaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(5, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RepeatParserErrorMessagesAreReadable()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            var expectedMessage = "Parsing failure: Unexpected 'end of input'; expected 'a' between 4 and 5 times, but found 3";
+
+            try
+            {
+                var r = repeated.Parse("aaa");
+            }
+            catch(ParseException ex)
+            {
+                Assert.That(ex.Message, Is.StringStarting(expectedMessage));
+            }
+        }
+
+        [Test]
         public void CanParseSequence()
         {
             var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','));
