@@ -21,19 +21,6 @@
                 .Named("LineTerminator");
 
         /// <summary>
-        /// Parser for single line comment. Doesn't contain tail line ending
-        /// </summary>
-        /// <param name="commentStart">Symbols to start comment. I.e. "//" for C#, "#" for perl, ";" for assembler</param>
-        /// <returns></returns>
-        public static Parser<string> EndOfLineComment(string commentStart)
-        {
-            return
-                from start in String(commentStart)
-                from comment in CharExcept("\r\n").Many().Text()
-                select comment;
-        }
-
-        /// <summary>
         /// Parser for identifier starting with <paramref name="firstLetterParser"/> and continuing with <paramref name="tailLetterParser"/>
         /// </summary>
         public static Parser<string> Identifier(Parser<char> firstLetterParser, Parser<char> tailLetterParser)

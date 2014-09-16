@@ -36,6 +36,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommentParser.cs" />
     <Compile Include="IInput.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="IPositionAware.cs" />
