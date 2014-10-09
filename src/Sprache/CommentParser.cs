@@ -8,7 +8,7 @@ namespace Sprache
     /// <summary>
     /// Constructs customizable comment parsers.
     /// </summary>
-    public class CommentParser
+    public class CommentParser : IComment
     {
         ///<summary>
         ///Single-line comment header.
