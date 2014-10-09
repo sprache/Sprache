@@ -56,6 +56,9 @@
     <Compile Include="Result.cs" />
     <Compile Include="ResultHelper.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
