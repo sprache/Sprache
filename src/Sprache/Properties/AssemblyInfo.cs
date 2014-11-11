@@ -4,4 +4,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("Sprache Tiny C# Parser Combinators")]
 [assembly: AssemblyProduct("Sprache")]
 [assembly: AssemblyCopyright("Copyright © Nicholas Blumhardt 2010")]
-[assembly: InternalsVisibleTo("Sprache.Tests")]
+[assembly: InternalsVisibleTo("Sprache.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001008792f016f06a20d1d19e42745b3ad821dac1fe30d2996b6a119794d0a2c278a1a1963133efdf90fe0a6d76b1142671f90c7ca6dd5e945949ee2d347ac22ce767cd2a3dc0b7aa5d38795e50646a35e4def2ba50a967eeb96c074905d9258675770a9864785029f230943d930e2b604b35aa188a24a44346a8f136ef923ac646c8")]
