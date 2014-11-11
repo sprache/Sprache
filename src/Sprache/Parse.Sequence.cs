@@ -66,8 +66,6 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parser"></param>
-        /// <param name="count"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
