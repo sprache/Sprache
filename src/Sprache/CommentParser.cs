@@ -38,22 +38,37 @@ namespace Sprache
             Single = "//";
             MultiOpen = "/*";
             MultiClose = "*/";
-            NewLine = "\r\n";
+            NewLine = "\n";
         }
 
         /// <summary>
-        /// Initializes a Comment with custom headers newline characters.
+        /// Initializes a Comment with custom multi-line headers and newline characters.
+        /// Single-line headers are made null, it is assumed they would not be used.
+        /// </summary>
+        /// <param name="multiOpen"></param>
+        /// <param name="multiClose"></param>
+        /// <param name="newLine"></param>
+        public CommentParser(string multiOpen, string multiClose, string newLine = "\n")
+        {
+            Single = null;
+            MultiOpen = multiOpen;
+            MultiClose = multiClose;
+            NewLine = newLine;
+        }
+
+        /// <summary>
+        /// Initializes a Comment with custom headers and newline characters.
         /// </summary>
         /// <param name="single"></param>
         /// <param name="multiOpen"></param>
         /// <param name="multiClose"></param>
         /// <param name="newLine"></param>
-        public CommentParser(string single, string multiOpen, string multiClose, string newLine = "\r\n")
+        public CommentParser(string single, string multiOpen, string multiClose, string newLine = "\n")
         {
             Single = single;
             MultiOpen = multiOpen;
             MultiClose = multiClose;
-            newLine = NewLine;
+            NewLine = newLine;
         }
 
         ///<summary>
@@ -67,7 +82,7 @@ namespace Sprache
                     throw new ParseException("Field 'Single' is null; single-line comments not allowed.");
 
                 return from first in Parse.String(Single)
-                       from rest in Parse.CharExcept("\r\n").Many().Text()
+                       from rest in Parse.CharExcept(NewLine).Many().Text()
                        select rest;
             }
             private set { }
