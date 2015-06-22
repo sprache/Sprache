@@ -153,12 +153,6 @@ namespace Sprache.Tests
              select first.Concat(rest))
             .Or(Parse.Char('a').Once());
 
-        [Test, Ignore("Not Implemented")]
-        public void CanParseLeftRecursiveGrammar()
-        {
-            AssertParser.SucceedsWith(ASeq.End(), "a,a,a", r => Assert.AreEqual(new string(r.ToArray()), "aaa"));
-        }
-
         [Test]
         public void DetectsLeftRecursion()
         {
@@ -176,12 +170,6 @@ namespace Sprache.Tests
              from rest in Parse.Char('b').Once()
              select first.Concat(rest))
             .Or(Parse.Char('b').Once());
-
-        [Test, Ignore("Not Implemented")]
-        public void CanParseMutuallyLeftRecursiveGrammar()
-        {
-            AssertParser.SucceedsWithAll(ABSeq.End(), "baba");
-        }
 
         [Test]
         public void DetectsMutualLeftRecursion()

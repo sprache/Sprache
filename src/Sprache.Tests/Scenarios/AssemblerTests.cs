@@ -23,7 +23,7 @@ namespace Sprache.Tests.Scenarios
             from operands in AsmToken(Identifier).XDelimitedBy(Parse.Char(','))
             select Tuple.Create(instructionName, operands.ToArray());
 
-        public static CommentParser Comment = new CommentParser() { Single = ";" };
+        public static CommentParser Comment = new CommentParser { Single = ";", NewLine = Environment.NewLine };
 
         public static Parser<string> LabelId =
             Parse.Identifier(Parse.Letter.Or(Parse.Chars("._?")), Parse.LetterOrDigit.Or(Parse.Chars("_@#$~.?")));

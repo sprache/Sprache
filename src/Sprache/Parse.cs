@@ -257,7 +257,7 @@ namespace Sprache
 
                 while (r.WasSuccessful)
                 {
-                    if (remainder == r.Remainder)
+                    if (remainder.Equals(r.Remainder))
                         break;
 
                     result.Add(r.Value);
@@ -420,7 +420,7 @@ namespace Sprache
                     return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
                 
-                if (fr.Remainder == i)
+                if (fr.Remainder.Equals(i))
                     return second(i).IfFailure(sf => fr);
 
                 return fr;
@@ -439,7 +439,7 @@ namespace Sprache
             if (parser == null) throw new ArgumentNullException("parser");
             if (name == null) throw new ArgumentNullException("name");
 
-            return i => parser(i).IfFailure(f => f.Remainder == i ?
+            return i => parser(i).IfFailure(f => f.Remainder.Equals(i) ?
                 Result.Failure<T>(f.Remainder, f.Message, new[] { name }) :
                 f);
         }
@@ -462,14 +462,14 @@ namespace Sprache
                 if (!fr.WasSuccessful)
                 {
                     // The 'X' part
-                    if (fr.Remainder != i)
+                    if (!fr.Remainder.Equals(i))
                         return fr; 
                     
                     return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
                 // This handles a zero-length successful application of first.
-                if (fr.Remainder == i)
+                if (fr.Remainder.Equals(i))
                     return second(i).IfFailure(sf => fr);
 
                 return fr;
@@ -517,7 +517,7 @@ namespace Sprache
             if (first == null) throw new ArgumentNullException("first");
             if (second == null) throw new ArgumentNullException("second");
 
-            return first.Then(f => second.Select(s => f.Concat(s)));
+            return first.Then(f => second.Select(f.Concat));
         }
 
         /// <summary>
@@ -740,18 +740,29 @@ namespace Sprache
         /// </summary>
         public static readonly Parser<string> Number = Numeric.AtLeastOnce().Text();
 
-        static readonly Parser<string> DecimalWithoutLeadingDigits =
-            from nothing in Return("") // dummy so that CultureInfo.CurrentCulture is evaluated later
-            from dot in String(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Text()
-            from fraction in Number
-            select dot + fraction;
+        static Parser<string> DecimalWithoutLeadingDigits(CultureInfo ci = null)
+        {
+            return from nothing in Return("")
+                   // dummy so that CultureInfo.CurrentCulture is evaluated later
+                   from dot in String((ci ?? CultureInfo.CurrentCulture).NumberFormat.NumberDecimalSeparator).Text()
+                   from fraction in Number
+                   select dot + fraction;
+        }
 
-        static readonly Parser<string> DecimalWithLeadingDigits =
-            Number.Then(n => DecimalWithoutLeadingDigits.XOr(Return("")).Select(f => n + f));
+        static Parser<string> DecimalWithLeadingDigits(CultureInfo ci = null)
+        {
+            return Number.Then(n => DecimalWithoutLeadingDigits(ci).XOr(Return("")).Select(f => n + f));
+        }
 
         /// <summary>
-        /// Parse a decimal number.
+        /// Parse a decimal number using the current culture's separator character.
         /// </summary>
- 	    public static readonly Parser<string> Decimal = DecimalWithLeadingDigits.XOr(DecimalWithoutLeadingDigits);
+        public static readonly Parser<string> Decimal = DecimalWithLeadingDigits().XOr(DecimalWithoutLeadingDigits());
+
+        /// <summary>
+        /// Parse a decimal number with separator '.'.
+        /// </summary>
+        public static readonly Parser<string> DecimalInvariant = DecimalWithLeadingDigits(CultureInfo.InvariantCulture)
+                                                                     .XOr(DecimalWithoutLeadingDigits(CultureInfo.InvariantCulture));
     }
 }
