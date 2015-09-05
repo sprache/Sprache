@@ -28,6 +28,8 @@ namespace Sprache
         {
             if (regex == null) throw new ArgumentNullException("regex");
 
+            regex = OptimizeRegex(regex);
+
             var expectations = description == null
                 ? new string[0]
                 : new[] { description };
@@ -40,7 +42,7 @@ namespace Sprache
                     var input = i.Source.Substring(i.Position);
                     var match = regex.Match(input);
 
-                    if (match.Success && match.Index == 0)
+                    if (match.Success)
                     {
                         for (int j = 0; j < match.Length; j++)
                             remainder = remainder.Advance();
@@ -59,6 +61,20 @@ namespace Sprache
 
                 return Result.Failure<string>(i, "Unexpected end of input", expectations);
             };
+        }
+
+        /// <summary>
+        /// Optimize the regex by only matching successfully at the start of the input.
+        /// Do this by wrapping the whole regex in non-capturing parentheses preceded by
+        ///  a `^'.
+        /// </summary>
+        /// <remarks>
+        /// This method is invoked via reflection in unit tests. If renamed, the tests
+        /// will need to be modified or they will fail.
+        /// </remarks>
+        private static Regex OptimizeRegex(Regex regex)
+        {
+            return new Regex(string.Format("^(?:{0})", regex), regex.Options);
         }
     }
 }
