@@ -28,6 +28,34 @@ namespace Sprache
         {
             if (regex == null) throw new ArgumentNullException("regex");
 
+            return RegexMatch(regex, description).Then(match => Return(match.Value));
+        }
+
+        /// <summary>
+        /// Construct a parser from the given regular expression, returning a parser of
+        /// type <see cref="Match"/>.
+        /// </summary>
+        /// <param name="pattern">The regex expression.</param>
+        /// <param name="description">Description of characters that don't match.</param>
+        /// <returns>A parser of regex match objects.</returns>
+        public static Parser<Match> RegexMatch(string pattern, string description = null)
+        {
+            if (pattern == null) throw new ArgumentNullException("pattern");
+
+            return RegexMatch(new Regex(pattern), description);
+        }
+
+        /// <summary>
+        /// Construct a parser from the given regular expression, returning a parser of
+        /// type <see cref="Match"/>.
+        /// </summary>
+        /// <param name="regex">The regex expression.</param>
+        /// <param name="description">Description of characters that don't match.</param>
+        /// <returns>A parser of regex match objects.</returns>
+        public static Parser<Match> RegexMatch(Regex regex, string description = null)
+        {
+            if (regex == null) throw new ArgumentNullException("regex");
+
             regex = OptimizeRegex(regex);
 
             var expectations = description == null
@@ -47,19 +75,19 @@ namespace Sprache
                         for (int j = 0; j < match.Length; j++)
                             remainder = remainder.Advance();
 
-                        return Result.Success(match.Value, remainder);
+                        return Result.Success(match, remainder);
                     }
 
                     var found = match.Index == input.Length
                                     ? "end of source"
                                     : string.Format("`{0}'", input[match.Index]);
-                    return Result.Failure<string>(
+                    return Result.Failure<Match>(
                         remainder,
                         "string matching regex `" + regex.ToString() + "' expected but " + found + " found",
                         expectations);
                 }
 
-                return Result.Failure<string>(i, "Unexpected end of input", expectations);
+                return Result.Failure<Match>(i, "Unexpected end of input", expectations);
             };
         }
 
