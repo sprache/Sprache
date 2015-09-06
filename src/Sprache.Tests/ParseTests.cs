@@ -260,6 +260,26 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void RegexMatchParserConsumesInputOnSuccessfulMatch()
+        {
+            var digits = Parse.RegexMatch(@"\d(\d*)");
+            var r = digits.TryParse("123d");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual("123", r.Value.Value);
+            Assert.AreEqual("23", r.Value.Groups[1].Value);
+            Assert.AreEqual(3, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RegexMatchParserDoesNotConsumeInputOnFailedMatch()
+        {
+            var digits = Parse.RegexMatch(@"\d+");
+            var r = digits.TryParse("d123");
+            Assert.IsFalse(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+        }
+
+        [Test]
         public void PositionedParser()
         {
             var pos = (from s in Parse.String("winter").Text()
