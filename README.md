@@ -51,6 +51,7 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
  * The [XAML binding expression parser](https://github.com/SuperJMN/OmniXAML/blob/master/Source/OmniXaml/Parsers/MarkupExtensions/MarkupExtensionParser.cs) in [OmniXaml](https://github.com/SuperJMN/OmniXAML), the cross-platform XAML implementation
  * The query parser in [Seq](https://getseq.net), a structured log server for .NET
  * The [connection string parser](https://github.com/EasyNetQ/EasyNetQ/blob/master/Source/EasyNetQ/ConnectionString/ConnectionStringGrammar.cs) in [EasyNetQ](http://easynetq.com/), a .NET API for RabbitMQ
+ * Sprache appears in the [credits for JetBrains ReSharper](https://confluence.jetbrains.com/display/ReSharper/Third-Party+Software+Shipped+With+ReSharper#Third-PartySoftwareShippedWithReSharper-Sprache)
 
 Background
 ----------
