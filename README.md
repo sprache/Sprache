@@ -5,6 +5,8 @@ It doesn't compete with "industrial strength" language workbenches - it fits som
 Usage
 -----
 
+[![Join the chat at https://gitter.im/sprache/Sprache](https://badges.gitter.im/sprache/Sprache.svg)](https://gitter.im/sprache/Sprache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Unlike most parser-building frameworks, you use Sprache directly from your program code, and don't need to set up any build-time code generation tasks. Sprache itself is a single tiny assembly.
 
 A simple parser might parse a sequence of characters:
