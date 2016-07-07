@@ -20,3 +20,5 @@ TestResult.xml
 # Ignore NuGet package files.
 *.nupkg
 Package/lib
+.vs
+project.lock.json

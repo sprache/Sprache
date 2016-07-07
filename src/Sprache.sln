@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sprache.Tests", "Sprache.Tests\Sprache.Tests.csproj", "{68C733D9-5ACC-4AFA-85E5-FB9146708DCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlExample", "XmlExample\XmlExample.csproj", "{D13B4DBC-CD71-44BD-BEA6-746684857784}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqyCalculator", "LinqyCalculator\LinqyCalculator.csproj", "{F031D517-60B1-4C98-9369-91FDA65C7FDB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{88A61A5D-F071-4CC1-9C07-FFCC6191101B}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,7 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Version.cs = Version.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sprache", "Sprache\Sprache.csproj", "{82CC8CF8-B770-4756-850A-95DD14DD312F}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sprache", "Sprache\Sprache.xproj", "{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LinqyCalculator", "LinqyCalculator\LinqyCalculator.xproj", "{10A9990A-32EC-453B-8806-07F1602E2411}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,17 +59,6 @@ Global
 		{D13B4DBC-CD71-44BD-BEA6-746684857784}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D13B4DBC-CD71-44BD-BEA6-746684857784}.Release|x86.ActiveCfg = Release|x86
 		{D13B4DBC-CD71-44BD-BEA6-746684857784}.Release|x86.Build.0 = Release|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Debug|x86.ActiveCfg = Debug|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Debug|x86.Build.0 = Debug|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Release|x86.ActiveCfg = Release|x86
-		{F031D517-60B1-4C98-9369-91FDA65C7FDB}.Release|x86.Build.0 = Release|x86
 		{05708A1B-EABC-45BA-A6A1-58AF51B7A2B0}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{05708A1B-EABC-45BA-A6A1-58AF51B7A2B0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{05708A1B-EABC-45BA-A6A1-58AF51B7A2B0}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -92,16 +81,30 @@ Global
 		{4BFA4889-0FA0-4EAE-84FA-E95924A18ABD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4BFA4889-0FA0-4EAE-84FA-E95924A18ABD}.Release|x86.ActiveCfg = Release|x86
 		{4BFA4889-0FA0-4EAE-84FA-E95924A18ABD}.Release|x86.Build.0 = Release|x86
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{82CC8CF8-B770-4756-850A-95DD14DD312F}.Release|x86.ActiveCfg = Release|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Debug|x86.Build.0 = Debug|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Release|x86.ActiveCfg = Release|Any CPU
+		{2FA2086F-BCD4-4CF8-B171-D9F90264A53B}.Release|x86.Build.0 = Release|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Debug|x86.Build.0 = Debug|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Release|x86.ActiveCfg = Release|Any CPU
+		{10A9990A-32EC-453B-8806-07F1602E2411}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -87,12 +87,6 @@
     <Compile Include="TemplateNode.cs" />
     <Compile Include="TemplateParser.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sprache\Sprache.csproj">
-      <Project>{82cc8cf8-b770-4756-850a-95dd14dd312f}</Project>
-      <Name>Sprache</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
