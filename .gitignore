@@ -21,3 +21,4 @@ TestResult.xml
 *.nupkg
 Package/lib
 .vs
+project.lock.json
