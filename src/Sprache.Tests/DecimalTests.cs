@@ -8,6 +8,7 @@ namespace Sprache.Tests
     public class DecimalTests
     {
         private static readonly Parser<string> DecimalParser = Parse.Decimal.End();
+        private static readonly Parser<string> DecimalInvariantParser = Parse.DecimalInvariant.End();
 
         private CultureInfo _previousCulture;
 
@@ -49,5 +50,12 @@ namespace Sprache.Tests
         {
             DecimalParser.Parse("1A.5");
         }
+
+        [Test]
+        public void LeadingDigitsInvariant()
+        {
+            Assert.AreEqual("12.23", DecimalInvariantParser.Parse("12.23"));
+        }
+
     }
 }

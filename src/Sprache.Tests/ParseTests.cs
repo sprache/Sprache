@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -152,12 +153,6 @@ namespace Sprache.Tests
              select first.Concat(rest))
             .Or(Parse.Char('a').Once());
 
-        [Test, Ignore("Not Implemented")]
-        public void CanParseLeftRecursiveGrammar()
-        {
-            AssertParser.SucceedsWith(ASeq.End(), "a,a,a", r => Assert.AreEqual(new string(r.ToArray()), "aaa"));
-        }
-
         [Test]
         public void DetectsLeftRecursion()
         {
@@ -175,12 +170,6 @@ namespace Sprache.Tests
              from rest in Parse.Char('b').Once()
              select first.Concat(rest))
             .Or(Parse.Char('b').Once());
-
-        [Test, Ignore("Not Implemented")]
-        public void CanParseMutuallyLeftRecursiveGrammar()
-        {
-            AssertParser.SucceedsWithAll(ABSeq.End(), "baba");
-        }
 
         [Test]
         public void DetectsMutualLeftRecursion()
@@ -271,6 +260,26 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void RegexMatchParserConsumesInputOnSuccessfulMatch()
+        {
+            var digits = Parse.RegexMatch(@"\d(\d*)");
+            var r = digits.TryParse("123d");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual("123", r.Value.Value);
+            Assert.AreEqual("23", r.Value.Groups[1].Value);
+            Assert.AreEqual(3, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RegexMatchParserDoesNotConsumeInputOnFailedMatch()
+        {
+            var digits = Parse.RegexMatch(@"\d+");
+            var r = digits.TryParse("d123");
+            Assert.IsFalse(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+        }
+
+        [Test]
         public void PositionedParser()
         {
             var pos = (from s in Parse.String("winter").Text()
@@ -349,12 +358,74 @@ namespace Sprache.Tests
         }
 
         [Test]
+        public void RepeatParserCanParseAMinimumNumberOfValues()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            // Test failure.
+            var r = repeated.TryParse("aaa");
+            Assert.IsFalse(r.WasSuccessful);
+            Assert.AreEqual(0, r.Remainder.Position);
+
+            // Test success.
+            r = repeated.TryParse("aaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(4, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RepeatParserCanParseAMaximumNumberOfValues()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            var r = repeated.TryParse("aaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(4, r.Remainder.Position);
+
+            r = repeated.TryParse("aaaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(5, r.Remainder.Position);
+
+            r = repeated.TryParse("aaaaaa");
+            Assert.IsTrue(r.WasSuccessful);
+            Assert.AreEqual(5, r.Remainder.Position);
+        }
+
+        [Test]
+        public void RepeatParserErrorMessagesAreReadable()
+        {
+            var repeated = Parse.Char('a').Repeat(4, 5);
+
+            var expectedMessage = "Parsing failure: Unexpected 'end of input'; expected 'a' between 4 and 5 times, but found 3";
+
+            try
+            {
+                var r = repeated.Parse("aaa");
+            }
+            catch(ParseException ex)
+            {
+                Assert.That(ex.Message, Is.StringStarting(expectedMessage));
+            }
+        }
+
+        [Test]
         public void CanParseSequence()
         {
             var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','));
             var r = sequence.TryParse("a,a,a");
             Assert.IsTrue(r.WasSuccessful);
             Assert.IsTrue(r.Remainder.AtEnd);
+        }
+
+        [Test]
+        public void FailGracefullyOnSequence()
+        {
+            var sequence = Parse.Char('a').XDelimitedBy(Parse.Char(','));
+            AssertParser.FailsWith(sequence, "a,a,b", result =>
+            {
+                StringAssert.Contains("unexpected 'b'", result.Message);
+                CollectionAssert.Contains(result.Expectations, "a");
+            });
         }
 
         [Test]

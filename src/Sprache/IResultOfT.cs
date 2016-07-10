@@ -31,6 +31,6 @@ namespace Sprache
         /// <summary>
         /// Gets the remainder of the input.
         /// </summary>
-        Input Remainder { get; }
+        IInput Remainder { get; }
     }
 }
