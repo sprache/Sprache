@@ -12,7 +12,7 @@ namespace Sprache.Tests.Scenarios
         {
             const string input = "1 + (2 * 3";
             var x = Assert.Throws<ParseException>(() => ExpressionParser.ParseExpression(input));
-            Assert.That(x.Message, Is.StringContaining("expected )"));
+            Assert.That(x.Message, Does.Contain("expected )"));
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace Sprache.Tests.Scenarios
         {
             const string input = "1 + * 3";
             var x = Assert.Throws<ParseException>(() => ExpressionParser.ParseExpression(input));
-            Assert.That(x.Message, Is.Not.StringContaining("expected end of input"));
+            Assert.That(x.Message, Does.Not.Contain("expected end of input"));
         }    
     }
 

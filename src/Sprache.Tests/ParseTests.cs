@@ -404,7 +404,7 @@ namespace Sprache.Tests
             }
             catch(ParseException ex)
             {
-                Assert.That(ex.Message, Is.StringStarting(expectedMessage));
+                Assert.That(ex.Message, Does.StartWith(expectedMessage));
             }
         }
 

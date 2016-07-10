@@ -21,10 +21,10 @@ namespace Sprache.Tests.Scenarios
             Assert.That(StarTrek2009_StarDate.Parse("2259.55"), Is.EqualTo(new DateTime(2259, 2, 24)));
         }
 
-        [Test, ExpectedException(typeof(ParseException))]
+        [Test]
         public void InvalidStarDatesAreNotParsed()
         {
-            var date = StarTrek2009_StarDate.Parse("2259.4000");
+            Assert.Throws<ParseException>(() => StarTrek2009_StarDate.Parse("2259.4000"));
         }
     }
 }
