@@ -103,9 +103,9 @@ namespace XmlExample
     {
         static void Main()
         {
-            StreamReader reader = new StreamReader("TestFile.xml");
+            StreamReader reader = File.OpenText("TestFile.xml");
             var parsed = XmlParser.Document.Parse(reader.ReadToEnd());
-            reader.Close();
+            reader.Dispose();
             Console.WriteLine(parsed);
             Console.ReadKey(true);
         }
