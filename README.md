@@ -1,4 +1,4 @@
-Sprache is a simple, lightweight library for constructing parsers directly in C# code.
+(This is the 2.0 develop branch.) Sprache is a simple, lightweight library for constructing parsers directly in C# code.
 
 It doesn't compete with "industrial strength" language workbenches - it fits somewhere in between regular expressions and a full-featured toolset like [ANTLR](http://antlr.org).
 
