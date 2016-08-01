@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Sprache;
 
 namespace LinqyCalculator
@@ -33,7 +34,7 @@ namespace LinqyCalculator
 
         static Expression CallFunction(string name, Expression[] parameters)
         {
-            var methodInfo = typeof (Math).GetMethod(name, parameters.Select(e => e.Type).ToArray());
+            var methodInfo = typeof (Math).GetTypeInfo().GetMethod(name, parameters.Select(e => e.Type).ToArray());
             if (methodInfo == null)
                 throw new ParseException(string.Format("Function '{0}({1})' does not exist.", name,
                                                        string.Join(",", parameters.Select(e => e.Type.Name))));

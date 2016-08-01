@@ -75,7 +75,7 @@ namespace TinyTemplates.Tests
             Assert.AreEqual("Saturday", o);
         }
 
-        [Test, Ignore]
+        [Test, Ignore("Reason: unknown")]
         public void WithinIterationParentModelPropertiesAreAccessible()
         {
             var tt = new Template("#|Days#DateTime1.DayOfWeek#.");

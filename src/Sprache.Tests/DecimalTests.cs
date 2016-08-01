@@ -1,6 +1,5 @@
 ﻿﻿using NUnit.Framework;
 using System.Globalization;
-using System.Threading;
 
 namespace Sprache.Tests
 {
@@ -15,14 +14,14 @@ namespace Sprache.Tests
         [SetUp]
         public void Init()
         {
-            _previousCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            _previousCulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
         [TearDown]
         public void Cleanup()
         {
-            Thread.CurrentThread.CurrentCulture = _previousCulture;
+            CultureInfo.CurrentCulture = _previousCulture;
         }
 
         [Test]
@@ -38,17 +37,15 @@ namespace Sprache.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(ParseException))]
         public void TwoPeriods()
         {
-            DecimalParser.Parse("1.2.23");
+            Assert.Throws<ParseException>(() => DecimalParser.Parse("1.2.23"));
         }
 
         [Test]
-        [ExpectedException(typeof(ParseException))]
         public void Letters()
         {
-            DecimalParser.Parse("1A.5");
+            Assert.Throws<ParseException>(() => DecimalParser.Parse("1A.5"));
         }
 
         [Test]
