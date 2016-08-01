@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sprache;
+using System.IO;
 
 namespace XmlExample
 {
@@ -45,6 +46,8 @@ namespace XmlExample
 
     public static class XmlParser
     {
+        static CommentParser Comment = new CommentParser("<!--", "-->", "\r\n");
+
         static readonly Parser<string> Identifier =
             from first in Parse.Letter.Once()
             from rest in Parse.LetterOrDigit.XOr(Parse.Char('-')).XOr(Parse.Char('_')).Many()
@@ -81,10 +84,14 @@ namespace XmlExample
         static readonly Parser<Node> ShortNode = Tag(from id in Identifier
                                                      from slash in Parse.Char('/')
                                                      select new Node { Name = id });
-        
+
         static readonly Parser<Node> Node = ShortNode.Or(FullNode);
 
-        static readonly Parser<Item> Item = Node.Select(n => (Item)n).XOr(Content);
+        static readonly Parser<Item> Item =
+            from leading in Comment.MultiLineComment.Many()
+            from item in Node.Select(n => (Item)n).XOr(Content)
+            from trailing in Comment.MultiLineComment.Many()
+            select item;
 
         public static readonly Parser<Document> Document =
             from leading in Parse.WhiteSpace.Many()
@@ -96,8 +103,9 @@ namespace XmlExample
     {
         static void Main()
         {
-            const string doc = "<body><p>hello,<br/> <i>world!</i></p></body>";
-            var parsed = XmlParser.Document.Parse(doc);
+            StreamReader reader = new StreamReader("TestFile.xml");
+            var parsed = XmlParser.Document.Parse(reader.ReadToEnd());
+            reader.Close();
             Console.WriteLine(parsed);
             Console.ReadKey(true);
         }

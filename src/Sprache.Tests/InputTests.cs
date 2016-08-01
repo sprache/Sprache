@@ -96,7 +96,7 @@ namespace Sprache.Tests
         [Test]
         public void LineCountingSmokeTest()
         {
-            var i = new Input("abc\ndef");
+            IInput i = new Input("abc\ndef");
             Assert.AreEqual(0, i.Position);
             Assert.AreEqual(1, i.Line);
             Assert.AreEqual(1, i.Column);

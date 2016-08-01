@@ -106,16 +106,13 @@
     <Compile Include="ParseTests.cs" />
     <Compile Include="PosAwareStr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexTests.cs" />
     <Compile Include="ResultTests.cs" />
     <Compile Include="Scenarios\AmqpErrorTests.cs" />
+    <Compile Include="Scenarios\AssemblerTests.cs" />
     <Compile Include="Scenarios\CsvTests.cs" />
     <Compile Include="Scenarios\ExpressionGrammarTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sprache\Sprache.csproj">
-      <Project>{DF5FE6F0-5ABE-4363-9184-EB6EF64F0F61}</Project>
-      <Name>Sprache</Name>
-    </ProjectReference>
+    <Compile Include="Scenarios\StarDateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -136,6 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sprache\Sprache.csproj">
+      <Project>{82cc8cf8-b770-4756-850a-95dd14dd312f}</Project>
+      <Name>Sprache</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
