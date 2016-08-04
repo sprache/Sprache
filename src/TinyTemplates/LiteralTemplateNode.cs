@@ -10,7 +10,7 @@ namespace TinyTemplates
 
         public LiteralTemplateNode(string text)
         {
-            if (text == null) throw new ArgumentNullException("text");
+            if (text == null) throw new ArgumentNullException(nameof(text));
             _text = text;
         }
 

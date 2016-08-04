@@ -24,14 +24,14 @@ namespace TinyTemplates
 
         public Template(string templateText)
         {
-            if (templateText == null) throw new ArgumentNullException("templateText");
+            if (templateText == null) throw new ArgumentNullException(nameof(templateText));
             _root = TemplateParser.ParseTemplate(templateText);
         }
 
         public void Execute(object model, TextWriter output)
         {
-            if (model == null) throw new ArgumentNullException("model");
-            if (output == null) throw new ArgumentNullException("output");
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (output == null) throw new ArgumentNullException(nameof(output));
             var modelStack = new Stack<object>();
             modelStack.Push(model);
             _root.Execute(modelStack, output);

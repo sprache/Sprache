@@ -24,8 +24,8 @@ namespace Sprache
         /// <returns>The result of the parser</returns>
         public static IResult<T> TryParse<T>(this Parser<T> parser, string input)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (input == null) throw new ArgumentNullException("input");
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             return parser(new Input(input));
         }
@@ -40,8 +40,8 @@ namespace Sprache
         /// <exception cref="Sprache.ParseException">It contains the details of the parsing error.</exception>
         public static T Parse<T>(this Parser<T> parser, string input)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (input == null) throw new ArgumentNullException("input");
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             var result = parser.TryParse(input);
             

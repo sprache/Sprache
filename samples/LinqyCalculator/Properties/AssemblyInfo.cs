@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Sprache")]
+[assembly: AssemblyProduct("LinqyCalculator")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,5 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5600f661-00ab-4711-8c29-fb8ddf45a5ec")]
-[assembly: InternalsVisibleTo("Sprache.Tests")]
+[assembly: Guid("d7a17f71-dd1e-4cd9-9cc8-66322fd8698e")]
