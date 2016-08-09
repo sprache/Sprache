@@ -1,6 +1,6 @@
 ﻿{
   "title": "Sprache",
-  "version": "2.1",
+  "version": "2.0.0",
   "authors": [ "Nicholas Blumhardt and Contributors" ],
   "copyright": "Copyright Sprache Contributors 2013",
   "description": "Sprache is a simple, lightweight library for constructing parsers directly in C# code.",
