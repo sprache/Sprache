@@ -1,4 +1,4 @@
-version: 2.1.{build}
+version: '{build}'
 branches:
   only:
   - master
@@ -8,7 +8,7 @@ pull_requests:
 install:
   - ps: .\build\install.ps1
 build_script:
-- ps: .\build\build.ps1 $env:APPVEYOR_BUILD_VERSION $env:APPVEYOR_REPO_TAG_NAME
+- ps: .\build\build.ps1
 test_script:
 - ps: .\build\test.ps1
 artifacts:
@@ -20,5 +20,4 @@ deploy:
   skip_symbols: true
   artifact: /.*\.nupkg/
   on:
-      branch: master                # release from master branch only
-      appveyor_repo_tag: true       # deploy on tag push only
+      branch: /^(master|develop)$/
