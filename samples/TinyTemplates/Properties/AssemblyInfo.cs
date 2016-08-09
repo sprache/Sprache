@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Sprache")]
+[assembly: AssemblyProduct("TinyTemplates")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,5 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5600f661-00ab-4711-8c29-fb8ddf45a5ec")]
-[assembly: InternalsVisibleTo("Sprache.Tests")]
+[assembly: Guid("a0410d8d-2d98-4ee4-a177-db31ca493d19")]

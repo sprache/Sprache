@@ -13,7 +13,7 @@ namespace Sprache
         /// <returns>a parse of string</returns>
         public static Parser<string> Regex(string pattern, string description = null)
         {
-            if (pattern == null) throw new ArgumentNullException("pattern");
+            if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
             return Regex(new Regex(pattern), description);
         }
@@ -26,7 +26,7 @@ namespace Sprache
         /// <returns>a parse of string</returns>
         public static Parser<string> Regex(Regex regex, string description = null)
         {
-            if (regex == null) throw new ArgumentNullException("regex");
+            if (regex == null) throw new ArgumentNullException(nameof(regex));
 
             return RegexMatch(regex, description).Then(match => Return(match.Value));
         }
@@ -40,7 +40,7 @@ namespace Sprache
         /// <returns>A parser of regex match objects.</returns>
         public static Parser<Match> RegexMatch(string pattern, string description = null)
         {
-            if (pattern == null) throw new ArgumentNullException("pattern");
+            if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
             return RegexMatch(new Regex(pattern), description);
         }
@@ -54,7 +54,7 @@ namespace Sprache
         /// <returns>A parser of regex match objects.</returns>
         public static Parser<Match> RegexMatch(Regex regex, string description = null)
         {
-            if (regex == null) throw new ArgumentNullException("regex");
+            if (regex == null) throw new ArgumentNullException(nameof(regex));
 
             regex = OptimizeRegex(regex);
 
@@ -83,7 +83,7 @@ namespace Sprache
                                     : string.Format("`{0}'", input[match.Index]);
                     return Result.Failure<Match>(
                         remainder,
-                        "string matching regex `" + regex.ToString() + "' expected but " + found + " found",
+                        "string matching regex `" + regex + "' expected but " + found + " found",
                         expectations);
                 }
 
