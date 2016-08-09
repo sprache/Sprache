@@ -1,11 +1,13 @@
-(This is the 2.0 develop branch.) Sprache is a simple, lightweight library for constructing parsers directly in C# code.
+
+# Sprache [![Join the chat at https://gitter.im/sprache/Sprache](https://badges.gitter.im/sprache/Sprache.svg)](https://gitter.im/sprache/Sprache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://nuget.org/packages/Sprache) [![Build status](https://ci.appveyor.com/api/projects/status/xrn2d7b9crqj8l4a?svg=true)](https://ci.appveyor.com/project/Sprache/sprache)
+
+Sprache is a simple, lightweight library for constructing parsers directly in C# code.
 
 It doesn't compete with "industrial strength" language workbenches - it fits somewhere in between regular expressions and a full-featured toolset like [ANTLR](http://antlr.org).
 
-Usage
------
+![Sprache](https://avatars1.githubusercontent.com/u/1999078?v=3&s=200)
 
-[![Join the chat at https://gitter.im/sprache/Sprache](https://badges.gitter.im/sprache/Sprache.svg)](https://gitter.im/sprache/Sprache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+### Usage
 
 Unlike most parser-building frameworks, you use Sprache directly from your program code, and don't need to set up any build-time code generation tasks. Sprache itself is a single tiny assembly.
 
@@ -31,8 +33,7 @@ var id = identifier.Parse(" abc123  ");
 Assert.AreEqual("abc123", id);
 ```
 
-Examples and Tutorials
-----------------------
+### Examples and Tutorials
 
 The best place to start is [this introductory article](http://nblumhardt.com/2010/01/building-an-external-dsl-in-c/).
 
@@ -55,8 +56,7 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
  * The [connection string parser](https://github.com/EasyNetQ/EasyNetQ/blob/master/Source/EasyNetQ/ConnectionString/ConnectionStringGrammar.cs) in [EasyNetQ](http://easynetq.com/), a .NET API for RabbitMQ
  * Sprache appears in the [credits for JetBrains ReSharper](https://confluence.jetbrains.com/display/ReSharper/Third-Party+Software+Shipped+With+ReSharper#Third-PartySoftwareShippedWithReSharper-Sprache)
 
-Background
-----------
+### Background
 
 Parser combinators are covered extensively on the web. The original paper describing the monadic implementation by [Graham Hutton and Eric Meijer](http://www.cs.nott.ac.uk/~gmh/monparsing.pdf) is very readable. Sprache was originally written by [Nicholas Blumhardt](http://nblumhardt.com) and grew out of some exercises in [Hutton's Haskell book](http://www.amazon.com/Programming-Haskell-Graham-Hutton/dp/0521692695).
 
