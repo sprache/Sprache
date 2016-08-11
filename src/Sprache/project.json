@@ -36,6 +36,16 @@
         "define": [ "STRING_IS_ENUMERABLE", "STRING_JOIN_ENUMERABLE" ]
       }
     },
+    "sl5": {
+      "frameworkAssemblies": {
+        "System": "5.0.5",
+        "System.Core": "5.0.5",
+        "mscorlib": "5.0.5"
+      },
+      "buildOptions": {
+        "define": [ "STRING_IS_ENUMERABLE", "STRING_JOIN_ENUMERABLE" ]
+      }
+    },
     "netstandard1.0": {
       "dependencies": {
         "System.Globalization": "4.0.11",
