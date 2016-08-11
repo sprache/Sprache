@@ -29,7 +29,7 @@ namespace Sprache
                         return Result.Success(i.Current, i.Advance());
 
                     return Result.Failure<char>(i,
-                        string.Format("unexpected '{0}'", i.Current),
+                        $"unexpected '{i.Current}'",
                         new[] { description });
                 }
 
@@ -68,7 +68,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<char> Chars(params char[] c)
         {
-            return Char(c.Contains, string.Join("|", c));
+            return Char(c.Contains, StringExtensions.Join("|", c));
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<char> Chars(string c)
         {
-            return Char(c.ToEnumerable().Contains, string.Join("|", c.ToCharArray()));
+            return Char(c.ToEnumerable().Contains, StringExtensions.Join("|", c.ToEnumerable()));
         }
 
 
@@ -100,7 +100,7 @@ namespace Sprache
         public static Parser<char> CharExcept(IEnumerable<char> c)
         {
             var chars = c as char[] ?? c.ToArray();
-            return CharExcept(chars.Contains, string.Join("|", chars));
+            return CharExcept(chars.Contains, StringExtensions.Join("|", chars));
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Sprache
         /// <returns></returns> 
         public static Parser<char> CharExcept(string c)
         {
-            return CharExcept(c.ToEnumerable().Contains, string.Join("|", c.ToCharArray()));
+            return CharExcept(c.ToEnumerable().Contains, StringExtensions.Join("|", c.ToEnumerable()));
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Sprache
 
                 if (result.WasSuccessful)
                 {
-                    var msg = string.Format("`{0}' was not expected", string.Join(", ", result.Expectations));
+                    var msg = $"`{StringExtensions.Join(", ", result.Expectations)}' was not expected";
                     return Result.Failure<object>(i, msg, new string[0]);
                 }
                 return Result.Success<object>(null, i);

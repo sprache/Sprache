@@ -26,13 +26,25 @@
   },
 
   "frameworks": {
-    "net45": {},
+    "net3.5": {
+      "buildOptions": {
+        "define": [ "STRING_IS_ENUMERABLE" ]
+      }
+    },
+    "net4.0": {
+      "buildOptions": {
+        "define": [ "STRING_IS_ENUMERABLE", "STRING_JOIN_ENUMERABLE" ]
+      }
+    },
     "netstandard1.0": {
       "dependencies": {
-         "System.Globalization": "4.0.11",
-         "System.Linq": "4.1.0",
-         "System.Runtime": "4.1.0",
-         "System.Text.RegularExpressions": "4.1.0"
+        "System.Globalization": "4.0.11",
+        "System.Linq": "4.1.0",
+        "System.Runtime": "4.1.0",
+        "System.Text.RegularExpressions": "4.1.0"
+      },
+      "buildOptions": {
+        "define": [ "STRING_JOIN_ENUMERABLE" ]
       }
     }
   }

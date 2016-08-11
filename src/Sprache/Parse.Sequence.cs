@@ -91,16 +91,13 @@
                             ? "end of input"
                             : r.Remainder.Current.ToString();
 
-                        var msg = string.Format("Unexpected '{0}'", what);
-                        var exp = string.Format("'{0}' between {1} and {2} times, but found {3}", string.Join(", ", r.Expectations), 
-                            minimumCount, 
-                            maximumCount, 
-                            n);
+                        var msg = $"Unexpected '{what}'";
+                        var exp = $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {n}";
 
                         return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                     }
 
-                    if (remainder != r.Remainder)
+                    if (!ReferenceEquals(remainder, r.Remainder))
                     {
                         result.Add(r.Value);
                     }
