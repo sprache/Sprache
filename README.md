@@ -1,5 +1,5 @@
 
-# Sprache [![Sprache tag on Stack Overflow](https://img.shields.io/badge/stackoverflow-sprache-orange.svg)](http://stackoverflow.com/questions/tagged/sprache) [![Join the chat at https://gitter.im/sprache/Sprache](https://badges.gitter.im/sprache/Sprache.svg)](https://gitter.im/sprache/Sprache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://nuget.org/packages/Sprache) [![Build status](https://ci.appveyor.com/api/projects/status/xrn2d7b9crqj8l4a?svg=true)](https://ci.appveyor.com/project/Sprache/sprache)
+# Sprache [![Sprache tag on Stack Overflow](https://img.shields.io/badge/stackoverflow-sprache-orange.svg)](http://stackoverflow.com/questions/tagged/sprache) [![Join the chat at https://gitter.im/sprache/Sprache](https://badges.gitter.im/sprache/Sprache.svg)](https://gitter.im/sprache/Sprache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NuGet](https://img.shields.io/nuget/v/Sprache.svg)](https://nuget.org/packages/Sprache) [![Build status](https://ci.appveyor.com/api/projects/status/xrn2d7b9crqj8l4a?svg=true)](https://ci.appveyor.com/project/Sprache/sprache)
 
 Sprache is a simple, lightweight library for constructing parsers directly in C# code.
 
