@@ -44,7 +44,7 @@ namespace Sprache
         /// <returns></returns>
         public static T GetOrElse<T>(this IOption<T> option, T defaultValue)
         {
-            if (option == null) throw new ArgumentNullException("option");
+            if (option == null) throw new ArgumentNullException(nameof(option));
             return option.IsEmpty ? defaultValue : option.Get();
         }
     }

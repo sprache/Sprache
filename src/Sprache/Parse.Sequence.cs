@@ -17,8 +17,8 @@
         /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> DelimitedBy<T, U>(this Parser<T> parser, Parser<U> delimiter)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (delimiter == null) throw new ArgumentNullException("delimiter");
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
+            if (delimiter == null) throw new ArgumentNullException(nameof(delimiter));
 
             return from head in parser.Once()
                    from tail in
@@ -39,8 +39,8 @@
         /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> XDelimitedBy<T, U>(this Parser<T> itemParser, Parser<U> delimiter)
         {
-            if (itemParser == null) throw new ArgumentNullException("itemParser");
-            if (delimiter == null) throw new ArgumentNullException("delimiter");
+            if (itemParser == null) throw new ArgumentNullException(nameof(itemParser));
+            if (delimiter == null) throw new ArgumentNullException(nameof(delimiter));
 
             return from head in itemParser.Once()
                    from tail in
@@ -67,13 +67,14 @@
         /// 
         /// </summary>
         /// <param name="parser"></param>
-        /// <param name="count"></param>
+        /// <param name="minimumCount"></param>
+        /// <param name="maximumCount"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int minimumCount, int maximumCount)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
 
             return i =>
             {
@@ -90,16 +91,13 @@
                             ? "end of input"
                             : r.Remainder.Current.ToString();
 
-                        var msg = string.Format("Unexpected '{0}'", what);
-                        var exp = string.Format("'{0}' between {1} and {2} times, but found {3}", string.Join(", ", r.Expectations), 
-                            minimumCount, 
-                            maximumCount, 
-                            n);
+                        var msg = $"Unexpected '{what}'";
+                        var exp = $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {n}";
 
                         return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                     }
 
-                    if (remainder != r.Remainder)
+                    if (!ReferenceEquals(remainder, r.Remainder))
                     {
                         result.Add(r.Value);
                     }
@@ -124,9 +122,9 @@
         /// <exception cref="ArgumentNullException"></exception>
         public static Parser<T> Contained<T, U, V>(this Parser<T> parser, Parser<U> open, Parser<V> close)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (open == null) throw new ArgumentNullException("open");
-            if (close == null) throw new ArgumentNullException("close");
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
+            if (open == null) throw new ArgumentNullException(nameof(open));
+            if (close == null) throw new ArgumentNullException(nameof(close));
 
             return from o in open
                    from item in parser

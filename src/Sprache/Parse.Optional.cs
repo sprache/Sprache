@@ -15,7 +15,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<IOption<T>> Optional<T>(this Parser<T> parser)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
+            if (parser == null) throw new ArgumentNullException(nameof(parser));
 
             return i =>
             {
