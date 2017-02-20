@@ -270,12 +270,21 @@ namespace Sprache
         }
 
         /// <summary>
-        /// Parse a stream of elements. If any element is partially parsed
+        /// Parse a stream of elements, failing if any element is only partially parsed.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parser"></param>
-        /// <returns></returns>
-        /// <remarks>Implemented imperatively to decrease stack usage.</remarks>
+        /// <typeparam name="T">The type of element to parse.</typeparam>
+        /// <param name="parser">A parser that matches a single element.</param>
+        /// <returns>A <see cref="Parser{T}"/> that matches the sequence.</returns>
+        /// <remarks>
+        /// <para>
+        /// Using <seealso cref="XMany{T}(Parser{T})"/> may be preferable to <seealso cref="Many{T}(Parser{T})"/>
+        /// where the first character of each match identified by <paramref name="parser"/>
+        /// is sufficient to determine whether the entire match should succeed. The X*
+        /// methods typically give more helpful errors and are easier to debug than their
+        /// unqualified counterparts.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="XOr"/>
         public static Parser<IEnumerable<T>> XMany<T>(this Parser<T> parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));

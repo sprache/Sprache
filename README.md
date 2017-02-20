@@ -39,9 +39,9 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
 
 **Examples** included with the source demonstrate:
 
-* [Parsing XML directly to a Document object](https://github.com/sprache/Sprache/blob/master/src/XmlExample/Program.cs)
-* [Parsing numeric expressions to `System.Linq.Expression` objects](https://github.com/sprache/Sprache/blob/master/src/LinqyCalculator/ExpressionParser.cs)
-* [Parsing comma-separated values (CSV) into lists of strings](https://github.com/sprache/Sprache/blob/master/src/Sprache.Tests/Scenarios/CsvTests.cs)
+* [Parsing XML directly to a Document object](https://github.com/sprache/Sprache/blob/master/samples/XmlExample/Program.cs)
+* [Parsing numeric expressions to `System.Linq.Expression` objects](https://github.com/sprache/Sprache/blob/master/samples/LinqyCalculator/ExpressionParser.cs)
+* [Parsing comma-separated values (CSV) into lists of strings](https://github.com/sprache/Sprache/blob/master/test/Sprache.Tests/Scenarios/CsvTests.cs)
 
 **Tutorials** explaining Sprache:
 
