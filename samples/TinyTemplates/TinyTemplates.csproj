@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Copyright>Copyright Sprache Contributors 2013</Copyright>
+    <AssemblyTitle>TinyTemplates</AssemblyTitle>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <Authors>Nicholas Blumhardt and Contributors</Authors>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <AssemblyName>LinqyCalculator</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <PackageId>LinqyCalculator</PackageId>
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <AssemblyName>TinyTemplates</AssemblyName>
+    <PackageId>TinyTemplates</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

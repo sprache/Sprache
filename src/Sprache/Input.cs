@@ -13,6 +13,9 @@ namespace Sprache
         private readonly int _line;
         private readonly int _column;
 
+        /// <summary>
+        /// Gets the list of memos assigned to the <see cref="Input" /> instance.
+        /// </summary>
         public IDictionary<object, object> Memos { get; private set; }
 
         /// <summary>
