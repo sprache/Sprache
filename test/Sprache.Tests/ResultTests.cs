@@ -13,7 +13,7 @@ namespace Sprache.Tests
         {
             var p = Parse.String("xy").Text().XMany().End();
             var r = (Result<IEnumerable<string>>)p.TryParse("x{");
-            Assert.True(r.Message.Contains("unexpected '{'"));
+            Assert.Contains("unexpected '{'", r.Message);
         }
 
         [Fact]
