@@ -4,9 +4,9 @@
     <Description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</Description>
     <Copyright>Copyright Sprache Contributors 2017</Copyright>
     <AssemblyTitle>Sprache</AssemblyTitle>
-    <VersionPrefix>2.1.2</VersionPrefix>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <Authors>Nicholas Blumhardt;Contributors</Authors>
-    <TargetFrameworks>net40;netstandard1.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;netstandard1.0;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Sprache</AssemblyName>
     <PackageId>Sprache</PackageId>
@@ -30,18 +30,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="mscorlib" />
-  </ItemGroup>
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'sl5' ">
-    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE;STRING_JOIN_ENUMERABLE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">

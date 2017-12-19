@@ -5,7 +5,6 @@
     <AssemblyName>LinqyCalculator</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>LinqyCalculator</PackageId>
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
