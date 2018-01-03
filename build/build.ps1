@@ -4,8 +4,14 @@ $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch
 
 echo "build: Version suffix is $suffix"
 
-# run restore on all project.json files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
-Get-ChildItem -Path $PSScriptRoot\..\src -Filter project.json -Recurse | ForEach-Object { & dotnet restore $_.FullName --no-cache 2>1 }
+# run restore on all *.csproj files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
+Get-ChildItem -Path $PSScriptRoot\..\src -Filter *.csproj -Recurse | ForEach-Object { & dotnet restore $_.FullName --no-cache 2>1 }
 
-# run pack on all project.json files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
-Get-ChildItem -Path $PSScriptRoot\..\src -Filter project.json -Recurse | ForEach-Object { & dotnet pack $_.FullName -c Release --version-suffix=$suffix 2>1 }
+# run pack on all *.csproj files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
+Get-ChildItem -Path $PSScriptRoot\..\src -Filter *.csproj -Recurse | ForEach-Object {
+	if ($suffix) { 
+		& dotnet pack $_.FullName -c Release --version-suffix=$suffix 2>1
+	} else {
+		& dotnet pack $_.FullName -c Release 2>1
+	}
+}

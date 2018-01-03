@@ -65,7 +65,7 @@ namespace Sprache.Tests.Scenarios
         {
             var input = "a,b";
             var r = Csv.Parse(input);
-            Assert.Equal(1, r.Count());
+            Assert.Single(r);
 
             var l1 = r.First().ToArray();
             Assert.Equal(2, l1.Length);
@@ -78,7 +78,7 @@ namespace Sprache.Tests.Scenarios
         {
             var input = "a,b,";
             var r = Csv.Parse(input);
-            Assert.Equal(1, r.Count());
+            Assert.Single(r);
 
             var l1 = r.First().ToArray();
             Assert.Equal(3, l1.Length);
@@ -92,7 +92,7 @@ namespace Sprache.Tests.Scenarios
         {
             var input = "a,b," + Environment.NewLine;
             var r = Csv.Parse(input);
-            Assert.Equal(1, r.Count());
+            Assert.Single(r);
 
             var l1 = r.First().ToArray();
             Assert.Equal(3, l1.Length);
@@ -150,7 +150,7 @@ namespace Sprache.Tests.Scenarios
         {
             var input = "a,b,\"c" + Environment.NewLine + "d\"";
             var r = Csv.Parse(input);
-            Assert.Equal(1, r.Count());
+            Assert.Single(r);
         }
 
         [Fact]

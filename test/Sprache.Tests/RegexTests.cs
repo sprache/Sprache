@@ -26,8 +26,8 @@ namespace Sprache.Tests
 
             const string input = "123abc";
 
-            Assert.True(regexOriginal.IsMatch(input));
-            Assert.False(regexOptimized.IsMatch(input));
+            Assert.Matches(regexOriginal, input);
+            Assert.DoesNotMatch(regexOptimized, input);
         }
 
         [Fact]
@@ -38,8 +38,8 @@ namespace Sprache.Tests
 
             const string input = "abc123";
 
-            Assert.True(regexOriginal.IsMatch(input));
-            Assert.True(regexOptimized.IsMatch(input));
+            Assert.Matches(regexOriginal, input);
+            Assert.Matches(regexOptimized, input);
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace Sprache.Tests
         [InlineData(_startsWithCarrot, RegexOptions.None, "123abc")]                 // TestName = "Starts with ^, no options, failure"
         [InlineData(_startsWithCarrot, RegexOptions.ExplicitCapture, "123abc")]      // TestName = "Starts with ^, explicit capture, failure"
         [InlineData(_alternation, RegexOptions.None, "abc123")]                      // TestName = "Alternation, no options, success"
-        [InlineData(_alternation, RegexOptions.ExplicitCapture, "that")]             // TestName = "Alternation, explicit capture, success"
+        [InlineData(_alternation, RegexOptions.ExplicitCapture, "abc123")]           // TestName = "Alternation, explicit capture, success"
         [InlineData(_alternation, RegexOptions.None, "that")]                        // TestName = "Alternation, no options, failure"
         [InlineData(_alternation, RegexOptions.ExplicitCapture, "that")]             // TestName = "Alternation, explicit capture, failure"
         public void RegexOptimizationDoesNotChangeRegexBehavior(string pattern, RegexOptions options, string input)
