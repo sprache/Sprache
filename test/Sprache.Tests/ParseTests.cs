@@ -461,5 +461,33 @@ namespace Sprache.Tests
             Assert.Equal(1, id.End.Line);
             Assert.Equal(8, id.End.Column);
         }
+
+        [Fact]
+        public void PreviewParserAlwaysSucceedsLikeOptionalParserButDoesntConsumeAnyInput()
+        {
+            var parser = Parse.Char('a').XAtLeastOnce().Text().Token().Preview();
+            var r = parser.TryParse("   aaa   ");
+
+            Assert.True(r.WasSuccessful);
+            Assert.Equal("aaa", r.Value.GetOrDefault());
+            Assert.Equal(0, r.Remainder.Position);
+
+            r = parser.TryParse("   bbb   ");
+            Assert.True(r.WasSuccessful);
+            Assert.Null(r.Value.GetOrDefault());
+            Assert.Equal(0, r.Remainder.Position);
+        }
+
+        [Fact]
+        public void PreviewParserIsSimilarToPositiveLookaheadInRegex()
+        {
+            var parser =
+                from test in Parse.String("test").Token().Preview()
+                from testMethod in Parse.String("testMethod").Token().Text()
+                select testMethod;
+
+            var result = parser.Parse("   testMethod  ");
+            Assert.Equal("testMethod", result);
+        }
     }
 }
