@@ -435,5 +435,31 @@ namespace Sprache.Tests
             Assert.True(r.WasSuccessful);
             Assert.True(r.Remainder.AtEnd);
         }
+
+        [Fact]
+        public void TextSpanParserReturnsTheSpanOfTheParsedValue()
+        {
+            var parser =
+                from leading in Parse.WhiteSpace.Many()
+                from span in Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Span()
+                from trailing in Parse.WhiteSpace.Many()
+                select span;
+
+            var r = parser.TryParse("  Hello!");
+            Assert.True(r.WasSuccessful);
+            Assert.False(r.Remainder.AtEnd);
+
+            var id = r.Value;
+            Assert.Equal("Hello", id.Value);
+            Assert.Equal(5, id.Length);
+
+            Assert.Equal(2, id.Start.Pos);
+            Assert.Equal(1, id.Start.Line);
+            Assert.Equal(3, id.Start.Column);
+
+            Assert.Equal(7, id.End.Pos);
+            Assert.Equal(1, id.End.Line);
+            Assert.Equal(8, id.End.Column);
+        }
     }
 }
