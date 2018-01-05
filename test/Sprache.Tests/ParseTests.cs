@@ -240,6 +240,35 @@ namespace Sprache.Tests
         }
 
         [Fact]
+        public void XOptionalParserConsumesInputOnSuccessfulMatch()
+        {
+            var optAbc = Parse.String("abc").Text().XOptional();
+            var r = optAbc.TryParse("abcd");
+            Assert.True(r.WasSuccessful);
+            Assert.Equal(3, r.Remainder.Position);
+            Assert.True(r.Value.IsDefined);
+            Assert.Equal("abc", r.Value.Get());
+        }
+
+        [Fact]
+        public void XOptionalParserDoesNotConsumeInputOnFailedMatch()
+        {
+            var optAbc = Parse.String("abc").Text().XOptional();
+            var r = optAbc.TryParse("d");
+            Assert.True(r.WasSuccessful);
+            Assert.Equal(0, r.Remainder.Position);
+            Assert.True(r.Value.IsEmpty);
+        }
+
+        [Fact]
+        public void XOptionalParserFailsOnPartialMatch()
+        {
+            var optAbc = Parse.String("abc").Text().XOptional();
+            AssertParser.FailsAt(optAbc, "abd", 2);
+            AssertParser.FailsAt(optAbc, "aa", 1);
+        }
+
+        [Fact]
         public void RegexParserConsumesInputOnSuccessfulMatch()
         {
             var digits = Parse.Regex(@"\d+");
