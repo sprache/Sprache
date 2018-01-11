@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</Description>
+    <Copyright>Copyright Sprache Contributors 2017</Copyright>
+    <AssemblyTitle>Sprache</AssemblyTitle>
+    <VersionPrefix>2.1.2</VersionPrefix>
+    <Authors>Nicholas Blumhardt;Contributors</Authors>
+    <TargetFrameworks>sl5;net35;net40;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Sprache</AssemblyName>
+    <PackageId>Sprache</PackageId>
+    <PackageTags>Parser;Parsers</PackageTags>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/1999078</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/sprache/Sprache</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/sprache/Sprache/blob/master/licence.txt</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/sprache/Sprache</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <Reference Include="System" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'sl5' ">
+    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE;STRING_JOIN_ENUMERABLE</DefineConstants>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE</DefineConstants>
+  <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <DefineConstants>$(DefineConstants);STRING_JOIN_ENUMERABLE</DefineConstants>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE;STRING_JOIN_ENUMERABLE</DefineConstants>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Globalization" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

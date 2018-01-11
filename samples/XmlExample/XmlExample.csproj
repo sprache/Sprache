@@ -1,22 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
-    <AssemblyName>LinqyCalculator</AssemblyName>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>XmlExample</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>LinqyCalculator</PackageId>
+    <PackageId>XmlExample</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sprache\Sprache.csproj" />
+    <None Include="App.config" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sprache\Sprache.csproj" />
   </ItemGroup>
 
 </Project>

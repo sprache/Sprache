@@ -1,22 +1,24 @@
 version: '{build}'
+image: Visual Studio 2017
+
 branches:
   only:
   - master
   - develop
+
 pull_requests:
   do_not_increment_build_number: true
-install:
-  - ps: .\build\install.ps1
+
 build_script:
-- ps: .\build\build.ps1
-test_script:
-- ps: .\build\test.ps1
+- ps: .\build.ps1
+
 artifacts:
-- path: '**\*.nupkg'
+- path: '.\artifacts\*.nupkg'
+
 deploy:
 - provider: NuGet
   api_key:
-    secure: 6xI1jxoZzJ4pIWm4bIufAwdJGy467P+VdIll3/dAAGEpxgISXMIGwMWa77VT3yM9 
+    secure: po+cN8gEO7ami/vMXGuZ0WiYJHzB6AoJCD0Cdq78XXRh/o9JNZKcV3MSgoxmBiMs 
   skip_symbols: true
   artifact: /.*\.nupkg/
   on:
