@@ -10,13 +10,10 @@ pull_requests:
   do_not_increment_build_number: true
 
 build_script:
-- ps: .\build\build.ps1
-
-test_script:
-- ps: .\build\test.ps1
+- ps: .\build.ps1
 
 artifacts:
-- path: '**\*.nupkg'
+- path: '.\artifacts\*.nupkg'
 
 deploy:
 - provider: NuGet
