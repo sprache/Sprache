@@ -584,6 +584,41 @@ namespace Sprache.Tests
         }
 
         [Fact]
+        public void CommentedParserAcceptsMultipleTrailingCommentsAsLongAsTheyStartOnTheSameLine()
+        {
+            var parser = Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Commented();
+
+            // trailing comments
+            var result = parser.Parse("    \t hello123   /* one */ /* two */ /* " + @"
+                three */ // this is not a trailing comment
+                // neither this");
+            Assert.Equal("hello123", result.Value);
+            Assert.False(result.LeadingComments.Any());
+            Assert.True(result.TrailingComments.Any());
+
+            var trailing = result.TrailingComments.ToArray();
+            Assert.Equal(3, trailing.Length);
+            Assert.Equal("one", trailing[0].Trim());
+            Assert.Equal("two", trailing[1].Trim());
+            Assert.Equal("three", trailing[2].Trim());
+
+            // leading and trailing comments
+            result = parser.Parse(@" // leading comments!
+            /* more leading comments! */
+            helloWorld /* one*/ // two!
+            // more trailing comments! (that don't belong to the parsed value)");
+            Assert.Equal("helloWorld", result.Value);
+            Assert.Equal(2, result.LeadingComments.Count());
+            Assert.Equal("leading comments!", result.LeadingComments.First().Trim());
+            Assert.Equal("more leading comments!", result.LeadingComments.Last().Trim());
+
+            trailing = result.TrailingComments.ToArray();
+            Assert.Equal(2, trailing.Length);
+            Assert.Equal("one", trailing[0].Trim());
+            Assert.Equal("two!", trailing[1].Trim());
+        }
+
+        [Fact]
         public void CommentedParserAcceptsCustomizedCommentParser()
         {
             var cp = new CommentParser("#", "{", "}", "\n");

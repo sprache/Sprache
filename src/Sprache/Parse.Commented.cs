@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sprache
 {
@@ -100,8 +101,14 @@ namespace Sprache
             var whiteSpaceExceptForNewLine = WhiteSpace.Except(Chars("\r\n")).Many().Text();
 
             // returns true if the second span starts on the first span's last line
-            bool IsSameLine(ITextSpan<T> first, IOption<ITextSpan<string>> second) =>
-                first.End.Line == second.GetOrDefault()?.Start.Line;
+            bool IsSameLine(ITextSpan<T> first, ITextSpan<string> second) =>
+                first.End.Line == second.Start.Line;
+
+            // single comment span followed by a whitespace
+            var commentSpan =
+                from cs in comment.Span()
+                from ws in whiteSpaceExceptForNewLine
+                select cs;
 
             // add leading and trailing comments to the parser
             return
@@ -109,10 +116,11 @@ namespace Sprache
                 from leadingComments in comment.Token().Many()
                 from valueSpan in parser.Span()
                 from trailingWhiteSpace in whiteSpaceExceptForNewLine
-                from trailingPreview in comment.Span().Preview()
-                from trailingComments in IsSameLine(valueSpan, trailingPreview) ? comment.Once() :
-                    whiteSpaceExceptForNewLine.Return(EmptyStringList)
-                select new CommentedValue<T>(leadingComments, valueSpan.Value, trailingComments);
+                from trailingPreview in commentSpan.Many().Preview()
+                let trailingCount = trailingPreview.GetOrElse(Enumerable.Empty<ITextSpan<string>>())
+                    .Where(c => IsSameLine(valueSpan, c)).Count()
+                from trailingComments in commentSpan.Repeat(trailingCount)
+                select new CommentedValue<T>(leadingComments, valueSpan.Value, trailingComments.Select(c => c.Value));
         }
     }
 }
