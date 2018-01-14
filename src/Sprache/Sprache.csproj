@@ -4,13 +4,13 @@
     <Description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</Description>
     <Copyright>Copyright Sprache Contributors 2017</Copyright>
     <AssemblyTitle>Sprache</AssemblyTitle>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionPrefix>2.1.3</VersionPrefix>
     <Authors>Nicholas Blumhardt;Contributors</Authors>
     <TargetFrameworks>sl5;net35;net40;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Sprache</AssemblyName>
     <PackageId>Sprache</PackageId>
-    <PackageTags>Parser;Parsers;Monad</PackageTags>
+    <PackageTags>Parser;Parsers</PackageTags>
     <PackageIconUrl>https://avatars1.githubusercontent.com/u/1999078</PackageIconUrl>
     <PackageProjectUrl>https://github.com/sprache/Sprache</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/sprache/Sprache/blob/master/licence.txt</PackageLicenseUrl>
@@ -48,6 +48,7 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE</DefineConstants>
+  <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
