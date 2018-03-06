@@ -240,6 +240,35 @@ namespace Sprache.Tests
         }
 
         [Fact]
+        public void XOptionalParserConsumesInputOnSuccessfulMatch()
+        {
+            var optAbc = Parse.String("abc").Text().XOptional();
+            var r = optAbc.TryParse("abcd");
+            Assert.True(r.WasSuccessful);
+            Assert.Equal(3, r.Remainder.Position);
+            Assert.True(r.Value.IsDefined);
+            Assert.Equal("abc", r.Value.Get());
+        }
+
+        [Fact]
+        public void XOptionalParserDoesNotConsumeInputOnFailedMatch()
+        {
+            var optAbc = Parse.String("abc").Text().XOptional();
+            var r = optAbc.TryParse("d");
+            Assert.True(r.WasSuccessful);
+            Assert.Equal(0, r.Remainder.Position);
+            Assert.True(r.Value.IsEmpty);
+        }
+
+        [Fact]
+        public void XOptionalParserFailsOnPartialMatch()
+        {
+            var optAbc = Parse.String("abc").Text().XOptional();
+            AssertParser.FailsAt(optAbc, "abd", 2);
+            AssertParser.FailsAt(optAbc, "aa", 1);
+        }
+
+        [Fact]
         public void RegexParserConsumesInputOnSuccessfulMatch()
         {
             var digits = Parse.Regex(@"\d+");
@@ -401,7 +430,7 @@ namespace Sprache.Tests
             {
                 var r = repeated.Parse("aaa");
             }
-            catch(ParseException ex)
+            catch (ParseException ex)
             {
                 Assert.StartsWith(expectedMessage, ex.Message);
             }
@@ -434,6 +463,198 @@ namespace Sprache.Tests
             var r = parser.TryParse("[a]");
             Assert.True(r.WasSuccessful);
             Assert.True(r.Remainder.AtEnd);
+        }
+
+        [Fact]
+        public void TextSpanParserReturnsTheSpanOfTheParsedValue()
+        {
+            var parser =
+                from leading in Parse.WhiteSpace.Many()
+                from span in Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Span()
+                from trailing in Parse.WhiteSpace.Many()
+                select span;
+
+            var r = parser.TryParse("  Hello!");
+            Assert.True(r.WasSuccessful);
+            Assert.False(r.Remainder.AtEnd);
+
+            var id = r.Value;
+            Assert.Equal("Hello", id.Value);
+            Assert.Equal(5, id.Length);
+
+            Assert.Equal(2, id.Start.Pos);
+            Assert.Equal(1, id.Start.Line);
+            Assert.Equal(3, id.Start.Column);
+
+            Assert.Equal(7, id.End.Pos);
+            Assert.Equal(1, id.End.Line);
+            Assert.Equal(8, id.End.Column);
+        }
+
+        [Fact]
+        public void PreviewParserAlwaysSucceedsLikeOptionalParserButDoesntConsumeAnyInput()
+        {
+            var parser = Parse.Char('a').XAtLeastOnce().Text().Token().Preview();
+            var r = parser.TryParse("   aaa   ");
+
+            Assert.True(r.WasSuccessful);
+            Assert.Equal("aaa", r.Value.GetOrDefault());
+            Assert.Equal(0, r.Remainder.Position);
+
+            r = parser.TryParse("   bbb   ");
+            Assert.True(r.WasSuccessful);
+            Assert.Null(r.Value.GetOrDefault());
+            Assert.Equal(0, r.Remainder.Position);
+        }
+
+        [Fact]
+        public void PreviewParserIsSimilarToPositiveLookaheadInRegex()
+        {
+            var parser =
+                from test in Parse.String("test").Token().Preview()
+                from testMethod in Parse.String("testMethod").Token().Text()
+                select testMethod;
+
+            var result = parser.Parse("   testMethod  ");
+            Assert.Equal("testMethod", result);
+        }
+
+        [Fact]
+        public void CommentedParserConsumesWhiteSpaceLikeTokenParserAndAddsLeadingAndTrailingComments()
+        {
+            var parser = Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Commented();
+
+            // whitespace only
+            var result = parser.Parse("    \t hello123   \t\r\n  ");
+            Assert.Equal("hello123", result.Value);
+            Assert.Empty(result.LeadingComments);
+            Assert.Empty(result.TrailingComments);
+
+            // leading comments
+            result = parser.End().Parse(" /* My identifier */ world321   ");
+            Assert.Equal("world321", result.Value);
+            Assert.Single(result.LeadingComments);
+            Assert.Empty(result.TrailingComments);
+            Assert.Equal("My identifier", result.LeadingComments.Single().Trim());
+
+            // trailing comments
+            result = parser.End().Parse("    \t hello123   // what's that? ");
+            Assert.Equal("hello123", result.Value);
+            Assert.Empty(result.LeadingComments);
+            Assert.Single(result.TrailingComments);
+            Assert.Equal("what's that?", result.TrailingComments.Single().Trim());
+        }
+
+        [Fact]
+        public void CommentedParserConsumesAllLeadingCommentsAndOnlyOneTrailingCommentIfItIsOnTheSameLine()
+        {
+            var parser = Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Commented();
+
+            // leading and trailing comments
+            var result = parser.Parse(@" // leading comments!
+            /* more leading comments! */
+
+            helloWorld // trailing comments!
+
+            // more trailing comments! (these comments don't belong to the parsed value)");
+
+            Assert.Equal("helloWorld", result.Value);
+            Assert.Equal(2, result.LeadingComments.Count());
+            Assert.Equal("leading comments!", result.LeadingComments.First().Trim());
+            Assert.Equal("more leading comments!", result.LeadingComments.Last().Trim());
+            Assert.Single(result.TrailingComments);
+            Assert.Equal("trailing comments!", result.TrailingComments.First().Trim());
+
+            // multiple leading and trailing comments
+            result = parser.Parse(@" // leading comments!
+
+            /* multiline leading comments
+            this is the second line */
+
+            test321
+
+            // trailing comments! these comments doesn't belong to the parsed value
+            /* --==-- */");
+            Assert.Equal("test321", result.Value);
+            Assert.Equal(2, result.LeadingComments.Count());
+            Assert.Equal("leading comments!", result.LeadingComments.First().Trim());
+            Assert.StartsWith("multiline leading comments", result.LeadingComments.Last().Trim());
+            Assert.EndsWith("this is the second line", result.LeadingComments.Last().Trim());
+            Assert.Empty(result.TrailingComments);
+        }
+
+        [Fact]
+        public void CommentedParserAcceptsMultipleTrailingCommentsAsLongAsTheyStartOnTheSameLine()
+        {
+            var parser = Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Commented();
+
+            // trailing comments
+            var result = parser.Parse("    \t hello123   /* one */ /* two */ /* " + @"
+                three */ // this is not a trailing comment
+                // neither this");
+            Assert.Equal("hello123", result.Value);
+            Assert.False(result.LeadingComments.Any());
+            Assert.True(result.TrailingComments.Any());
+
+            var trailing = result.TrailingComments.ToArray();
+            Assert.Equal(3, trailing.Length);
+            Assert.Equal("one", trailing[0].Trim());
+            Assert.Equal("two", trailing[1].Trim());
+            Assert.Equal("three", trailing[2].Trim());
+
+            // leading and trailing comments
+            result = parser.Parse(@" // leading comments!
+            /* more leading comments! */
+            helloWorld /* one*/ // two!
+            // more trailing comments! (that don't belong to the parsed value)");
+            Assert.Equal("helloWorld", result.Value);
+            Assert.Equal(2, result.LeadingComments.Count());
+            Assert.Equal("leading comments!", result.LeadingComments.First().Trim());
+            Assert.Equal("more leading comments!", result.LeadingComments.Last().Trim());
+
+            trailing = result.TrailingComments.ToArray();
+            Assert.Equal(2, trailing.Length);
+            Assert.Equal("one", trailing[0].Trim());
+            Assert.Equal("two!", trailing[1].Trim());
+        }
+
+        [Fact]
+        public void CommentedParserAcceptsCustomizedCommentParser()
+        {
+            var cp = new CommentParser("#", "{", "}", "\n");
+            var parser = Parse.Identifier(Parse.Letter, Parse.LetterOrDigit).Commented(cp);
+
+            // leading and trailing comments
+            var result = parser.Parse(@" # leading comments!
+            { more leading comments! }
+
+            helloWorld # trailing comments!
+
+            # more trailing comments! (these comments don't belong to the parsed value)");
+
+            Assert.Equal("helloWorld", result.Value);
+            Assert.Equal(2, result.LeadingComments.Count());
+            Assert.Equal("leading comments!", result.LeadingComments.First().Trim());
+            Assert.Equal("more leading comments!", result.LeadingComments.Last().Trim());
+            Assert.Single(result.TrailingComments);
+            Assert.Equal("trailing comments!", result.TrailingComments.First().Trim());
+
+            // multiple leading and trailing comments
+            result = parser.Parse(@" # leading comments!
+
+            { multiline leading comments
+            this is the second line }
+
+            test321
+
+            # trailing comments! these comments doesn't belong to the parsed value
+            { --==-- }");
+            Assert.Equal("test321", result.Value);
+            Assert.Equal(2, result.LeadingComments.Count());
+            Assert.Equal("leading comments!", result.LeadingComments.First().Trim());
+            Assert.StartsWith("multiline leading comments", result.LeadingComments.Last().Trim());
+            Assert.EndsWith("this is the second line", result.LeadingComments.Last().Trim());
+            Assert.Empty(result.TrailingComments);
         }
     }
 }

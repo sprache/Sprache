@@ -51,9 +51,11 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
 **Real-world** parsers built with Sprache:
 
  * The [template parser](https://github.com/OctopusDeploy/Octostache/blob/master/source/Octostache/Templates/TemplateParser.cs) in [Octostache](https://github.com/OctopusDeploy/Octostache), the variable substitution language of [Octopus Deploy](https://octopus.com)
- * The [XAML binding expression parser](https://github.com/SuperJMN/OmniXAML/blob/master/Source/OmniXaml/Parsers/MarkupExtensions/MarkupExtensionParser.cs) in [OmniXaml](https://github.com/SuperJMN/OmniXAML), the cross-platform XAML implementation
+ * The [XAML binding expression parser](https://github.com/OmniGUI/OmniXAML/blob/master/OmniXaml/InlineParsers/Extensions/MarkupExtensionParser.cs) in [OmniXaml](https://github.com/OmniGUI/OmniXAML), the cross-platform XAML implementation
  * The query parser in [Seq](https://getseq.net), a structured log server for .NET
  * The [connection string parser](https://github.com/EasyNetQ/EasyNetQ/blob/master/Source/EasyNetQ/ConnectionString/ConnectionStringGrammar.cs) in [EasyNetQ](http://easynetq.com/), a .NET API for RabbitMQ
+ * The [markup parsers](https://github.com/AvaloniaUI/Avalonia/blob/master/src/Markup/Avalonia.Markup.Xaml/Parsers/SelectorGrammar.cs) in [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia), the multi-platform desktop .NET UI framework
+ * [ApexSharp parser](https://github.com/apexsharp/apexparser/blob/master/ApexParser/Parser/ApexGrammar.cs), a two-way [Apex to C# transpiler](https://github.com/apexsharp/apexparser) (Salesforce programming language)
  * Sprache appears in the [credits for JetBrains ReSharper](https://confluence.jetbrains.com/display/ReSharper/Third-Party+Software+Shipped+With+ReSharper#Third-PartySoftwareShippedWithReSharper-Sprache)
 
 ### Background
