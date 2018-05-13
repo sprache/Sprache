@@ -92,7 +92,9 @@
                             : r.Remainder.Current.ToString();
 
                         var msg = $"Unexpected '{what}'";
-                        var exp = $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {n}";
+                        var exp = minimumCount == maximumCount 
+                            ? $"'{StringExtensions.Join(", ", r.Expectations)}' {minimumCount} times, but found {n}"
+                            : $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {n}";
 
                         return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                     }
