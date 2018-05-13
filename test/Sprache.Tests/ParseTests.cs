@@ -435,6 +435,23 @@ namespace Sprache.Tests
                 Assert.StartsWith(expectedMessage, ex.Message);
             }
         }
+        
+        [Fact]
+        public void RepeatExactlyParserErrorMessagesAreReadable()
+        {
+            var repeated = Parse.Char('a').Repeat(4);
+
+            var expectedMessage = "Parsing failure: Unexpected 'end of input'; expected 'a' 4 times, but found 3";
+
+            try
+            {
+                var r = repeated.Parse("aaa");
+            }
+            catch(ParseException ex)
+            {
+                Assert.StartsWith(expectedMessage, ex.Message);
+            }
+        }
 
         [Fact]
         public void CanParseSequence()
