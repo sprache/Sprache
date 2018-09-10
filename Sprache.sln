@@ -3,17 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{88A61A5D-F071-4CC1-9C07-FFCC6191101B}"
-	ProjectSection(SolutionItems) = preProject
-		src\Files\NonWorkingLeftExpressionParser.cs = src\Files\NonWorkingLeftExpressionParser.cs
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{10F554FC-7631-443D-8046-17AD2F31AD2E}"
 	ProjectSection(SolutionItems) = preProject
-		build\build.ps1 = build\build.ps1
-		build\install.ps1 = build\install.ps1
-		build\installDotnet.ps1 = build\installDotnet.ps1
-		build\test.ps1 = build\test.ps1
+		appveyor.yml = appveyor.yml
+		build.ps1 = build.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{76AC6F3F-F4CD-444B-8E28-A370D67A72D7}"
