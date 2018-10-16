@@ -81,30 +81,31 @@
                 var remainder = i;
                 var result = new List<T>();
 
-                for (var n = 0; n < maximumCount; ++n)
+                var count = 0;
+
+                var r = parser(remainder);
+                while (r.WasSuccessful && count < maximumCount)
                 {
-                    var r = parser(remainder);
+                    count++;
 
-                    if (!r.WasSuccessful && n < minimumCount)
-                    {
-                        var what = r.Remainder.AtEnd
-                            ? "end of input"
-                            : r.Remainder.Current.ToString();
-
-                        var msg = $"Unexpected '{what}'";
-                        var exp = minimumCount == maximumCount 
-                            ? $"'{StringExtensions.Join(", ", r.Expectations)}' {minimumCount} times, but found {n}"
-                            : $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {n}";
-
-                        return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
-                    }
-
-                    if (!ReferenceEquals(remainder, r.Remainder))
-                    {
-                        result.Add(r.Value);
-                    }
+                    result.Add(r.Value);
 
                     remainder = r.Remainder;
+                    r = parser(remainder);
+                }
+
+                if (count < minimumCount)
+                {
+                    var what = r.Remainder.AtEnd
+                        ? "end of input"
+                        : r.Remainder.Current.ToString();
+
+                    var msg = $"Unexpected '{what}'";
+                    var exp = minimumCount == maximumCount
+                        ? $"'{StringExtensions.Join(", ", r.Expectations)}' {minimumCount} times, but found {count}"
+                        : $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {count}";
+
+                    return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                 }
 
                 return Result.Success<IEnumerable<T>>(result, remainder);
