@@ -494,6 +494,36 @@ namespace Sprache.Tests
         }
 
         [Fact]
+        public void DelimitedWithMinimumAndMaximum()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), 3, 4);
+            Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a,a").Value.Count());
+            Assert.Throws<ParseException>(() => sequence.Parse("a,a"));
+        }
+
+        [Fact]
+        public void DelimitedWithMinimum()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), 3, null);
+            Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
+            Assert.Equal(5, sequence.TryParse("a,a,a,a,a").Value.Count());
+            Assert.Throws<ParseException>(() => sequence.Parse("a,a"));
+        }
+
+        [Fact]
+        public void DelimitedWithMaximum()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), null, 4);
+            Assert.Equal(1, sequence.TryParse("a").Value.Count());
+            Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a,a").Value.Count());
+        }
+
+        [Fact]
         public void FailGracefullyOnSequence()
         {
             var sequence = Parse.Char('a').XDelimitedBy(Parse.Char(','));

@@ -17,6 +17,22 @@
         /// <exception cref="ArgumentNullException"></exception>
         public static Parser<IEnumerable<T>> DelimitedBy<T, U>(this Parser<T> parser, Parser<U> delimiter)
         {
+            return DelimitedBy(parser, delimiter, null, null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="minimumCount"></param>
+        /// <param name="maximumCount"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Parser<IEnumerable<T>> DelimitedBy<T, U>(this Parser<T> parser, Parser<U> delimiter, int? minimumCount, int? maximumCount)
+        {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             if (delimiter == null) throw new ArgumentNullException(nameof(delimiter));
 
@@ -24,7 +40,7 @@
                    from tail in
                        (from separator in delimiter
                         from item in parser
-                        select item).Many()
+                        select item).Repeat(minimumCount - 1, maximumCount - 1)
                    select head.Concat(tail);
         }
 
