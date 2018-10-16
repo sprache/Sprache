@@ -435,7 +435,7 @@ namespace Sprache.Tests
                 Assert.StartsWith(expectedMessage, ex.Message);
             }
         }
-        
+
         [Fact]
         public void RepeatExactlyParserErrorMessagesAreReadable()
         {
@@ -447,10 +447,41 @@ namespace Sprache.Tests
             {
                 var r = repeated.Parse("aaa");
             }
-            catch(ParseException ex)
+            catch (ParseException ex)
             {
                 Assert.StartsWith(expectedMessage, ex.Message);
             }
+        }
+
+        [Fact]
+        public void RepeatParseWithOnlyMinimum()
+        {
+            var repeated = Parse.Char('a').Repeat(4, null);
+
+
+            Assert.Equal(4, repeated.TryParse("aaaa").Remainder.Position);
+            Assert.Equal(7, repeated.TryParse("aaaaaaa").Remainder.Position);
+            Assert.Equal(10, repeated.TryParse("aaaaaaaaaa").Remainder.Position);
+
+            try
+            {
+                repeated.Parse("aaa");
+            }
+            catch (ParseException ex)
+            {
+                Assert.StartsWith("Parsing failure: Unexpected 'end of input'; expected 'a' minimum 4 times, but found 3", ex.Message);
+            }
+        }
+
+        [Fact]
+        public void RepeatParseWithOnlyMaximum()
+        {
+            var repeated = Parse.Char('a').Repeat(null, 6);
+
+            Assert.Equal(4, repeated.TryParse("aaaa").Remainder.Position);
+            Assert.Equal(6, repeated.TryParse("aaaaaa").Remainder.Position);
+            Assert.Equal(6, repeated.TryParse("aaaaaaaaaa").Remainder.Position);
+            Assert.Equal(0, repeated.TryParse("").Remainder.Position);
         }
 
         [Fact]

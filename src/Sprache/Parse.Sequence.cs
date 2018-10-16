@@ -72,7 +72,7 @@
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int minimumCount, int maximumCount)
+        public static Parser<IEnumerable<T>> Repeat<T>(this Parser<T> parser, int? minimumCount, int? maximumCount)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
@@ -84,7 +84,7 @@
                 var count = 0;
 
                 var r = parser(remainder);
-                while (r.WasSuccessful && count < maximumCount)
+                while (r.WasSuccessful && (maximumCount == null || count < maximumCount.Value))
                 {
                     count++;
 
@@ -94,16 +94,20 @@
                     r = parser(remainder);
                 }
 
-                if (count < minimumCount)
+                if (minimumCount.HasValue && count < minimumCount.Value)
                 {
                     var what = r.Remainder.AtEnd
                         ? "end of input"
                         : r.Remainder.Current.ToString();
 
                     var msg = $"Unexpected '{what}'";
-                    var exp = minimumCount == maximumCount
-                        ? $"'{StringExtensions.Join(", ", r.Expectations)}' {minimumCount} times, but found {count}"
-                        : $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount} and {maximumCount} times, but found {count}";
+                    string exp;
+                    if (minimumCount == maximumCount)
+                        exp = $"'{StringExtensions.Join(", ", r.Expectations)}' {minimumCount.Value} times, but found {count}";
+                    else if (maximumCount == null)
+                        exp = $"'{StringExtensions.Join(", ", r.Expectations)}' minimum {minimumCount.Value} times, but found {count}";
+                    else
+                        exp = $"'{StringExtensions.Join(", ", r.Expectations)}' between {minimumCount.Value} and {maximumCount.Value} times, but found {count}";
 
                     return Result.Failure<IEnumerable<T>>(i, msg, new[] { exp });
                 }
