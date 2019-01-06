@@ -19,6 +19,17 @@ namespace Sprache
         public ParseException(string message) : base(message) { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ParseException" /> class with a specified error message
+        /// and the position where the error occured.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="input">The input that caused the error.</param>
+        public ParseException(string message, IInput input) : base(message)
+        {
+            Position = Position.FromInput(input);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ParseException" /> class with a specified error message 
         /// and a reference to the inner exception that is the cause of this exception.
         /// </summary>
@@ -26,5 +37,13 @@ namespace Sprache
         /// <param name="innerException">The exception that is the cause of the current exception, 
         /// or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public ParseException(string message, Exception innerException) : base(message, innerException) { }
+
+        /// <summary>
+        /// Gets the parsers positon.
+        /// </summary>
+        public Position Position {
+            get;
+            private set;
+        }
     }
 }
