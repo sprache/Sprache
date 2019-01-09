@@ -23,10 +23,12 @@ namespace Sprache
         /// and the position where the error occured.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        /// <param name="input">The input that caused the error.</param>
-        public ParseException(string message, IInput input) : base(message)
+        /// <param name="position">The position where the error occured.</param>
+        public ParseException(string message, Position position) : base(message)
         {
-            Position = Position.FromInput(input);
+            if (position == null) throw new ArgumentNullException(nameof(position));
+
+            Position = position;
         }
 
         /// <summary>
@@ -39,11 +41,10 @@ namespace Sprache
         public ParseException(string message, Exception innerException) : base(message, innerException) { }
 
         /// <summary>
-        /// Gets the parsers positon.
+        /// Gets the position of the parsing failure if one is available; otherwise, null.
         /// </summary>
         public Position Position {
             get;
-            private set;
         }
     }
 }
