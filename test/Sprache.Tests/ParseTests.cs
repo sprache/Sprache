@@ -425,6 +425,7 @@ namespace Sprache.Tests
             var repeated = Parse.Char('a').Repeat(4, 5);
 
             var expectedMessage = "Parsing failure: Unexpected 'end of input'; expected 'a' between 4 and 5 times, but found 3";
+            var expectedColumnPosition = 1;
 
             try
             {
@@ -433,6 +434,7 @@ namespace Sprache.Tests
             catch (ParseException ex)
             {
                 Assert.StartsWith(expectedMessage, ex.Message);
+                Assert.Equal(expectedColumnPosition, ex.Position.Column);
             }
         }
         
@@ -442,6 +444,7 @@ namespace Sprache.Tests
             var repeated = Parse.Char('a').Repeat(4);
 
             var expectedMessage = "Parsing failure: Unexpected 'end of input'; expected 'a' 4 times, but found 3";
+            var expectedColumnPosition = 1;
 
             try
             {
@@ -450,6 +453,7 @@ namespace Sprache.Tests
             catch(ParseException ex)
             {
                 Assert.StartsWith(expectedMessage, ex.Message);
+                Assert.Equal(expectedColumnPosition, ex.Position.Column);
             }
         }
 
