@@ -86,11 +86,11 @@ namespace XmlExample
                                                      from slash in Parse.Char('/')
                                                      select new Node { Name = id });
 
-        static readonly Parser<Node> Node = ShortNode.Or(FullNode);
+        static readonly Parser<Node> Node = ShortNode | FullNode;
 
         static readonly Parser<Item> Item =
             from leading in Comment.MultiLineComment.Many()
-            from item in Node.Select(n => (Item)n).XOr(Content)
+            from item in Node.Select(n => (Item)n).XOr(Content.Select(c => (Item)c))
             from trailing in Comment.MultiLineComment.Many()
             select item;
 

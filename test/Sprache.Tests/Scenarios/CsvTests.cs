@@ -21,7 +21,7 @@ namespace Sprache.Tests.Scenarios
         }
 
         static readonly Parser<char> QuotedCellContent =
-            Parse.AnyChar.Except(QuotedCellDelimiter).Or(Escaped(QuotedCellDelimiter));
+            Parse.AnyChar.Except(QuotedCellDelimiter) | Escaped(QuotedCellDelimiter);
 
         static readonly Parser<char> LiteralCellContent =
             Parse.AnyChar.Except(CellSeparator).Except(Parse.String(Environment.NewLine));
@@ -36,9 +36,7 @@ namespace Sprache.Tests.Scenarios
             Parse.String(Environment.NewLine).Text();
 
         static readonly Parser<string> RecordTerminator =
-            Parse.Return("").End().XOr(
-            NewLine.End()).Or(
-            NewLine);
+            Parse.Return("").End().XOr(NewLine.End()) | NewLine;
 
         static readonly Parser<string> Cell =
             QuotedCell.XOr(

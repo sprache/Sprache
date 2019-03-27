@@ -27,7 +27,7 @@ namespace Sprache.Tests.Scenarios
             select new IntValue(int.Parse(x));
 
         static readonly Parser<Value> value =
-            stringValue.Or<Value>(intValue);
+            stringValue.Select(s => (Value)s).Or<Value>(intValue.Select(s => (Value)s));
 
         static readonly Parser<string> key =
             Parse.AnyChar.Except(keyValueDelimiter).Except(itemSeparator).XMany().Text();
@@ -43,7 +43,7 @@ namespace Sprache.Tests.Scenarios
             select new AmqpStringItem(x);
 
         static readonly Parser<AmqpErrorItem> item =
-            keyValue.Or<AmqpErrorItem>(itemContent);
+            keyValue.Select(s => (AmqpErrorItem)s) | itemContent.Select(s => (AmqpErrorItem)s);
 
         private static readonly Parser<IEnumerable<AmqpErrorItem>> items =
             from leading in item

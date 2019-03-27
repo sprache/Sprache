@@ -21,7 +21,7 @@ namespace Sprache
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (description == null) throw new ArgumentNullException(nameof(description));
 
-            return i =>
+            return new Parser<char>(i =>
             {
                 if (!i.AtEnd)
                 {
@@ -36,7 +36,7 @@ namespace Sprache
                 return Result.Failure<char>(i,
                     "Unexpected end of input reached",
                     new[] { description });
-            };
+            });
         }
 
         /// <summary>
@@ -209,9 +209,9 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<object>(i =>
             {
-                var result = parser(i);
+                var result = parser.TryParse(i);
 
                 if (result.WasSuccessful)
                 {
@@ -219,7 +219,7 @@ namespace Sprache
                     return Result.Failure<object>(i, msg, new string[0]);
                 }
                 return Result.Success<object>(null, i);
-            };
+            });
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Sprache
             if (first == null) throw new ArgumentNullException(nameof(first));
             if (second == null) throw new ArgumentNullException(nameof(second));
 
-            return i => first(i).IfSuccess(s => second(s.Value)(s.Remainder));
+            return new Parser<U>(i => first.TryParse(i).IfSuccess(s => second(s.Value).TryParse(s.Remainder)));
         }
 
         /// <summary>
@@ -249,11 +249,11 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<IEnumerable<T>>(i =>
             {
                 var remainder = i;
                 var result = new List<T>();
-                var r = parser(i);
+                var r = parser.TryParse(i);
 
                 while (r.WasSuccessful)
                 {
@@ -262,11 +262,11 @@ namespace Sprache
 
                     result.Add(r.Value);
                     remainder = r.Remainder;
-                    r = parser(remainder);
+                    r = parser.TryParse(remainder);
                 }
 
                 return Result.Success<IEnumerable<T>>(result, remainder);
-            };
+            });
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace Sprache
 
             return parser.Once().Then(t1 => parser.Many().Select(ts => t1.Concat(ts)));
         }
-
+        
         /// <summary>
         /// TryParse a stream of elements with at least one item. Except the first
         /// item, all other items will be matched with the <code>XMany</code> operator.
@@ -329,13 +329,13 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i => parser(i).IfSuccess(s =>
+            return new Parser<T>(i => parser.TryParse(i).IfSuccess(s =>
                 s.Remainder.AtEnd
                     ? s
                     : Result.Failure<T>(
                         s.Remainder,
                         string.Format("unexpected '{0}'", s.Remainder.Current),
-                        new[] { "end of input" }));
+                        new[] {"end of input"})));
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Sprache
 
             Parser<T> p = null;
 
-            return i =>
+            return new Parser<T>(i =>
                        {
                            if (p == null)
                                p = reference();
@@ -393,10 +393,10 @@ namespace Sprache
                            i.Memos[p] = Result.Failure<T>(i,
                                "Left recursion in the grammar.",
                                new string[0]);
-                           var result = p(i);
+                           var result = p.TryParse(i);
                            i.Memos[p] = result;
                            return result;
-                       };
+                       });
         }
 
         /// <summary>
@@ -421,19 +421,19 @@ namespace Sprache
             if (first == null) throw new ArgumentNullException(nameof(first));
             if (second == null) throw new ArgumentNullException(nameof(second));
 
-            return i =>
+            return new Parser<T>(i =>
             {
-                var fr = first(i);
+                var fr = first.TryParse(i);
                 if (!fr.WasSuccessful)
                 {
-                    return second(i).IfFailure(sf => DetermineBestError(fr, sf));
+                    return second.TryParse(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
                 if (fr.Remainder.Equals(i))
-                    return second(i).IfFailure(sf => fr);
+                    return second.TryParse(i).IfFailure(sf => fr);
 
                 return fr;
-            };
+            });
         }
 
         /// <summary>
@@ -448,9 +448,9 @@ namespace Sprache
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            return i => parser(i).IfFailure(f => f.Remainder.Equals(i) ?
+            return new Parser<T>(i => parser.TryParse(i).IfFailure(f => f.Remainder.Equals(i) ?
                 Result.Failure<T>(f.Remainder, f.Message, new[] { name }) :
-                f);
+                f));
         }
 
         /// <summary>
@@ -466,25 +466,26 @@ namespace Sprache
             if (first == null) throw new ArgumentNullException(nameof(first));
             if (second == null) throw new ArgumentNullException(nameof(second));
 
-            return i => {
-                var fr = first(i);
+            return new Parser<T>(i =>
+            {
+                var fr = first.TryParse(i);
                 if (!fr.WasSuccessful)
                 {
                     // The 'X' part
                     if (!fr.Remainder.Equals(i))
                         return fr;
 
-                    return second(i).IfFailure(sf => DetermineBestError(fr, sf));
+                    return second.TryParse(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
                 // This handles a zero-length successful application of first.
                 if (fr.Remainder.Equals(i))
-                    return second(i).IfFailure(sf => fr);
+                    return second.TryParse(i).IfFailure(sf => fr);
 
                 return fr;
-            };
+            });
         }
-
+        
         // Examines two results presumably obtained at an "Or" junction; returns the result with
         // the most information, or if they apply at the same input position, a union of the results.
         static IResult<T> DetermineBestError<T>(IResult<T> firstFailure, IResult<T> secondFailure)
@@ -537,7 +538,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<T> Return<T>(T value)
         {
-            return i => Result.Success(value, i);
+            return new Parser<T>(i => Result.Success(value, i));
         }
 
         /// <summary>
@@ -568,13 +569,13 @@ namespace Sprache
             if (except == null) throw new ArgumentNullException(nameof(except));
 
             // Could be more like: except.Then(s => s.Fail("..")).XOr(parser)
-            return i =>
+            return new Parser<T>(i =>
                 {
-                    var r = except(i);
+                    var r = except.TryParse(i);
                     if (r.WasSuccessful)
                         return Result.Failure<T>(i, "Excepted parser succeeded.", new[] { "other than the excepted input" });
-                    return parser(i);
-                };
+                    return parser.TryParse(i);
+                });
         }
 
         /// <summary>
@@ -603,10 +604,10 @@ namespace Sprache
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            return i => parser(i).IfSuccess(s =>
+            return new Parser<T>(i => parser.TryParse(i).IfSuccess(s =>
                 predicate(s.Value) ? s : Result.Failure<T>(i,
                     string.Format("Unexpected {0}.", s.Value),
-                    new string[0]));
+                    new string[0])));
         }
 
         /// <summary>

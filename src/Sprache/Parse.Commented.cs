@@ -31,9 +31,9 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<ITextSpan<T>>(i =>
             {
-                var r = parser(i);
+                var r = parser.TryParse(i);
                 if (r.WasSuccessful)
                 {
                     var span = new TextSpan<T>
@@ -48,7 +48,7 @@ namespace Sprache
                 }
 
                 return Result.Failure<ITextSpan<T>>(r.Remainder, r.Message, r.Expectations);
-            };
+            });
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Sprache
                 let trailingCount = trailingPreview.GetOrElse(Enumerable.Empty<ITextSpan<string>>())
                     .Where(c => IsSameLine(valueSpan, c)).Count()
                 from trailingComments in commentSpan.Repeat(trailingCount)
-                select new CommentedValue<T>(leadingComments, valueSpan.Value, trailingComments.Select(c => c.Value));
+                select (ICommented<T>) new CommentedValue<T>(leadingComments, valueSpan.Value, trailingComments.Select(c => c.Value));
         }
     }
 }

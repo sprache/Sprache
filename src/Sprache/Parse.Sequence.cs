@@ -76,14 +76,14 @@
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<IEnumerable<T>>(i =>
             {
                 var remainder = i;
                 var result = new List<T>();
 
                 for (var n = 0; n < maximumCount; ++n)
                 {
-                    var r = parser(remainder);
+                    var r = parser.TryParse(remainder);
 
                     if (!r.WasSuccessful && n < minimumCount)
                     {
@@ -108,7 +108,7 @@
                 }
 
                 return Result.Success<IEnumerable<T>>(result, remainder);
-            };
+            });
         }
 
         /// <summary>

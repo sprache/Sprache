@@ -134,7 +134,7 @@ namespace Sprache.Tests
         {
             var first = Parse.Char('a').Once().Concat(Parse.Char('b').Once());
             var second = Parse.Char('a').Once();
-            var p = first.Or(second);
+            var p = first | second;
             AssertParser.SucceedsWithAll(p, "a");
         }
 
@@ -145,12 +145,11 @@ namespace Sprache.Tests
             AssertParser.SucceedsWithAll(p, "abc");
         }
 
-        static readonly Parser<IEnumerable<char>> ASeq =
+        private static readonly Parser<IEnumerable<char>> ASeq =
             (from first in Parse.Ref(() => ASeq)
-             from comma in Parse.Char(',')
-             from rest in Parse.Char('a').Once()
-             select first.Concat(rest))
-            .Or(Parse.Char('a').Once());
+                from comma in Parse.Char(',')
+                from rest in Parse.Char('a').Once()
+                select first.Concat(rest)) | Parse.Char('a').Once();
 
         [Fact]
         public void DetectsLeftRecursion()
@@ -161,14 +160,12 @@ namespace Sprache.Tests
         static readonly Parser<IEnumerable<char>> ABSeq =
             (from first in Parse.Ref(() => BASeq)
              from rest in Parse.Char('a').Once()
-             select first.Concat(rest))
-            .Or(Parse.Char('a').Once());
+             select first.Concat(rest)) | Parse.Char('a').Once();
 
         static readonly Parser<IEnumerable<char>> BASeq =
             (from first in Parse.Ref(() => ABSeq)
              from rest in Parse.Char('b').Once()
-             select first.Concat(rest))
-            .Or(Parse.Char('b').Once());
+             select first.Concat(rest)) | Parse.Char('b').Once();
 
         [Fact]
         public void DetectsMutualLeftRecursion()

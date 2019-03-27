@@ -17,15 +17,15 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<IOption<T>>(i =>
             {
-                var pr = parser(i);
+                var pr = parser.TryParse(i);
 
                 if (pr.WasSuccessful)
                     return Result.Success(new Some<T>(pr.Value), pr.Remainder);
 
                 return Result.Success(new None<T>(), i);
-            };
+            });
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<IOption<T>>(i =>
             {
-                var result = parser(i);
+                var result = parser.TryParse(i);
 
                 if (result.WasSuccessful)
                     return Result.Success(new Some<T>(result.Value), result.Remainder);
@@ -50,7 +50,7 @@ namespace Sprache
                     return Result.Success(new None<T>(), i);
 
                 return Result.Failure<IOption<T>>(result.Remainder, result.Message, result.Expectations);
-            };
+            });
         }
 
         /// <summary>
@@ -66,15 +66,15 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return i =>
+            return new Parser<IOption<T>>(i =>
             {
-                var result = parser(i);
+                var result = parser.TryParse(i);
 
                 if (result.WasSuccessful)
                     return Result.Success(new Some<T>(result.Value), i);
 
                 return Result.Success(new None<T>(), i);
-            };
+            });
         }
     }
 }

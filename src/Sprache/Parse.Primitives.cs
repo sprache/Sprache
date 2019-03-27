@@ -15,10 +15,7 @@
         /// line ending or end of input
         /// </summary>
         public static Parser<string> LineTerminator =
-            Return("").End()
-                .Or(LineEnd.End())
-                .Or(LineEnd)
-                .Named("LineTerminator");
+            Return("").End() | LineEnd.End() | LineEnd.Named("LineTerminator");
 
         /// <summary>
         /// Parser for identifier starting with <paramref name="firstLetterParser"/> and continuing with <paramref name="tailLetterParser"/>

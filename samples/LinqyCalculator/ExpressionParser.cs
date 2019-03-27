@@ -44,7 +44,7 @@ namespace LinqyCalculator
 
         static readonly Parser<Expression> Constant =
              Parse.Decimal
-             .Select(x => Expression.Constant(double.Parse(x)))
+             .Select(x => (Expression) Expression.Constant(double.Parse(x)))
              .Named("number");
 
         static readonly Parser<Expression> Factor =
@@ -58,14 +58,16 @@ namespace LinqyCalculator
         static readonly Parser<Expression> Operand =
             ((from sign in Parse.Char('-')
               from factor in Factor
-              select Expression.Negate(factor)
+              select (Expression) Expression.Negate(factor)
              ).XOr(Factor)).Token();
 
         static readonly Parser<Expression> InnerTerm = Parse.ChainOperator(Power, Operand, Expression.MakeBinary);
 
-        static readonly Parser<Expression> Term = Parse.ChainOperator(Multiply.Or(Divide).Or(Modulo), InnerTerm, Expression.MakeBinary);
+        private static readonly Parser<Expression> Term =
+            Parse.ChainOperator(Multiply | Divide | Modulo, InnerTerm, Expression.MakeBinary);
 
-        static readonly Parser<Expression> Expr = Parse.ChainOperator(Add.Or(Subtract), Term, Expression.MakeBinary);
+        private static readonly Parser<Expression> Expr =
+            Parse.ChainOperator(Add | Subtract, Term, Expression.MakeBinary);
 
         static readonly Parser<Expression<Func<double>>> Lambda =
             Expr.End().Select(body => Expression.Lambda<Func<double>>(body));

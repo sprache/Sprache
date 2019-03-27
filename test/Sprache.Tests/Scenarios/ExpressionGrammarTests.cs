@@ -46,7 +46,7 @@ namespace Sprache.Tests.Scenarios
 
         static readonly Parser<Expression> Constant =
              Parse.Decimal
-             .Select(x => Expression.Constant(double.Parse(x)))
+             .Select(x => (Expression)Expression.Constant(double.Parse(x)))
              .Named("number");
 
         static readonly Parser<Expression> Factor =
@@ -59,7 +59,7 @@ namespace Sprache.Tests.Scenarios
         static readonly Parser<Expression> Operand =
             ((from sign in Parse.Char('-')
               from factor in Factor
-              select Expression.Negate(factor)
+              select (Expression)Expression.Negate(factor)
              ).XOr(Factor)).Token();
 
         static readonly Parser<Expression> Term = Parse.XChainOperator(Multiply.XOr(Divide), Operand, Expression.MakeBinary);

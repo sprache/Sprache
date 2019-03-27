@@ -12,16 +12,18 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<T> Positioned<T>(this Parser<T> parser) where T : IPositionAware<T>
         {
-            return i =>
+            return new Parser<T>(i =>
             {
-                var r = parser(i);
+                var r = parser.TryParse(i);
 
                 if (r.WasSuccessful)
                 {
-                    return Result.Success(r.Value.SetPos(Position.FromInput(i), r.Remainder.Position - i.Position), r.Remainder);
+                    return Result.Success(r.Value.SetPos(Position.FromInput(i), r.Remainder.Position - i.Position),
+                        r.Remainder);
                 }
+
                 return r;
-            };
+            });
         }
     }
 }

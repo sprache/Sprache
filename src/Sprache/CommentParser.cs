@@ -116,7 +116,7 @@ namespace Sprache
             get
             {
                 if (Single != null && MultiOpen != null && MultiClose != null)
-                    return SingleLineComment.Or(MultiLineComment);
+                    return SingleLineComment | MultiLineComment;
                 else if (Single != null && (MultiOpen == null || MultiClose == null))
                     return SingleLineComment;
                 else if (Single == null && (MultiOpen != null && MultiClose != null))

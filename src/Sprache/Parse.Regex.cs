@@ -62,7 +62,7 @@ namespace Sprache
                 ? new string[0]
                 : new[] { description };
 
-            return i =>
+            return new Parser<Match>(i =>
             {
                 if (!i.AtEnd)
                 {
@@ -88,7 +88,7 @@ namespace Sprache
                 }
 
                 return Result.Failure<Match>(i, "Unexpected end of input", expectations);
-            };
+            });
         }
 
         /// <summary>

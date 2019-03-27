@@ -8,7 +8,7 @@ namespace TinyTemplates
         static readonly Parser<char> Hash = Parse.Char('#');
 
         static readonly Parser<TemplateNode> EscapedHash =
-            Hash.Select(h => new LiteralTemplateNode(h.ToString()))
+            Hash.Select(h => (TemplateNode)new LiteralTemplateNode(h.ToString()))
             .Named("escaped '#' character");
 
         static readonly Parser<string> Identifier =
@@ -22,7 +22,7 @@ namespace TinyTemplates
             select new TemplateMemberAccessor(first.Concat(subs));
 
         static readonly Parser<TemplateNode> FreeSymbol =
-            Member.Select(m => new MemberAccessTemplateNode(m));
+            Member.Select(m => (TemplateNode)new MemberAccessTemplateNode(m));
 
         static Parser<T> OptionallyDelimited<T>(Parser<T> p)
         {
@@ -38,7 +38,7 @@ namespace TinyTemplates
 
         static readonly Parser<TemplateNode> Literal =
             Parse.AnyChar.Except(Hash).AtLeastOnce().Text()
-            .Select(t => new LiteralTemplateNode(t));
+            .Select(t => (TemplateNode)new LiteralTemplateNode(t));
 
         static readonly Parser<TemplateNode> Iteration =
             (from i in OptionallyDelimited(Parse.Char('|').Then(_ => Member))
@@ -46,15 +46,15 @@ namespace TinyTemplates
              from content in Parse.Ref(() => Aggregate)
 // ReSharper restore StaticFieldInitializersReferesToFieldBelow
              from end in Parse.String("#.")
-             select new IterationTemplateNode(i, content)).Named("iteration directive");
+             select (TemplateNode) new IterationTemplateNode(i, content)).Named("iteration directive");
 
-        static readonly Parser<TemplateNode> Directive = Hash
-            .Then(_ => EscapedHash.Or(Iteration).Or(Symbol));
+        private static readonly Parser<TemplateNode> Directive = Hash
+            .Then(_ => EscapedHash | Iteration | Symbol);
 
         static readonly Parser<TemplateNode> Element = Literal.XOr(Directive);
 
         static readonly Parser<TemplateNode> Aggregate =
-            Element.Many().Select(ee => new AggregateTemplateNode(ee));
+            Element.Many().Select(ee => (TemplateNode)new AggregateTemplateNode(ee));
 
         public static TemplateNode ParseTemplate(string templateText)
         {

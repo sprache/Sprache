@@ -26,7 +26,7 @@ namespace Sprache.Tests.Scenarios
         public static CommentParser Comment = new CommentParser { Single = ";", NewLine = Environment.NewLine };
 
         public static Parser<string> LabelId =
-            Parse.Identifier(Parse.Letter.Or(Parse.Chars("._?")), Parse.LetterOrDigit.Or(Parse.Chars("_@#$~.?")));
+            Parse.Identifier(Parse.Letter | Parse.Chars("._?"), Parse.LetterOrDigit | Parse.Chars("_@#$~.?"));
 
         public static Parser<string> Label =
             from labelName in AsmToken(LabelId)
