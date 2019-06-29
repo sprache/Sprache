@@ -37,17 +37,36 @@ namespace Sprache
             Memos = new Dictionary<object, object>();
         }
 
-        /// <summary>
-        /// Advances the input.
-        /// </summary>
-        /// <returns>A new <see cref="IInput" /> that is advanced.</returns>
-        /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
-        public IInput Advance()
+        /// <inheritdoc />
+        public IInput Advance() => Advance(1);
+
+        /// <inheritdoc />
+        public IInput Advance(int delta)
         {
             if (AtEnd)
                 throw new InvalidOperationException("The input is already at the end of the source.");
+            if (delta <= 0)
+                throw new InvalidOperationException($"The input can't advance by {delta}, need a positive number.");
+            if (Position + delta > Source.Length)
+                throw new InvalidOperationException($"The input can't advance by {delta} because it exceeds the bounds of the source.");
 
-            return new Input(_source, _position + 1, Current == '\n' ? _line + 1 : _line, Current == '\n' ? 1 : _column + 1);
+            var line = Line;
+            var column = Column;
+
+            for (var i = Position; i < Position + delta; i++)
+            {
+                if (Source[i] == '\n')
+                {
+                    line++;
+                    column = 1;
+                }
+                else
+                {
+                    column++;
+                }
+            }
+
+            return new Input(Source, Position + delta, line, column);
         }
 
         /// <summary>

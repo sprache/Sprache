@@ -11,11 +11,18 @@ namespace Sprache
     public interface IInput : IEquatable<IInput>
     {
         /// <summary>
-        /// Advances the input.
+        /// Advances the input by one character.
         /// </summary>
         /// <returns>A new <see cref="IInput" /> that is advanced.</returns>
         /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
         IInput Advance();
+
+        /// <summary>
+        /// Advances the input by given number of characters.
+        /// </summary>
+        /// <returns>A new <see cref="IInput" /> that is advanced.</returns>
+        /// <exception cref="System.InvalidOperationException">The input is already at the end of the source.</exception>
+        IInput Advance(int delta);
 
         /// <summary>
         /// Gets the whole source.
