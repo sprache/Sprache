@@ -22,10 +22,10 @@ Sprache provides a number of built-in functions that can make bigger parsers fro
 ```csharp
 Parser<string> identifier =
     from leading in Parse.WhiteSpace.Many()
-    from first in Parse.Letter.Once()
-    from rest in Parse.LetterOrDigit.Many()
+    from first in Parse.Letter.Once().Text()
+    from rest in Parse.LetterOrDigit.Many().Text()
     from trailing in Parse.WhiteSpace.Many()
-    select new string(first.Concat(rest).ToArray());
+    select first + rest;
 
 var id = identifier.Parse(" abc123  ");
 
