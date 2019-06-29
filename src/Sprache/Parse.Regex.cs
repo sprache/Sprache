@@ -72,8 +72,7 @@ namespace Sprache
 
                     if (match.Success)
                     {
-                        for (int j = 0; j < match.Length; j++)
-                            remainder = remainder.Advance();
+                        remainder = remainder.Advance(match.Length);
 
                         return Result.Success(match, remainder);
                     }
