@@ -364,10 +364,32 @@ namespace Sprache
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
-            return from leading in WhiteSpace.Many()
-                   from item in parser
-                   from trailing in WhiteSpace.Many()
-                   select item;
+            return i =>
+            {
+                // Leading whitespace
+                var leadingDelta = 0;
+                while (i.Position + leadingDelta < i.Source.Length && char.IsWhiteSpace(i.Source[i.Position + leadingDelta]))
+                    leadingDelta++;
+
+                if (leadingDelta > 0)
+                    i = i.Advance(leadingDelta);
+
+                // Actual parser
+                var result = parser(i);
+                if (!result.WasSuccessful)
+                    return result;
+
+                // Trailing whitespace
+                i = result.Remainder;
+                var trailingDelta = 0;
+                while (i.Position + trailingDelta < i.Source.Length && char.IsWhiteSpace(i.Source[i.Position + trailingDelta]))
+                    trailingDelta++;
+
+                if (trailingDelta > 0)
+                    i = i.Advance(trailingDelta);
+
+                return Result.Success(result.Value, i);
+            };
         }
 
         /// <summary>
