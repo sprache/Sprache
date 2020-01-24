@@ -437,7 +437,7 @@ namespace Sprache.Tests
                 Assert.Equal(expectedColumnPosition, ex.Position.Column);
             }
         }
-        
+
         [Fact]
         public void RepeatExactlyParserErrorMessagesAreReadable()
         {
@@ -450,11 +450,42 @@ namespace Sprache.Tests
             {
                 var r = repeated.Parse("aaa");
             }
-            catch(ParseException ex)
+            catch (ParseException ex)
             {
                 Assert.StartsWith(expectedMessage, ex.Message);
                 Assert.Equal(expectedColumnPosition, ex.Position.Column);
             }
+        }
+
+        [Fact]
+        public void RepeatParseWithOnlyMinimum()
+        {
+            var repeated = Parse.Char('a').Repeat(4, null);
+
+
+            Assert.Equal(4, repeated.TryParse("aaaa").Remainder.Position);
+            Assert.Equal(7, repeated.TryParse("aaaaaaa").Remainder.Position);
+            Assert.Equal(10, repeated.TryParse("aaaaaaaaaa").Remainder.Position);
+
+            try
+            {
+                repeated.Parse("aaa");
+            }
+            catch (ParseException ex)
+            {
+                Assert.StartsWith("Parsing failure: Unexpected 'end of input'; expected 'a' minimum 4 times, but found 3", ex.Message);
+            }
+        }
+
+        [Fact]
+        public void RepeatParseWithOnlyMaximum()
+        {
+            var repeated = Parse.Char('a').Repeat(null, 6);
+
+            Assert.Equal(4, repeated.TryParse("aaaa").Remainder.Position);
+            Assert.Equal(6, repeated.TryParse("aaaaaa").Remainder.Position);
+            Assert.Equal(6, repeated.TryParse("aaaaaaaaaa").Remainder.Position);
+            Assert.Equal(0, repeated.TryParse("").Remainder.Position);
         }
 
         [Fact]
@@ -464,6 +495,36 @@ namespace Sprache.Tests
             var r = sequence.TryParse("a,a,a");
             Assert.True(r.WasSuccessful);
             Assert.True(r.Remainder.AtEnd);
+        }
+
+        [Fact]
+        public void DelimitedWithMinimumAndMaximum()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), 3, 4);
+            Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a,a").Value.Count());
+            Assert.Throws<ParseException>(() => sequence.Parse("a,a"));
+        }
+
+        [Fact]
+        public void DelimitedWithMinimum()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), 3, null);
+            Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
+            Assert.Equal(5, sequence.TryParse("a,a,a,a,a").Value.Count());
+            Assert.Throws<ParseException>(() => sequence.Parse("a,a"));
+        }
+
+        [Fact]
+        public void DelimitedWithMaximum()
+        {
+            var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), null, 4);
+            Assert.Equal(1, sequence.TryParse("a").Value.Count());
+            Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
+            Assert.Equal(4, sequence.TryParse("a,a,a,a,a").Value.Count());
         }
 
         [Fact]
