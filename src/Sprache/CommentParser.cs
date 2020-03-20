@@ -48,7 +48,7 @@ namespace Sprache
         /// <param name="multiOpen"></param>
         /// <param name="multiClose"></param>
         /// <param name="newLine"></param>
-        public CommentParser(string multiOpen, string multiClose, string newLine = "\n")
+        public CommentParser(string multiOpen, string multiClose, string newLine)
         {
             Single = null;
             MultiOpen = multiOpen;
@@ -63,7 +63,7 @@ namespace Sprache
         /// <param name="multiOpen"></param>
         /// <param name="multiClose"></param>
         /// <param name="newLine"></param>
-        public CommentParser(string single, string multiOpen, string multiClose, string newLine = "\n")
+        public CommentParser(string single, string multiOpen, string multiClose, string newLine)
         {
             Single = single;
             MultiOpen = multiOpen;

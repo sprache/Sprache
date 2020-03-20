@@ -1,4 +1,3 @@
-
 # Sprache [![Sprache tag on Stack Overflow](https://img.shields.io/badge/stackoverflow-sprache-orange.svg)](http://stackoverflow.com/questions/tagged/sprache) [![Join the chat at https://gitter.im/sprache/Sprache](https://badges.gitter.im/sprache/Sprache.svg)](https://gitter.im/sprache/Sprache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NuGet](https://img.shields.io/nuget/v/Sprache.svg)](https://nuget.org/packages/Sprache) [![Build status](https://ci.appveyor.com/api/projects/status/xrn2d7b9crqj8l4a?svg=true)](https://ci.appveyor.com/project/Sprache/sprache)
 
 Sprache is a simple, lightweight library for constructing parsers directly in C# code.
@@ -23,10 +22,10 @@ Sprache provides a number of built-in functions that can make bigger parsers fro
 ```csharp
 Parser<string> identifier =
     from leading in Parse.WhiteSpace.Many()
-    from first in Parse.Letter.Once()
-    from rest in Parse.LetterOrDigit.Many()
+    from first in Parse.Letter.Once().Text()
+    from rest in Parse.LetterOrDigit.Many().Text()
     from trailing in Parse.WhiteSpace.Many()
-    select new string(first.Concat(rest).ToArray());
+    select first + rest;
 
 var id = identifier.Parse(" abc123  ");
 
@@ -47,14 +46,15 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
 
  * A great [CodeProject article by Alexey Yakovlev ](http://www.codeproject.com/Articles/795056/Sprache-Calc-building-yet-another-expression-evalu) (and [in Russian](http://habrahabr.ru/post/228037/))
  * Mike Hadlow's example of [parsing connection strings](http://mikehadlow.blogspot.com.au/2012/09/parsing-connection-string-with-sprache.html)
+ * Alexey Golub's article on [monadic parser combinators](https://tyrrrz.me/blog/monadic-parser-combinators) that shows how to build a JSON parser using Sprache
 
 **Real-world** parsers built with Sprache:
 
  * The [template parser](https://github.com/OctopusDeploy/Octostache/blob/master/source/Octostache/Templates/TemplateParser.cs) in [Octostache](https://github.com/OctopusDeploy/Octostache), the variable substitution language of [Octopus Deploy](https://octopus.com)
  * The [XAML binding expression parser](https://github.com/OmniGUI/OmniXAML/blob/master/OmniXaml/InlineParsers/Extensions/MarkupExtensionParser.cs) in [OmniXaml](https://github.com/OmniGUI/OmniXAML), the cross-platform XAML implementation
- * The query parser in [Seq](https://getseq.net), a structured log server for .NET
+ * Parts of the filter expression parser in [Seq](https://datalust.co/seq), a structured log server for .NET
  * The [connection string parser](https://github.com/EasyNetQ/EasyNetQ/blob/master/Source/EasyNetQ/ConnectionString/ConnectionStringGrammar.cs) in [EasyNetQ](http://easynetq.com/), a .NET API for RabbitMQ
- * [ApexSharp parser](https://github.com/apexsharp/apexparser/blob/master/ApexParser/Parser/ApexGrammar.cs), a two-way [Apex to C# transpiler](https://github.com/apexsharp/apexparser) (Salesforce programming language)
+ * [ApexSharp parser](https://github.com/apexsharp/apexparser/blob/master/ApexSharp.ApexParser/Parser/ApexGrammar.cs), a two-way [Apex to C# transpiler](https://github.com/apexsharp/apexparser) (Salesforce programming language)
  * Sprache appears in the [credits for JetBrains ReSharper](https://confluence.jetbrains.com/display/ReSharper/Third-Party+Software+Shipped+With+ReSharper#Third-PartySoftwareShippedWithReSharper-Sprache)
 
 ### Background

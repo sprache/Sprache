@@ -12,6 +12,8 @@ namespace Sprache.Tests.Scenarios
             const string input = "1 + (2 * 3";
             var x = Assert.Throws<ParseException>(() => ExpressionParser.ParseExpression(input));
             Assert.Contains("expected )", x.Message);
+            Assert.Equal(1, x.Position.Line);
+            Assert.Equal(11, x.Position.Column);
         }
 
         [Fact]
@@ -20,6 +22,8 @@ namespace Sprache.Tests.Scenarios
             const string input = "1 + * 3";
             var x = Assert.Throws<ParseException>(() => ExpressionParser.ParseExpression(input));
             Assert.DoesNotContain("expected end of input", x.Message);
+            Assert.Equal(1, x.Position.Line);
+            Assert.Equal(5, x.Position.Column);
         }    
     }
 

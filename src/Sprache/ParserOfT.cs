@@ -48,7 +48,7 @@ namespace Sprache
             if(result.WasSuccessful)
                 return result.Value;
 
-            throw new ParseException(result.ToString());
+            throw new ParseException(result.ToString(), Position.FromInput(result.Remainder));
         }
     }
 }

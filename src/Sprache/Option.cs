@@ -47,6 +47,50 @@ namespace Sprache
             if (option == null) throw new ArgumentNullException(nameof(option));
             return option.IsEmpty ? defaultValue : option.Get();
         }
+
+        /// <summary>
+        /// Maps a function over the value or else returns an empty option.
+        /// </summary>
+        /// <typeparam name="T">The input type.</typeparam>
+        /// <typeparam name="U">The output type.</typeparam>
+        /// <param name="option">The option containing the value to apply <paramref name="map" /> to.</param>
+        /// <param name="map">The function to apply to the value of <paramref name="option" />.</param>
+        /// <returns>An options result containing the result if there was an input value.</returns>
+        public static IOption<U> Select<T, U>(this IOption<T> option, Func<T,U> map)
+        {
+            if (option == null) throw new ArgumentNullException(nameof(option));
+            return option.IsDefined ? (IOption<U>) new Some<U>(map(option.Get())) : new None<U>();
+        }
+
+        /// <summary>
+        /// Binds the value to a function with optional result and flattens the result to a single optional.
+        /// A result projection is applied aftherwards.
+        /// </summary>
+        /// <typeparam name="T">The input type.</typeparam>
+        /// <typeparam name="U">The output type of <paramref name="bind" />.</typeparam>
+        /// <typeparam name="V">The final output type.</typeparam>
+        /// <param name="option">The option containing the value to bind to.</param>
+        /// <param name="bind">The function that receives the input values and returns an optional value.</param>
+        /// <param name="project">The function that is projects the result of <paramref name="bind" />.</param>
+        /// <returns>An option result containing the result if there were was an input value and bind result.</returns>
+        public static IOption<V> SelectMany<T,U,V>(this IOption<T> option, Func<T,IOption<U>> bind, Func<T,U,V> project)
+        {
+            if (option == null) throw new ArgumentNullException(nameof(option));
+            if (option.IsEmpty) return new None<V>();
+
+            var t = option.Get();
+            return bind(t).Select(u => project(t,u));
+        }
+
+        /// <summary>
+        /// Binds the value to a function with optional result and flattens the result to a single optional.
+        /// </summary>
+        /// <typeparam name="T">The input type.</typeparam>
+        /// <typeparam name="U">The output type.</typeparam>
+        /// <param name="option">The option containing the value to bind to.</param>
+        /// <param name="bind">The function that receives the input values and returns an optional value.</param>
+        /// <returns>An option result containing the result if there were was an input value and bind result.</returns>
+        public static IOption<U> SelectMany<T,U>(this IOption<T> option, Func<T,IOption<U>> bind) => option.SelectMany(bind, (_,x) => x);
     }
 
     internal abstract class AbstractOption<T> : IOption<T>
