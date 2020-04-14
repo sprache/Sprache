@@ -61,7 +61,7 @@ namespace LinqyCalculator
               select Expression.Negate(factor)
              ).XOr(Factor)).Token();
 
-        static readonly Parser<Expression> InnerTerm = Parse.ChainOperator(Power, Operand, Expression.MakeBinary);
+        static readonly Parser<Expression> InnerTerm = Parse.ChainRightOperator(Power, Operand, Expression.MakeBinary);
 
         static readonly Parser<Expression> Term = Parse.ChainOperator(Multiply.Or(Divide).Or(Modulo), InnerTerm, Expression.MakeBinary);
 
