@@ -80,7 +80,7 @@ namespace Sprache
 
                     var found = match.Index == input.Length
                                     ? "end of source"
-                                    : string.Format("`{0}'", input[match.Index]);
+                                    : string.Format("'{0}'", input[match.Index].ToString());
                     return Result.Failure<Match>(
                         remainder,
                         "string matching regex `" + regex + "' expected but " + found + " found",

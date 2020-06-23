@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Sprache
+﻿namespace Sprache
 {
     /// <summary>
     /// Constructs customizable comment parsers.
@@ -85,7 +80,6 @@ namespace Sprache
                        from rest in Parse.CharExcept(NewLine).Many().Text()
                        select rest;
             }
-            private set { }
         }
 
         ///<summary>
@@ -105,7 +99,6 @@ namespace Sprache
                                     .Until(Parse.String(MultiClose)).Text()
                        select rest;
             }
-            private set { }
         }
 
         ///<summary>
@@ -123,7 +116,6 @@ namespace Sprache
                     return MultiLineComment;
                 else throw new ParseException("Unable to parse comment; check values of fields 'MultiOpen' and 'MultiClose'.");
             }
-            private set { }
         }
     }
 }

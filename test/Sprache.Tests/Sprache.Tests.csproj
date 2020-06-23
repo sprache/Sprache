@@ -2,12 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
-    <AssemblyName>Sprache.Tests</AssemblyName>
-    <PackageId>Sprache.Tests</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

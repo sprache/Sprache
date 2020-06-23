@@ -2,12 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
-    <AssemblyName>LinqyCalculator</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>LinqyCalculator</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

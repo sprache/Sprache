@@ -36,7 +36,6 @@ namespace Sprache
         public int Pos
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -45,7 +44,6 @@ namespace Sprache
         public int Line
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -54,7 +52,6 @@ namespace Sprache
         public int Column
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -115,11 +112,15 @@ namespace Sprache
         /// </returns>
         public override int GetHashCode()
         {
+#if NETSTANDARD2_1
+            return HashCode.Combine(Pos, Line, Column);
+#else
             var h = 31;
             h = h * 13 + Pos;
             h = h * 13 + Line;
             h = h * 13 + Column;
             return h;
+#endif
         }
 
         /// <summary>

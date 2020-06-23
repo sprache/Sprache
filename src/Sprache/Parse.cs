@@ -284,7 +284,7 @@ namespace Sprache
         /// unqualified counterparts.
         /// </para>
         /// </remarks>
-        /// <seealso cref="XOr"/>
+        /// <seealso cref="XOr{T}"/>
         public static Parser<IEnumerable<T>> XMany<T>(this Parser<T> parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
@@ -387,12 +387,11 @@ namespace Sprache
                            if (p == null)
                                p = reference();
 
-                           if (i.Memos.ContainsKey(p))
+                           if (i.Memos.TryGetValue(p, out var x))
                            {
-                               var pResult = i.Memos[p] as IResult<T>;
-                               if (pResult.WasSuccessful)
+                               if (x is IResult<T> pResult && pResult.WasSuccessful)
                                    return pResult;
-                               throw new ParseException(pResult.ToString());
+                               throw new ParseException(x.ToString());
                            }
 
                            i.Memos[p] = Result.Failure<T>(i,

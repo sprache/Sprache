@@ -118,7 +118,7 @@ namespace Sprache
                 from trailingWhiteSpace in whiteSpaceExceptForNewLine
                 from trailingPreview in commentSpan.Many().Preview()
                 let trailingCount = trailingPreview.GetOrElse(Enumerable.Empty<ITextSpan<string>>())
-                    .Where(c => IsSameLine(valueSpan, c)).Count()
+                    .Count(c => IsSameLine(valueSpan, c))
                 from trailingComments in commentSpan.Repeat(trailingCount)
                 select new CommentedValue<T>(leadingComments, valueSpan.Value, trailingComments.Select(c => c.Value));
         }
