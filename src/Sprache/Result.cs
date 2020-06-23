@@ -38,27 +38,23 @@ namespace Sprache
     internal class Result<T> : IResult<T>
     {
         private readonly T _value;
-        private readonly IInput _remainder;
-        private readonly bool _wasSuccessful;
-        private readonly string _message;
-        private readonly IEnumerable<string> _expectations;
 
         public Result(T value, IInput remainder)
         {
             _value = value;
-            _remainder = remainder;
-            _wasSuccessful = true;
-            _message = null;
-            _expectations = Enumerable.Empty<string>();
+            Remainder = remainder;
+            WasSuccessful = true;
+            Message = null;
+            Expectations = Enumerable.Empty<string>();
         }
 
         public Result(IInput remainder, string message, IEnumerable<string> expectations)
         {
-            _value = default(T);
-            _remainder = remainder;
-            _wasSuccessful = false;
-            _message = message;
-            _expectations = expectations;
+            _value = default;
+            Remainder = remainder;
+            WasSuccessful = false;
+            Message = message;
+            Expectations = expectations;
         }
 
         public T Value
@@ -72,18 +68,18 @@ namespace Sprache
             }
         }
 
-        public bool WasSuccessful { get { return _wasSuccessful; } }
+        public bool WasSuccessful { get; }
 
-        public string Message { get { return _message; } }
+        public string Message { get; }
 
-        public IEnumerable<string> Expectations { get { return _expectations; } }
+        public IEnumerable<string> Expectations { get; }
 
-        public IInput Remainder { get { return _remainder; } }
+        public IInput Remainder { get; }
 
         public override string ToString()
         {
             if (WasSuccessful)
-                return string.Format("Successful parsing of {0}.", Value);
+                return $"Successful parsing of {Value}.";
 
             var expMsg = "";
 
@@ -92,7 +88,7 @@ namespace Sprache
 
             var recentlyConsumed = CalculateRecentlyConsumed();
 
-            return string.Format("Parsing failure: {0};{1} ({2}); recently consumed: {3}", Message, expMsg, Remainder, recentlyConsumed);
+            return $"Parsing failure: {Message};{expMsg} ({Remainder}); recently consumed: {recentlyConsumed}";
         }
 
         private string CalculateRecentlyConsumed()
