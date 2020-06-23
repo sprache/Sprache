@@ -140,19 +140,21 @@ namespace Sprache.Tests.Scenarios
 
         protected bool Equals(AssemblerLine other)
         {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
             return ToString() == other.ToString();
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((AssemblerLine)obj);
+            return Equals(obj as AssemblerLine);
         }
 
         public override int GetHashCode()
         {
+#if NETCOREAPP
+            return HashCode.Combine(Label, InstructionName, Operands, Comment);
+#else
             unchecked
             {
                 var hashCode = (Label != null ? Label.GetHashCode() : 0);
@@ -161,6 +163,7 @@ namespace Sprache.Tests.Scenarios
                 hashCode = (hashCode * 397) ^ (Comment != null ? Comment.GetHashCode() : 0);
                 return hashCode;
             }
+#endif
         }
 
         public override string ToString()

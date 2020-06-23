@@ -8,11 +8,6 @@ namespace Sprache
     /// </summary>
     public class Input : IInput
     {
-        private readonly string _source;
-        private readonly int _position;
-        private readonly int _line;
-        private readonly int _column;
-
         /// <summary>
         /// Gets the list of memos assigned to the <see cref="Input" /> instance.
         /// </summary>
@@ -29,10 +24,10 @@ namespace Sprache
 
         internal Input(string source, int position, int line = 1, int column = 1)
         {
-            _source = source;
-            _position = position;
-            _line = line;
-            _column = column;
+            Source = source;
+            Position = position;
+            Line = line;
+            Column = column;
 
             Memos = new Dictionary<object, object>();
         }
@@ -47,38 +42,38 @@ namespace Sprache
             if (AtEnd)
                 throw new InvalidOperationException("The input is already at the end of the source.");
 
-            return new Input(_source, _position + 1, Current == '\n' ? _line + 1 : _line, Current == '\n' ? 1 : _column + 1);
+            return new Input(Source, Position + 1, Current == '\n' ? Line + 1 : Line, Current == '\n' ? 1 : Column + 1);
         }
 
         /// <summary>
         /// Gets the whole source.
         /// </summary>
-        public string Source { get { return _source; } }
+        public string Source { get; }
 
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
         /// </summary>
-        public char Current { get { return _source[_position]; } }
+        public char Current => Source[Position];
 
         /// <summary>
         /// Gets a value indicating whether the end of the source is reached.
         /// </summary>
-        public bool AtEnd { get { return _position == _source.Length; } }
+        public bool AtEnd => Position == Source.Length;
 
         /// <summary>
         /// Gets the current positon.
         /// </summary>
-        public int Position { get { return _position; } }
+        public int Position { get; }
 
         /// <summary>
         /// Gets the current line number.
         /// </summary>
-        public int Line { get { return _line; } }
+        public int Line { get; }
 
         /// <summary>
         /// Gets the current column.
         /// </summary>
-        public int Column { get { return _column; } }
+        public int Column { get; }
 
         /// <summary>
         /// Returns a string that represents the current object.
@@ -88,7 +83,7 @@ namespace Sprache
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Line {0}, Column {1}", _line, _column);
+            return string.Format("Line {0}, Column {1}", Line, Column);
         }
 
         /// <summary>
@@ -99,10 +94,14 @@ namespace Sprache
         /// </returns>
         public override int GetHashCode()
         {
+#if NETSTANDARD2_1
+            return HashCode.Combine(Source, Position);
+#else
             unchecked
             {
-                return ((_source != null ? _source.GetHashCode() : 0) * 397) ^ _position;
+                return ((Source != null ? Source.GetHashCode() : 0) * 397) ^ Position;
             }
+#endif
         }
 
         /// <summary>
@@ -128,7 +127,7 @@ namespace Sprache
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(_source, other.Source) && _position == other.Position;
+            return string.Equals(Source, other.Source) && Position == other.Position;
         }
 
         /// <summary>
