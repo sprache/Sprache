@@ -8,9 +8,6 @@
     <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
     <AssemblyName>TinyTemplates</AssemblyName>
     <PackageId>TinyTemplates</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
   <ItemGroup>
