@@ -13,7 +13,7 @@ build_script:
 - ps: .\build.ps1
 
 artifacts:
-- path: '.\artifacts\*.nupkg'
+- path: '.\artifacts\*.*nupkg'
 
 deploy:
 - provider: NuGet

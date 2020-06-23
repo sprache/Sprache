@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{10F554FC
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		build.ps1 = build.ps1
+		global.json = global.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{76AC6F3F-F4CD-444B-8E28-A370D67A72D7}"
