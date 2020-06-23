@@ -11,17 +11,17 @@ if(Test-Path .\artifacts) {
 	Remove-Item .\artifacts -Force -Recurse
 }
 # run restore on all *.csproj files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
-Get-ChildItem -Path .\src -Filter *.csproj -Recurse | ForEach-Object { 
+Get-ChildItem -Path .\src -Filter *.csproj -Recurse | ForEach-Object {
 	& dotnet restore $_.FullName --no-cache
 	if($LASTEXITCODE -ne 0) { exit 1 }
 }
 
 # run pack on all *.csproj files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
 Get-ChildItem -Path .\src -Filter *.csproj -Recurse | ForEach-Object {
-	if ($suffix) { 
-		& dotnet pack $_.FullName -c Release -o ..\..\artifacts --version-suffix=$suffix
+	if ($suffix) {
+		& dotnet pack $_.FullName -c Release -o .\artifacts --version-suffix=$suffix /p:ContinuousIntegrationBuild=true
 	} else {
-		& dotnet pack $_.FullName -c Release -o ..\..\artifacts
+		& dotnet pack $_.FullName -c Release -o .\artifacts /p:ContinuousIntegrationBuild=true
 	}
 	if($LASTEXITCODE -ne 0) { exit 1 }
 }

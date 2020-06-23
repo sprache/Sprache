@@ -8,7 +8,7 @@ namespace Sprache
     {
         public static IEnumerable<char> ToEnumerable(this string @this)
         {
-#if STRING_IS_ENUMERABLE
+#if !NETSTANDARD1_0
             return @this;
 #else
             if (@this == null) throw new ArgumentNullException(nameof(@this));
@@ -22,7 +22,7 @@ namespace Sprache
 
         public static string Join<T>(string separator, IEnumerable<T> values)
         {
-#if STRING_JOIN_ENUMERABLE
+#if !NET35
             return string.Join(separator, values);
 #else
             return string.Join(separator, values.Select(v => v.ToString()).ToArray());
