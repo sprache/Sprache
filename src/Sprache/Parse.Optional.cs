@@ -34,7 +34,7 @@ namespace Sprache
         /// <typeparam name="T">The result type of the given parser</typeparam>
         /// <param name="parser">The parser to wrap</param>
         /// <returns>An eXclusive optional version of the given parser.</returns>
-        /// <seealso cref="XOr"/>
+        /// <seealso cref="XOr{T}"/>
         public static Parser<IOption<T>> XOptional<T>(this Parser<T> parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));

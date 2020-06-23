@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+#if NET35
 using System.Linq;
+#endif
 
 namespace Sprache
 {
@@ -11,7 +12,7 @@ namespace Sprache
 #if !NETSTANDARD1_0
             return @this;
 #else
-            if (@this == null) throw new ArgumentNullException(nameof(@this));
+            if (@this == null) throw new System.ArgumentNullException(nameof(@this));
 
             for (var i = 0; i < @this.Length; ++i)
             {
