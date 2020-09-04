@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</Description>
     <Copyright>Copyright Sprache Contributors 2017</Copyright>
     <AssemblyTitle>Sprache</AssemblyTitle>
-    <VersionPrefix>2.3.1</VersionPrefix>
+    <VersionPrefix>2.3.2</VersionPrefix>
     <Authors>Nicholas Blumhardt;Contributors</Authors>
     <TargetFrameworks>sl5;net35;net40;net45;netstandard1.0;netstandard2.0;netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
