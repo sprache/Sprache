@@ -388,7 +388,12 @@ namespace Sprache
                                p = reference();
 
                            if (i.Memos.ContainsKey(p))
-                               throw new ParseException(i.Memos[p].ToString());
+                           {
+                               var pResult = i.Memos[p] as IResult<T>;
+                               if (pResult.WasSuccessful)
+                                   return pResult;
+                               throw new ParseException(pResult.ToString());
+                           }
 
                            i.Memos[p] = Result.Failure<T>(i,
                                "Left recursion in the grammar.",

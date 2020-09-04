@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</Description>
     <Copyright>Copyright Sprache Contributors 2017</Copyright>
     <AssemblyTitle>Sprache</AssemblyTitle>
-    <VersionPrefix>2.3.0</VersionPrefix>
+    <VersionPrefix>2.3.1</VersionPrefix>
     <Authors>Nicholas Blumhardt;Contributors</Authors>
-    <TargetFrameworks>sl5;net35;net40;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>sl5;net35;net40;net45;netstandard1.0;netstandard2.0;netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Sprache</AssemblyName>
     <PackageId>Sprache</PackageId>
@@ -66,6 +66,15 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Globalization" Version="4.3.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Include="System.Globalization" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
   </ItemGroup>
