@@ -6,28 +6,31 @@ echo "build: Version suffix is $suffix"
 
 Push-Location $PSScriptRoot
 
-if(Test-Path .\artifacts) {
-	echo "build: Cleaning .\artifacts"
-	Remove-Item .\artifacts -Force -Recurse
+if(Test-Path ./artifacts) {
+	echo "build: Cleaning ./artifacts"
+	Remove-Item ./artifacts -Force -Recurse
 }
 # run restore on all *.csproj files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
-Get-ChildItem -Path .\src -Filter *.csproj -Recurse | ForEach-Object { 
+Get-ChildItem -Path ./src -Filter *.csproj -Recurse | ForEach-Object { 
+	echo "build: Restoring packages"
 	& dotnet restore $_.FullName --no-cache
 	if($LASTEXITCODE -ne 0) { exit 1 }
 }
 
 # run pack on all *.csproj files in the src folder including 2>1 to redirect stderr to stdout for badly behaved tools
-Get-ChildItem -Path .\src -Filter *.csproj -Recurse | ForEach-Object {
+Get-ChildItem -Path ./src -Filter *.csproj -Recurse | ForEach-Object {
+	echo "build: Packing $_.FullName"
 	if ($suffix) { 
-		& dotnet pack $_.FullName -c Release -o ..\..\artifacts --version-suffix=$suffix
+		& dotnet pack $_.FullName -c Release -o ./artifacts --version-suffix=$suffix
 	} else {
-		& dotnet pack $_.FullName -c Release -o ..\..\artifacts
+		& dotnet pack $_.FullName -c Release -o ./artifacts
 	}
 	if($LASTEXITCODE -ne 0) { exit 1 }
 }
 
 # run tests
-Get-ChildItem -Path .\test -Filter *.csproj -Recurse | ForEach-Object {
+Get-ChildItem -Path ./test -Filter *.csproj -Recurse | ForEach-Object {
+	echo "build: Testing $_.FullName"
 	 & dotnet test -c Release $_.FullName
 	 if($LASTEXITCODE -ne 0) { exit 1 }
 }
