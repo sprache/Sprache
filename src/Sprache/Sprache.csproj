@@ -7,6 +7,7 @@
     <VersionPrefix>2.3.2</VersionPrefix>
     <Authors>Nicholas Blumhardt;Contributors</Authors>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE;STRING_JOIN_ENUMERABLE</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Sprache</AssemblyName>
     <PackageId>Sprache</PackageId>
