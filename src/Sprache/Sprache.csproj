@@ -4,7 +4,7 @@
     <Description>Sprache is a simple, lightweight library for constructing parsers directly in C# code.</Description>
     <Copyright>Copyright Sprache Contributors 2017</Copyright>
     <AssemblyTitle>Sprache</AssemblyTitle>
-    <VersionPrefix>2.3.2</VersionPrefix>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <Authors>Nicholas Blumhardt;Contributors</Authors>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);STRING_IS_ENUMERABLE;STRING_JOIN_ENUMERABLE</DefineConstants>
