@@ -86,7 +86,7 @@ namespace Sprache.Tests.Scenarios
 
     public class AmqpStringItem : AmqpErrorItem
     {
-        public string Text { get; private set; }
+        public string Text { get; }
 
         public AmqpStringItem(string text)
         {
@@ -101,8 +101,8 @@ namespace Sprache.Tests.Scenarios
 
     public class KeyValue : AmqpErrorItem
     {
-        public Value Value { get; private set; }
-        public string Key { get; private set; }
+        public Value Value { get; }
+        public string Key { get; }
 
         public KeyValue(string key, Value value)
         {
@@ -123,7 +123,7 @@ namespace Sprache.Tests.Scenarios
 
     public class StringValue : Value
     {
-        public string Text { get; private set; }
+        public string Text { get; }
 
         public StringValue(string text)
         {
@@ -138,7 +138,7 @@ namespace Sprache.Tests.Scenarios
 
     public class IntValue : Value
     {
-        public int Value { get; private set; }
+        public int Value { get; }
 
         public IntValue(int value)
         {
