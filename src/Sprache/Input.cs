@@ -16,7 +16,7 @@ namespace Sprache
         /// <summary>
         /// Gets the list of memos assigned to the <see cref="Input" /> instance.
         /// </summary>
-        public IDictionary<object, object> Memos { get; private set; }
+        public IDictionary<object, object> Memos { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Input" /> class.

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -521,7 +520,7 @@ namespace Sprache.Tests
         public void DelimitedWithMaximum()
         {
             var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), null, 4);
-            Assert.Equal(1, sequence.TryParse("a").Value.Count());
+            Assert.Single(sequence.TryParse("a").Value);
             Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
             Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
             Assert.Equal(4, sequence.TryParse("a,a,a,a,a").Value.Count());
