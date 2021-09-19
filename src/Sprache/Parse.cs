@@ -434,6 +434,7 @@ namespace Sprache
                 var fr = first(i);
                 if (!fr.WasSuccessful)
                 {
+                    fr.Remainder.Memos.Clear();
                     return second(i).IfFailure(sf => DetermineBestError(fr, sf));
                 }
 
