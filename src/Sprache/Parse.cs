@@ -14,6 +14,11 @@ namespace Sprache
     public static partial class Parse
     {
         /// <summary>
+        /// Message for a failure result when left recursion is detected.
+        /// </summary>
+        public const string LeftRecursionErrorMessage = "Left recursion in the grammar.";
+
+        /// <summary>
         /// TryParse a single character matching 'predicate'
         /// </summary>
         /// <param name="predicate"></param>
@@ -393,14 +398,14 @@ namespace Sprache
                            if (i.Memos.ContainsKey(p))
                            {
                                var pResult = (IResult<T>)i.Memos[p];
-                               if (pResult.WasSuccessful)
+                               if (pResult.WasSuccessful) 
                                    return pResult;
-                               throw new ParseException(pResult.ToString());
+
+                               if (!pResult.WasSuccessful && pResult.Message == LeftRecursionErrorMessage)
+                                   throw new ParseException(pResult.ToString());
                            }
 
-                           i.Memos[p] = Result.Failure<T>(i,
-                               "Left recursion in the grammar.",
-                               new string[0]);
+                           i.Memos[p] = Result.Failure<T>(i, LeftRecursionErrorMessage, new string[0]);
                            var result = p(i);
                            i.Memos[p] = result;
                            return result;
