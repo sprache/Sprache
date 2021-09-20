@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Sprache;
 using System.IO;
-using System.Xml;
 
 namespace XmlExample
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -143,37 +142,6 @@ namespace Sprache.Tests
         {
             var p = Parse.String("abc");
             AssertParser.SucceedsWithAll(p, "abc");
-        }
-
-        static readonly Parser<IEnumerable<char>> ASeq =
-            (from first in Parse.Ref(() => ASeq)
-             from comma in Parse.Char(',')
-             from rest in Parse.Char('a').Once()
-             select first.Concat(rest))
-            .Or(Parse.Char('a').Once());
-
-        [Fact]
-        public void DetectsLeftRecursion()
-        {
-            Assert.Throws<ParseException>(() => ASeq.TryParse("a,a,a"));
-        }
-
-        static readonly Parser<IEnumerable<char>> ABSeq =
-            (from first in Parse.Ref(() => BASeq)
-             from rest in Parse.Char('a').Once()
-             select first.Concat(rest))
-            .Or(Parse.Char('a').Once());
-
-        static readonly Parser<IEnumerable<char>> BASeq =
-            (from first in Parse.Ref(() => ABSeq)
-             from rest in Parse.Char('b').Once()
-             select first.Concat(rest))
-            .Or(Parse.Char('b').Once());
-
-        [Fact]
-        public void DetectsMutualLeftRecursion()
-        {
-            Assert.Throws<ParseException>(() => ABSeq.End().TryParse("baba"));
         }
 
         [Fact]
@@ -521,7 +489,7 @@ namespace Sprache.Tests
         public void DelimitedWithMaximum()
         {
             var sequence = Parse.Char('a').DelimitedBy(Parse.Char(','), null, 4);
-            Assert.Equal(1, sequence.TryParse("a").Value.Count());
+            Assert.Single(sequence.TryParse("a").Value);
             Assert.Equal(3, sequence.TryParse("a,a,a").Value.Count());
             Assert.Equal(4, sequence.TryParse("a,a,a,a").Value.Count());
             Assert.Equal(4, sequence.TryParse("a,a,a,a,a").Value.Count());

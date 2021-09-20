@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Sprache
 {
@@ -36,7 +37,6 @@ namespace Sprache
         public int Pos
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -45,7 +45,6 @@ namespace Sprache
         public int Line
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -54,7 +53,6 @@ namespace Sprache
         public int Column
         {
             get;
-            private set;
         }
 
         /// <summary>

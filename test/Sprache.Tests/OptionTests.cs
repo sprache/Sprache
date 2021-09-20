@@ -1,4 +1,3 @@
-using Sprache;
 using Xunit;
 
 namespace Sprache.Tests

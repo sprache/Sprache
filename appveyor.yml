@@ -3,7 +3,7 @@ image: Visual Studio 2019
 
 branches:
   only:
-  - master
+  - main
   - develop
 
 pull_requests:
@@ -18,8 +18,8 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: tCEhrNs1q8bhXiGwKejajsjSyF+/66LwnPge1ntZKrI3mvfDf1Ab8iOrz1IuVRH2 
+    secure: LOSaZSy3ZL836xUIcCovdIt5kbL/aahbQPl2CvLCWxWaS+YSpKMB/OUAlbgLGp8Z 
   skip_symbols: true
   artifact: /.*\.nupkg/
   on:
-      branch: /^(master|develop)$/
+      branch: /^(main|develop)$/

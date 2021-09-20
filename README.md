@@ -43,7 +43,7 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
 * [Parsing comma-separated values (CSV) into lists of strings](https://github.com/sprache/Sprache/blob/master/test/Sprache.Tests/Scenarios/CsvTests.cs)
 
 **Tutorials** explaining Sprache:
-
+ * Overview of Sprache methods, [long guide by Justing Pealing](https://justinpealing.me.uk/post/2020-03-11-sprache1-chars/)
  * A great [CodeProject article by Alexey Yakovlev ](http://www.codeproject.com/Articles/795056/Sprache-Calc-building-yet-another-expression-evalu) (and [in Russian](http://habrahabr.ru/post/228037/))
  * Mike Hadlow's example of [parsing connection strings](http://mikehadlow.blogspot.com.au/2012/09/parsing-connection-string-with-sprache.html)
  * Alexey Golub's article on [monadic parser combinators](https://tyrrrz.me/blog/monadic-parser-combinators) that shows how to build a JSON parser using Sprache

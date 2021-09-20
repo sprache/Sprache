@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
 
 namespace Sprache
 {
@@ -10,6 +13,11 @@ namespace Sprache
     /// </summary>
     public static partial class Parse
     {
+        /// <summary>
+        /// Message for a failure result when left recursion is detected.
+        /// </summary>
+        public const string LeftRecursionErrorMessage = "Left recursion in the grammar.";
+
         /// <summary>
         /// TryParse a single character matching 'predicate'
         /// </summary>
@@ -284,7 +292,7 @@ namespace Sprache
         /// unqualified counterparts.
         /// </para>
         /// </remarks>
-        /// <seealso cref="XOr"/>
+        /// <seealso cref="XOr{T}"/>
         public static Parser<IEnumerable<T>> XMany<T>(this Parser<T> parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
@@ -389,15 +397,15 @@ namespace Sprache
 
                            if (i.Memos.ContainsKey(p))
                            {
-                               var pResult = i.Memos[p] as IResult<T>;
-                               if (pResult.WasSuccessful)
+                               var pResult = (IResult<T>)i.Memos[p];
+                               if (pResult.WasSuccessful) 
                                    return pResult;
-                               throw new ParseException(pResult.ToString());
+
+                               if (!pResult.WasSuccessful && pResult.Message == LeftRecursionErrorMessage)
+                                   throw new ParseException(pResult.ToString());
                            }
 
-                           i.Memos[p] = Result.Failure<T>(i,
-                               "Left recursion in the grammar.",
-                               new string[0]);
+                           i.Memos[p] = Result.Failure<T>(i, LeftRecursionErrorMessage, new string[0]);
                            var result = p(i);
                            i.Memos[p] = result;
                            return result;
@@ -593,7 +601,7 @@ namespace Sprache
         /// <returns></returns>
         public static Parser<IEnumerable<T>> Until<T, U>(this Parser<T> parser, Parser<U> until)
         {
-            return parser.Except(until).Many().Then(r => until.Return(r));
+            return parser.Except(until).Many().Then(until.Return);
         }
 
         /// <summary>
@@ -610,7 +618,7 @@ namespace Sprache
 
             return i => parser(i).IfSuccess(s =>
                 predicate(s.Value) ? s : Result.Failure<T>(i,
-                    string.Format("Unexpected {0}.", s.Value),
+                    $"Unexpected {s.Value}.",
                     new string[0]));
         }
 
@@ -686,9 +694,9 @@ namespace Sprache
             if (op == null) throw new ArgumentNullException(nameof(op));
             if (operand == null) throw new ArgumentNullException(nameof(operand));
             if (apply == null) throw new ArgumentNullException(nameof(apply));
-            return or(op.Then(opvalue =>
+            return or(op.Then(opValue =>
                           operand.Then(operandValue =>
-                              ChainOperatorRest(apply(opvalue, firstOperand, operandValue), op, operand, apply, or))),
+                              ChainOperatorRest(apply(opValue, firstOperand, operandValue), op, operand, apply, or))),
                       Return(firstOperand));
         }
 
@@ -742,10 +750,10 @@ namespace Sprache
             if (op == null) throw new ArgumentNullException(nameof(op));
             if (operand == null) throw new ArgumentNullException(nameof(operand));
             if (apply == null) throw new ArgumentNullException(nameof(apply));
-            return or(op.Then(opvalue =>
+            return or(op.Then(opValue =>
                         operand.Then(operandValue =>
                             ChainRightOperatorRest(operandValue, op, operand, apply, or)).Then(r =>
-                                Return(apply(opvalue, lastOperand, r)))),
+                                Return(apply(opValue, lastOperand, r)))),
                       Return(lastOperand));
         }
 
