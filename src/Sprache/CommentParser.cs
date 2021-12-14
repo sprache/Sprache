@@ -77,7 +77,7 @@
                     throw new ParseException("Field 'Single' is null; single-line comments not allowed.");
 
                 return from first in Parse.String(Single)
-                       from rest in Parse.CharExcept(NewLine).Many().Text()
+                       from rest in Parse.CharExcept(new[] {'\r', '\n' }).Many().Text()
                        select rest;
             }
             private set { }
