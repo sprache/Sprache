@@ -56,6 +56,7 @@ The best place to start is [this introductory article](http://nblumhardt.com/201
  * The [connection string parser](https://github.com/EasyNetQ/EasyNetQ/blob/master/Source/EasyNetQ/ConnectionString/ConnectionStringGrammar.cs) in [EasyNetQ](http://easynetq.com/), a .NET API for RabbitMQ
  * [ApexSharp parser](https://github.com/apexsharp/apexparser/blob/master/ApexSharp.ApexParser/Parser/ApexGrammar.cs), a two-way [Apex to C# transpiler](https://github.com/apexsharp/apexparser) (Salesforce programming language)
  * Sprache appears in the [credits for JetBrains ReSharper](https://confluence.jetbrains.com/display/ReSharper/Third-Party+Software+Shipped+With+ReSharper#Third-PartySoftwareShippedWithReSharper-Sprache)
+ * Sprache is used in the [OracleUdtClassGenerator](https://www.nuget.org/packages/OracleUdtClassGenerator/) to parse a DSL as a prelude to C# Source Generation. The implementation, including how to package Sprache into a NuGet Analyzer package, is [described in a blog post](https://www.philipdaniels.com/blog/2022/oracle-udt-class-generator/)
 
 ### Background
 
