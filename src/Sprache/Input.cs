@@ -6,9 +6,9 @@ namespace Sprache
     /// <summary>
     /// Represents an input for parsing.
     /// </summary>
-    public class Input : IInput
+    public struct Input : IInput
     {
-        private readonly string _source;
+        private readonly ReadOnlyMemory<char> _source;
         private readonly int _position;
         private readonly int _line;
         private readonly int _column;
@@ -21,13 +21,22 @@ namespace Sprache
         /// <summary>
         /// Initializes a new instance of the <see cref="Input" /> class.
         /// </summary>
-        /// <param name="source">The source.</param>
-        public Input(string source)
+        /// <param name="source">The source as Memory&lt;char&gt;</param>
+        public Input(ReadOnlyMemory<char> source)
             : this(source, 0)
         {
         }
 
-        internal Input(string source, int position, int line = 1, int column = 1)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Input" /> class.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        public Input(string source)
+            : this(source.AsMemory(), 0)
+        {
+        }
+
+        internal Input(ReadOnlyMemory<char> source, int position, int line = 1, int column = 1)
         {
             _source = source;
             _position = position;
@@ -35,6 +44,12 @@ namespace Sprache
             _column = column;
 
             Memos = new Dictionary<object, object>();
+
+        }
+
+        internal Input(string source, int position, int line = 1, int column = 1)
+            : this(source.AsMemory(), position, line, column)
+        {
         }
 
         /// <summary>
@@ -53,12 +68,12 @@ namespace Sprache
         /// <summary>
         /// Gets the whole source.
         /// </summary>
-        public string Source { get { return _source; } }
+        public ReadOnlyMemory<char> Source { get { return _source; } }
 
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
         /// </summary>
-        public char Current { get { return _source[_position]; } }
+        public char Current { get { return _source.Span[_position]; } }
 
         /// <summary>
         /// Gets a value indicating whether the end of the source is reached.
@@ -101,7 +116,7 @@ namespace Sprache
         {
             unchecked
             {
-                return ((_source != null ? _source.GetHashCode() : 0) * 397) ^ _position;
+                return (_source.GetHashCode() * 397) ^ _position;
             }
         }
 
@@ -127,8 +142,7 @@ namespace Sprache
         public bool Equals(IInput other)
         {
             if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return string.Equals(_source, other.Source) && _position == other.Position;
+            return _source.Equals(other.Source) && _position == other.Position;
         }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace Sprache
                 if (!i.AtEnd)
                 {
                     var remainder = i;
-                    var input = i.Source.Substring(i.Position);
+                    var input = new string(i.Source.Slice(i.Position).Span);
                     var match = regex.Match(input);
 
                     if (match.Success)
