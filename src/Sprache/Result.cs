@@ -105,7 +105,7 @@ namespace Sprache
 
             var numberOfRecentlyConsumedChars = totalConsumedChars - windowStart;
 
-            return Remainder.Source.Substring(windowStart, numberOfRecentlyConsumedChars);
+            return new string(Remainder.Source.Slice(windowStart, numberOfRecentlyConsumedChars).Span);
         }
     }
 }

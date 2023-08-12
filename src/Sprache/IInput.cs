@@ -18,7 +18,7 @@ namespace Sprache
         /// <summary>
         /// Gets the whole source.
         /// </summary>
-        string Source { get; }
+        ReadOnlyMemory<char> Source { get; }
 
         /// <summary>
         /// Gets the current <see cref="System.Char" />.
