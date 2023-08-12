@@ -21,9 +21,18 @@ namespace Sprache
         /// <summary>
         /// Initializes a new instance of the <see cref="Input" /> class.
         /// </summary>
+        /// <param name="source">The source as Memory&lt;char&gt;</char></param>
+        public Input(ReadOnlyMemory<char> source)
+            : this(source, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Input" /> class.
+        /// </summary>
         /// <param name="source">The source.</param>
         public Input(string source)
-            : this(source, 0)
+            : this(source.AsMemory(), 0)
         {
         }
 
