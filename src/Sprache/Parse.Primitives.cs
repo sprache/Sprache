@@ -5,7 +5,7 @@
         /// <summary>
         /// \n or \r\n
         /// </summary>
-        public static Parser<string> LineEnd =
+        public static readonly Parser<string> LineEnd =
             (from r in Char('\r').Optional()
             from n in Char('\n')
             select r.IsDefined ? r.Get().ToString() + n : n.ToString())
@@ -14,7 +14,7 @@
         /// <summary>
         /// line ending or end of input
         /// </summary>
-        public static Parser<string> LineTerminator =
+        public static readonly Parser<string> LineTerminator =
             Return("").End()
                 .Or(LineEnd.End())
                 .Or(LineEnd)
