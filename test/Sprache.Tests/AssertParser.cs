@@ -31,7 +31,7 @@ namespace Sprache.Tests
             parser.TryParse(input)
                 .IfFailure(f =>
                 {
-                    Assert.True(false, $"Parsing of \"input\" failed unexpectedly. f");
+                    Assert.Fail($"Parsing of \"{input}\" failed unexpectedly. {f}");
                     return f;
                 })
                 .IfSuccess(s =>
@@ -56,7 +56,7 @@ namespace Sprache.Tests
             parser.TryParse(input)
                 .IfSuccess(s =>
                 {
-                    Assert.True(false, $"Expected failure but succeeded with {s.Value}.");
+                    Assert.Fail($"Expected failure but succeeded with {s.Value}.");
                     return s;
                 })
                 .IfFailure(f =>

@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="appveyor.yml" />
+    <File Path="build.ps1" />
+  </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="samples/LinqyCalculator/LinqyCalculator.csproj" />
+    <Project Path="samples/TinyTemplates.Tests/TinyTemplates.Tests.csproj" />
+    <Project Path="samples/TinyTemplates/TinyTemplates.csproj" />
+    <Project Path="samples/XmlExample/XmlExample.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="licence.txt" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="test/Sprache.Tests/Sprache.Tests.csproj" />
+  </Folder>
+  <Project Path="src/Sprache/Sprache.csproj" />
+</Solution>
